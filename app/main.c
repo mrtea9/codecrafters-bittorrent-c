@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+typedef struct value value;
+
 enum {
     VAL_NUMBER,
     VAL_STRING,
