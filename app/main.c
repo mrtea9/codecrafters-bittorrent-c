@@ -39,7 +39,7 @@ bool is_digit(char c) {
     return c >= '0' && c <= '9';
 }
 
-void decode_string(char* bencoded_value) {
+char* decode_string(char* bencoded_value) {
     int length = atoi(bencoded_value);
     char* colon_index = strchr(bencoded_value, ':');
 
@@ -50,6 +50,8 @@ void decode_string(char* bencoded_value) {
         strncpy(decoded_str, start, length);
         decoded_str[length] = '\0';
         printf("\"%s\"\n", decoded_str);
+
+        return decoded_str;
     }
     else {
         fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
@@ -57,7 +59,7 @@ void decode_string(char* bencoded_value) {
     }
 }
 
-void decode_integer(char* bencoded_value) {
+char* decode_integer(char* bencoded_value) {
     int length = strlen(bencoded_value) - 2;
     char* colon_index = strchr(bencoded_value, 'i');
 
@@ -69,6 +71,8 @@ void decode_integer(char* bencoded_value) {
         decoded_str[length] = '\0';
 
         printf("%s\n", decoded_str);
+
+        return decoded_str;
     }
     else {
         fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
@@ -79,6 +83,8 @@ void decode_integer(char* bencoded_value) {
 void decode_list(char* bencoded_value) {
     int length = strlen(bencoded_value) - 2;
     char* encoded = bencoded_value + 1;
+    char* result;
+
     encoded[length] = '\0';
 
     if (length == 0) {
@@ -91,16 +97,9 @@ void decode_list(char* bencoded_value) {
         if (is_digit(encoded[i])) {
             int length = atoi(encoded);
 
-            char* colon_index = strchr(encoded, ':');
+            result = decode_string(encoded);
 
-            if (colon_index != NULL) {
-                char* start = colon_index + 1;
-                char* decoded_str = (char*)malloc(length + 1);
-
-                strncpy(decoded_str, start, length);
-                decoded_str[length] = '\0';
-                printf("\"%s\"\n", decoded_str);
-            }
+            printf("%s\n", result);
 
             exit(1);
         }
