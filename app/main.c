@@ -89,9 +89,9 @@ void decode_list(char* bencoded_value) {
     for (int i = 0; i < length; i++) {
 
         if (is_digit(encoded[i])) {
-            int length = atoi(bencoded_value);
+            int length = atoi(encoded);
 
-            char* colon_index = strchr(bencoded_value, ':');
+            char* colon_index = strchr(encoded, ':');
 
             if (colon_index != NULL) {
                 char* start = colon_index + 1;
