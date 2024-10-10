@@ -7,12 +7,12 @@ bool is_digit(char c) {
     return c >= '0' && c <= '9';
 }
 
-char* decode_string(const char* bencoded_value) {
+char* decode_string(char* bencoded_value) {
     int length = atoi(bencoded_value);
-    const char* colon_index = strchr(bencoded_value, ':');
+    char* colon_index = strchr(bencoded_value, ':');
 
     if (colon_index != NULL) {
-        const char* start = colon_index + 1;
+        char* start = colon_index + 1;
         char* decoded_str = (char*)malloc(length + 1);
 
         strncpy(decoded_str, start, length);
@@ -27,12 +27,12 @@ char* decode_string(const char* bencoded_value) {
     }
 }
 
-char* decode_integer(const char* bencoded_value) {
+char* decode_integer(char* bencoded_value) {
     int length = strlen(bencoded_value) - 2;
-    const char* colon_index = strchr(bencoded_value, 'i');
+    char* colon_index = strchr(bencoded_value, 'i');
 
     if (colon_index != NULL) {
-        const char* start = colon_index + 1;
+        char* start = colon_index + 1;
         char* decoded_str = (char*)malloc(length + 1);
 
         strncpy(decoded_str, start, length);
@@ -48,11 +48,10 @@ char* decode_integer(const char* bencoded_value) {
     }
 }
 
-char* decode_list(const char* bencoded_value) {
+char* decode_list(char* bencoded_value) {
     int length = strlen(bencoded_value) - 2;
-    const char* start = bencoded_value + 1;
+    char* start = bencoded_value + 1;
 
-    if()
 
     printf("%s\n");
     printf("[]\n");
@@ -61,7 +60,7 @@ char* decode_list(const char* bencoded_value) {
 
 }
 
-char* decode_bencode(const char* bencoded_value) {
+char* decode_bencode(char* bencoded_value) {
     int len = strlen(bencoded_value) - 1;
 
     if (is_digit(bencoded_value[0])) return decode_string(bencoded_value);
@@ -72,7 +71,7 @@ char* decode_bencode(const char* bencoded_value) {
     exit(1);
     }
 
-int process_command(const char* command,const char* encoded_str) {
+int process_command(char* command, char* encoded_str) {
 
     if (strcmp(command, "decode") == 0) {
         char* decoded_str = decode_bencode(encoded_str);
@@ -97,8 +96,8 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    const char* command = argv[1];
-    const char* encoded_str = argv[2];
+    char* command = argv[1];
+    char* encoded_str = argv[2];
 
     process_command(command, encoded_str);
 
