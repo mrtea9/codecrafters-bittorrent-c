@@ -83,6 +83,7 @@ void decode_list(char* bencoded_value) {
 
     if (length == 0) {
         printf("[]\n");
+        exit(0);
     }
 
     for (int i = 0; i < length; i++) {
@@ -93,7 +94,6 @@ void decode_list(char* bencoded_value) {
 
     printf("%s\n%i\n", encoded, length);
 
-    exit(0);
 
 }
 
