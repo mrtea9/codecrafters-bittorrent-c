@@ -59,8 +59,14 @@ char* decode_list(char* bencoded_value) {
     }
 
     for (int i = 0; i < length; i++) {
+        char* element;
 
         printf("%c ", encoded[i]);
+
+        if (is_digit(encoded[i])) {
+            element = decode_string(encoded);
+            printf("element = %s\n", element);
+        }
 
     }
 
