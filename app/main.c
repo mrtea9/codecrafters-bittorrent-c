@@ -58,6 +58,13 @@ char* decode_list(char* bencoded_value) {
         return encoded;
     }
 
+    for (int i = 0; i < length; i++) {
+        char* element;
+
+        printf("%s", encoded[i]);
+
+    }
+
     printf("%s\n%i\n", encoded, length);
 
     exit(0);
