@@ -50,11 +50,11 @@ char* decode_integer(const char* bencoded_value) {
 
 char* decode_list(const char* bencoded_value) {
     int length = strlen(bencoded_value) - 2;
-    char* start = bencoded_value + 1;
+    const char* start = bencoded_value + 1;
 
     if()
 
-    printf("%s\n", start);
+    printf("%s\n");
     printf("[]\n");
 
     exit(0);
