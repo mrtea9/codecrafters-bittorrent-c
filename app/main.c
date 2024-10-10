@@ -91,7 +91,16 @@ void decode_list(char* bencoded_value) {
         if (is_digit(encoded[i])) {
             int length = atoi(bencoded_value);
 
+            char* colon_index = strchr(bencoded_value, ':');
 
+            if (colon_index != NULL) {
+                char* start = colon_index + 1;
+                char* decoded_str = (char*)malloc(length + 1);
+
+                strncpy(decoded_str, start, length);
+                decoded_str[length] = '\0';
+                printf("\"%s\"\n", decoded_str);
+            }
 
             exit(1);
         }
