@@ -59,7 +59,7 @@ void value_print_list(value* value) {
 void value_print(value* value) {
     switch (value->type) {
         case VAL_NUMBER:
-            printf("%s\n", value->number);
+            printf("%i\n", value->number);
             break;
         case VAL_STRING:
             printf("\"%s\"\n", value->string);
@@ -68,11 +68,6 @@ void value_print(value* value) {
             value_print_list(value);
             break;
     }
-}
-
-void value_println(value* value) {
-    value_print(value);
-    putchar('\n');
 }
 
 bool is_digit(char c) {
@@ -105,11 +100,14 @@ value* decode_integer(char* bencoded_value) {
     if (colon_index != NULL) {
         char* start = colon_index + 1;
         char* decoded_str = (char*)malloc(length + 1);
+        int result;
 
         strncpy(decoded_str, start, length);
         decoded_str[length] = '\0';
+        result = atoi(decoded_str);
 
-        return value_number(atoi(decoded_str));
+        free(decoded_str);
+        return value_number(result);
     }
     else {
         fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
@@ -161,7 +159,7 @@ int process_command(char* command, char* encoded_str) {
 
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
-        value_println(result);
+        value_print(result);
     }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
