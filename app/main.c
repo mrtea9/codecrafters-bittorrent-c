@@ -21,7 +21,12 @@ char* decode_bencode(const char* bencoded_value) {
             fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
             exit(1);
         }
-    } else {
+    }
+    else if (bencoded_value[0] == 'i') {
+        printf("dadad\n");
+        return bencoded_value;
+    }
+    else {
         fprintf(stderr, "Only strings are supported at the moment\n");
         exit(1);
     }
