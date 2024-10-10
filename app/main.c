@@ -58,8 +58,9 @@ char* decode_list(char* bencoded_value) {
         return encoded;
     }
 
+    if (isdigit(encoded[0])) return decode_integer(encoded);
+
     printf("%s\n%i\n", encoded, length);
-    printf("[]\n");
 
     exit(0);
 
