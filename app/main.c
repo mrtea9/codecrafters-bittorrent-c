@@ -24,7 +24,15 @@ char* decode_bencode(const char* bencoded_value) {
     }
     else if (bencoded_value[0] == 'i') {
         printf("dadad\n");
-        return bencoded_value;
+        int length = strlen(bencoded_value) - 2;
+        const char* colon_index = strchr(bencoded_value, 'i');
+        if (colon_index != NULL) {
+            const char* start = colon_index + 1;
+            char* decoded_str = (char*)malloc(length + 1);
+            strncpy(decoded_str, start, length);
+            decoded_str[length] = '\0';
+            return decoded_str;
+        }
     }
     else {
         fprintf(stderr, "Only strings are supported at the moment\n");
