@@ -58,9 +58,9 @@ char* decode_list(char* bencoded_value) {
         return encoded;
     }
 
-    for (int i = 0; i < length - 1; i++) {
+    for (int i = 0; i < length; i++) {
 
-        printf("%c\n", encoded[i]);
+        printf("%c ", encoded[i]);
 
     }
 
