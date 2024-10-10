@@ -15,7 +15,7 @@ typedef struct value {
     int number;
     char* string;
 
-} decoded_val;
+} value;
 
 void value_print(value* value) {
 
