@@ -60,7 +60,7 @@ char* decode_list(char* bencoded_value) {
 
     for (int i = 0; i < length - 1; i++) {
 
-        printf("%s", encoded[i]);
+        printf("%i", i);
 
     }
 
