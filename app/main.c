@@ -53,7 +53,7 @@ void value_print_list(value* value) {
 
         putchar(',');
     }
-    putchar(']');
+    putchar(']\n');
 }
 
 void value_print(value* value) {
