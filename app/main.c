@@ -52,7 +52,7 @@ char* decode_bencode(const char* bencoded_value) {
     }
 }
 
-int process_command(char* command, char* encoded_str) {
+int process_command(const char* command,const char* encoded_str) {
 
     if (strcmp(command, "decode") == 0) {
         // You can use print statements as follows for debugging, they'll be visible when running tests.
