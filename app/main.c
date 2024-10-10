@@ -88,6 +88,14 @@ void decode_list(char* bencoded_value) {
 
     for (int i = 0; i < length; i++) {
 
+        if (is_digit(encoded[i])) {
+            int length = atoi(bencoded_value);
+
+
+
+            exit(1);
+        }
+
         printf("%c ", encoded[i]);
 
     }
