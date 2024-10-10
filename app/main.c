@@ -7,50 +7,54 @@ bool is_digit(char c) {
     return c >= '0' && c <= '9';
 }
 
-char* decode_bencode(const char* bencoded_value) {
-    if (is_digit(bencoded_value[0])) {
-        int length = atoi(bencoded_value);
-        const char* colon_index = strchr(bencoded_value, ':');
+char* decode_string(const char* bencoded_value) {
+    int length = atoi(bencoded_value);
+    const char* colon_index = strchr(bencoded_value, ':');
 
-        if (colon_index != NULL) {
-            const char* start = colon_index + 1;
-            char* decoded_str = (char*)malloc(length + 1);
+    if (colon_index != NULL) {
+        const char* start = colon_index + 1;
+        char* decoded_str = (char*)malloc(length + 1);
 
-            strncpy(decoded_str, start, length);
-            decoded_str[length] = '\0';
-            printf("\"%s\"\n", decoded_str);
+        strncpy(decoded_str, start, length);
+        decoded_str[length] = '\0';
+        printf("\"%s\"\n", decoded_str);
 
-            return decoded_str;
-        } else {
-            fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
-            exit(1);
-        }
-    }
-    else if (bencoded_value[0] == 'i') {
-        int length = strlen(bencoded_value) - 2;
-        const char* colon_index = strchr(bencoded_value, 'i');
-
-        if (colon_index != NULL) {
-            const char* start = colon_index + 1;
-            char* decoded_str = (char*)malloc(length + 1);
-
-            strncpy(decoded_str, start, length);
-            decoded_str[length] = '\0';
-
-            printf("%s\n", decoded_str);
-
-            return decoded_str;
-        }
-        else {
-            fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
-            exit(1);
-        }
+        return decoded_str;
     }
     else {
-        fprintf(stderr, "Only strings are supported at the moment\n");
+        fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
         exit(1);
     }
 }
+
+char* decode_integer(const char* bencoded_value) {
+    int length = strlen(bencoded_value) - 2;
+    const char* colon_index = strchr(bencoded_value, 'i');
+
+    if (colon_index != NULL) {
+        const char* start = colon_index + 1;
+        char* decoded_str = (char*)malloc(length + 1);
+
+        strncpy(decoded_str, start, length);
+        decoded_str[length] = '\0';
+
+        printf("%s\n", decoded_str);
+
+        return decoded_str;
+    }
+    else {
+        fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
+        exit(1);
+    }
+}
+
+char* decode_bencode(const char* bencoded_value) {
+    if (is_digit(bencoded_value[0])) return decode_string(bencoded_value);
+    if (bencoded_value[0] == 'i') return decode_integer(bencoded_value);
+
+    fprintf(stderr, "Only strings and integer are supported at the moment\n");
+    exit(1);
+    }
 
 int process_command(const char* command,const char* encoded_str) {
 
