@@ -50,8 +50,6 @@ void decode_string(char* bencoded_value) {
         strncpy(decoded_str, start, length);
         decoded_str[length] = '\0';
         printf("\"%s\"\n", decoded_str);
-
-        return decoded_str;
     }
     else {
         fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
@@ -71,8 +69,6 @@ void decode_integer(char* bencoded_value) {
         decoded_str[length] = '\0';
 
         printf("%s\n", decoded_str);
-
-        return decoded_str;
     }
     else {
         fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
@@ -87,7 +83,6 @@ void decode_list(char* bencoded_value) {
 
     if (length == 0) {
         printf("[]\n");
-        return encoded;
     }
 
     for (int i = 0; i < length; i++) {
