@@ -49,8 +49,9 @@ char* decode_integer(const char* bencoded_value) {
 }
 
 char* decode_list(const char* bencoded_value) {
+    int length = strlen(bencoded_value) - 2;
 
-    printf("test\n");
+    printf("[]\n");
 
     exit(1);
 
