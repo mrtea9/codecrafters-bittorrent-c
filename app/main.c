@@ -52,6 +52,8 @@ char* decode_list(const char* bencoded_value) {
 
     printf("test\n");
     exit(1);
+
+    return bencoded_value;
 }
 
 char* decode_bencode(const char* bencoded_value) {
@@ -59,7 +61,7 @@ char* decode_bencode(const char* bencoded_value) {
 
     if (is_digit(bencoded_value[0])) return decode_string(bencoded_value);
     if (bencoded_value[0] == 'i' && bencoded_value[len - 1] == 'e') return decode_integer(bencoded_value);
-    if (bencoded_value[0] == 'l' && bencoded_value[len - 1] == 'e') return decode_list(bencoded_value);
+    if (bencoded_value[0] == 'l') return decode_list(bencoded_value);
 
     fprintf(stderr, "Only strings and integer are supported at the moment\n");
     exit(1);
