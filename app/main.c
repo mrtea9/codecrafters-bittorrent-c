@@ -53,7 +53,7 @@ char* decode_list(char* bencoded_value) {
     char* encoded = bencoded_value + 1;
 
 
-    printf("%s\n, %i\n", start, length);
+    printf("%s\n, %i\n", encoded, length);
     printf("[]\n");
 
     exit(0);
