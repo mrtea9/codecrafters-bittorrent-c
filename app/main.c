@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
     const char* command = argv[1];
     const char* encoded_str = argv[2];
 
-    processCommand(command, encoded_str);
+    process_command(command, encoded_str);
 
     return 0;
 }
