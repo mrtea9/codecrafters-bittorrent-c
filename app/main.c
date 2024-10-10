@@ -21,6 +21,8 @@ typedef struct value {
     value* list;
 } value;
 
+void value_print(value* value);
+
 value* value_number(int number) {
     value* val = malloc(sizeof(value));
     val->type = VAL_NUMBER;
@@ -37,7 +39,7 @@ value* value_string(char* string) {
 }
 
 value* value_list(void) {
-    value* val = malloc(sizoef(value));
+    value* val = malloc(sizeof(value));
     val->type = VAL_LIST;
     val->count = 0;
     val->list = NULL;
@@ -45,13 +47,13 @@ value* value_list(void) {
 }
 
 void value_print_list(value* value) {
-    putchar("[");
+    putchar('[');
     for (int i = 0; i < value->count; i++) {
         value_print(value->list);
 
-        putchar(",");
+        putchar(',');
     }
-    putchar("]");
+    putchar(']');
 }
 
 void value_print(value* value) {
@@ -63,7 +65,7 @@ void value_print(value* value) {
             printf("\"%s\"\n", value->string);
             break;
         case VAL_LIST:
-            values_list_print(value);
+            value_print_list(value);
             break;
     }
 }
@@ -96,7 +98,7 @@ value* decode_string(char* bencoded_value) {
     }
 }
 
-char* decode_integer(char* bencoded_value) {
+value* decode_integer(char* bencoded_value) {
     int length = strlen(bencoded_value) - 2;
     char* colon_index = strchr(bencoded_value, 'i');
 
@@ -107,7 +109,7 @@ char* decode_integer(char* bencoded_value) {
         strncpy(decoded_str, start, length);
         decoded_str[length] = '\0';
 
-        return value_number(decoded_str);
+        return value_number(atoi(decoded_str));
     }
     else {
         fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
@@ -115,7 +117,7 @@ char* decode_integer(char* bencoded_value) {
     }
 }
 
-void decode_list(char* bencoded_value) {
+value* decode_list(char* bencoded_value) {
     int length = strlen(bencoded_value) - 2;
     char* encoded = bencoded_value + 1;
     char* result;
@@ -123,18 +125,14 @@ void decode_list(char* bencoded_value) {
     encoded[length] = '\0';
 
     if (length == 0) {
-        printf("[]\n");
-        exit(0);
+        return value_list();
     }
 
     for (int i = 0; i < length; i++) {
 
         if (is_digit(encoded[i])) {
-            int length = atoi(encoded);
 
-            result = decode_string(encoded);
-
-            printf("%s\n", result);
+            printf("dadadada\n");
 
             exit(1);
         }
