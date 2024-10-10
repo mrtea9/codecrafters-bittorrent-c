@@ -15,10 +15,44 @@ typedef struct value {
     int number;
     char* string;
 
+    int count;
+    value* list;
 } value;
 
-void value_print(value* value) {
+value* value_number(int number) {
+    value* val = malloc(sizeof(value));
+    val->type = VAL_NUMBER;
+    val->number = number;
+    return val;
+}
 
+value* value_string(char* string) {
+    value* val = malloc(sizeof(value));
+    val->type = VAL_STRING;
+    val->string = malloc(strlen(string) + 1);
+    strcpy(val->string, string);
+    return val;
+}
+
+value* value_list(void) {
+    value* val = malloc(sizoef(value));
+    val->type = VAL_LIST;
+    val->count = 0;
+    val->list = NULL;
+    return val;
+}
+
+void value_print_list(value* value) {
+    putchar("[");
+    for (int i = 0; i < value->count; i++) {
+        value_print(value->list);
+
+        putchar(",");
+    }
+    putchar("]");
+}
+
+void value_print(value* value) {
     switch (value->type) {
         case VAL_NUMBER:
             printf("%s\n", value->number);
@@ -26,8 +60,10 @@ void value_print(value* value) {
         case VAL_STRING:
             printf("\"%s\"\n", value->string);
             break;
+        case VAL_LIST:
+            values_list_print(value);
+            break;
     }
-
 }
 
 void value_println(value* value) {
@@ -39,7 +75,7 @@ bool is_digit(char c) {
     return c >= '0' && c <= '9';
 }
 
-char* decode_string(char* bencoded_value) {
+value* decode_string(char* bencoded_value) {
     int length = atoi(bencoded_value);
     char* colon_index = strchr(bencoded_value, ':');
 
@@ -49,9 +85,8 @@ char* decode_string(char* bencoded_value) {
 
         strncpy(decoded_str, start, length);
         decoded_str[length] = '\0';
-        printf("\"%s\"\n", decoded_str);
 
-        return decoded_str;
+        return value_string(decoded_str);
     }
     else {
         fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
@@ -70,9 +105,7 @@ char* decode_integer(char* bencoded_value) {
         strncpy(decoded_str, start, length);
         decoded_str[length] = '\0';
 
-        printf("%s\n", decoded_str);
-
-        return decoded_str;
+        return value_number(decoded_str);
     }
     else {
         fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
@@ -110,15 +143,15 @@ void decode_list(char* bencoded_value) {
 
     printf("%s\n%i\n", encoded, length);
 
-
+    return value_list();
 }
 
-void decode_bencode(char* bencoded_value) {
+value* decode_bencode(char* bencoded_value) {
     int len = strlen(bencoded_value) - 1;
 
-    if (is_digit(bencoded_value[0])) decode_string(bencoded_value);
-    if (bencoded_value[0] == 'i' && bencoded_value[len] == 'e') decode_integer(bencoded_value);
-    if (bencoded_value[0] == 'l' && bencoded_value[len] == 'e') decode_list(bencoded_value);
+    if (is_digit(bencoded_value[0])) return decode_string(bencoded_value);
+    if (bencoded_value[0] == 'i' && bencoded_value[len] == 'e') return decode_integer(bencoded_value);
+    if (bencoded_value[0] == 'l' && bencoded_value[len] == 'e') return decode_list(bencoded_value);
 
     fprintf(stderr, "Only strings and integer are supported at the moment\n");
     exit(1);
@@ -127,8 +160,8 @@ void decode_bencode(char* bencoded_value) {
 int process_command(char* command, char* encoded_str) {
 
     if (strcmp(command, "decode") == 0) {
-        decode_bencode(encoded_str);
-
+        value* result = decode_bencode(encoded_str);
+        value_println(result);
     }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
