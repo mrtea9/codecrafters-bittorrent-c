@@ -223,7 +223,6 @@ value* decode_dict(char** bencoded_value) {
     return result;
 }
 
-
 value* decode_bencode(char* bencoded_value) {
     if (is_digit(bencoded_value[0])) return decode_string(&bencoded_value);
     if (bencoded_value[0] == 'i') return decode_integer(&bencoded_value);
