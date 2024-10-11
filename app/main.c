@@ -239,6 +239,10 @@ int process_command(char* command, char* encoded_str) {
         value_println(result);
         value_delete(result);
     }
+    else if (strcmp(command, "info") == 0) {
+        printf("daa");
+        return 1;
+    }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
         return 1;
