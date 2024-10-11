@@ -236,44 +236,53 @@ value* decode_bencode(char* bencoded_value) {
     exit(1);
 }
 
-unsigned char* read_file(const char* fileName, size_t* length) {
-    FILE* fileHandle = fopen(fileName, "r");
-    if (fileHandle == NULL) {
+unsigned char* read_file(const char* filename, size_t* filesize) {
+    FILE* file = fopen(filename, "r");
+
+    if (file == NULL) {
         return NULL;
     }
-    if (fseek(fileHandle, 0, SEEK_END) != 0) {
-        fclose(fileHandle);
+
+    if (fseek(file, 0, SEEK_END) != 0) {
+        fclose(file);
         return NULL;
     }
-    int fileSize = ftell(fileHandle);
-    if (fileSize == 0) {
-        fclose(fileHandle);
+
+    int filesize = ftell(file);
+
+    if (filesize == 0) {
+        fclose(file);
         return NULL;
     }
-    fseek(fileHandle, 0, SEEK_SET);
-    char* buffer = malloc(fileSize);
+
+    fseek(file, 0, SEEK_SET);
+
+    char* buffer = malloc(filesize);
+
     if (buffer == 0) {
-        fclose(fileHandle);
+        fclose(file);
         return NULL;
     }
-    *length = fread(buffer, sizeof(char), fileSize, fileHandle);
-    fclose(fileHandle);
+
+    *length = fread(buffer, sizeof(char), filesize, file);
+
+    fclose(file);
     return buffer;
 }
 
-//void print_hex_dump(const unsigned char* buffer, size_t length) {
-//    printf("Hex dump of file contents:\n");
-//    for (size_t i = 0; i < length; i++) {
-//        // Print ASCII representation if printable, otherwise a dot
-//        if (isprint(buffer[i])) {
-//            printf("%c", buffer[i]);
-//        }
-//        else {
-//            printf("(.) ");
-//        }
-//    }
-//    printf("\n");
-//}
+void print_hex_dump(const unsigned char* buffer, size_t length) {
+    printf("Hex dump of file contents:\n");
+    for (size_t i = 0; i < length; i++) {
+        // Print ASCII representation if printable, otherwise a dot
+        if (isprint(buffer[i])) {
+            printf("%c", buffer[i]);
+        }
+        else {
+            printf("(.) ");
+        }
+    }
+    printf("\n");
+}
 
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
@@ -286,8 +295,7 @@ int process_command(char* command, char* encoded_str) {
         size_t file_length = 0;
         unsigned char* file_content = read_file(encoded_str, &file_length);
 
-        printf("daa %s\n", file_content);
-        //print_hex_dump(file_content, file_length);
+        print_hex_dump(file_content, file_length);
 
         exit(1);
     }
