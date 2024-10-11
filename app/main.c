@@ -256,7 +256,8 @@ int process_command(char* command, char* encoded_str) {
         for (int i = 0; c != EOF; i++) {
 
             c = fgetc(fptr);
-            printf("%s", c);
+            printf("%c", c);
+
         }
 
 
