@@ -261,9 +261,6 @@ unsigned char* read_file(const char* filename, size_t* length) {
 void print_hex_dump(const unsigned char* buffer, size_t length) {
     printf("Hex dump of file contents:\n");
     for (size_t i = 0; i < length; i++) {
-        // Print byte in hex format
-        printf("%02x ", buffer[i]);
-
         // Print ASCII representation if printable, otherwise a dot
         if (isprint(buffer[i])) {
             printf("(%c) ", buffer[i]);
