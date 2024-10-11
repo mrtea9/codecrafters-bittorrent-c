@@ -14,7 +14,7 @@ enum {
 struct value {
     int type;
 
-    int number;
+    long number;
     char* string;
 
     int count;
@@ -79,7 +79,7 @@ void value_print_list(value* val) {
 void value_print(value* val) {
     switch (val->type) {
     case VAL_NUMBER:
-        printf("%i", val->number);
+        printf("%ld", val->number);
         break;
     case VAL_STRING:
         printf("\"%s\"", val->string);
@@ -125,7 +125,7 @@ value* decode_integer(char** bencoded_value) {
         (*bencoded_value)++;
     }
     (*bencoded_value)++; // Skip the 'e'
-
+    printf("%ld\n", result);
     return value_number(result);
 }
 
