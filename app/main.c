@@ -245,27 +245,33 @@ int process_command(char* command, char* encoded_str) {
     else if (strcmp(command, "info") == 0) {
         unsigned char c;
         unsigned char str[1000] = "sad";
-        FILE* fptr;
+        size_t length;
+        FILE* file;
 
-        if ((fptr = fopen(encoded_str, "r")) == NULL) {
+        if ((file = fopen(encoded_str, "rb")) == NULL) {
             printf("Error! opening file");
 
             exit(1);
         }
 
-        for (int i = 0; c != EOF; i++) {
+        fseek(file, 0, SEEK_END);
+        length = ftell(file);
+        fseek(file, 0, SEEK_SET);
 
-            c = fgetc(fptr);
-            printf("%c", c);
-
+        unsigned char* buffer = malloc(length + 1);
+        if (!buffer) {
+            perror("Memory allocation failed");
+            fclose(file);
+            exit(1);
         }
+        fread(buffer, 1, length, file);
+        buffer[length] = '\0';  // Null-terminate for safety
 
 
-        fclose(fptr);
+        fclose(file);
         //value* result = decode_bencode(str);
         //value_println(result);
         //value_delete(result);
-        printf("%s\n", str);
         return 1;
     }
     else {
