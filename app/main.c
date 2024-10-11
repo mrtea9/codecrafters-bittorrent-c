@@ -259,6 +259,7 @@ int process_command(char* command, char* encoded_str) {
 
         fclose(fptr);
 
+        printf("%s\n", str);
         printf("%x", str);
         return 1;
     }
