@@ -186,7 +186,7 @@ value* decode_list(char* bencoded_value) {
        // printf("encoded = %s\n", encoded);
         result = value_add(result, value_take(&encoded, 1));
        // printf("encoded = %s\n", encoded);
-        value_println(result);
+       // value_println(result);
     }
 
     return result;
