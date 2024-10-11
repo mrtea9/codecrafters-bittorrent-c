@@ -67,6 +67,26 @@ value* value_add(value* val1, value* val2) {
     return val1;
 }
 
+void value_delete(value* value) {
+
+    switch (value->type) {
+
+        case VAL_NUMBER:
+            break;
+
+        case VAL_STRING:
+            free(value->string);
+
+        case VAL_LIST:
+            for (int i = 0; i < value->count; i++) {
+                value_delete(value->list[i]);
+            }
+            break;
+    }
+
+    free(value);
+}
+
 void value_print_list(value* val) {
     putchar('[');
     for (int i = 0; i < val->count; i++) {
@@ -171,6 +191,7 @@ int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
         value_println(result);
+        value_delete(result);
     }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
