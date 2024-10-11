@@ -240,7 +240,7 @@ int process_command(char* command, char* encoded_str) {
         value_delete(result);
     }
     else if (strcmp(command, "info") == 0) {
-        int num;
+        char myString[100];
         FILE* fptr;
 
         if ((fptr = fopen(encoded_str, "r")) == NULL) {
@@ -248,9 +248,11 @@ int process_command(char* command, char* encoded_str) {
 
             exit(1);
         }
-        fscanf(fptr, "%d", &num);
 
-        printf("Value of n=%d", num);
+        while (fgets(myString, 100, fptr)) {
+            printf("%s", myString);
+        }
+
         fclose(fptr);
         return 1;
     }
