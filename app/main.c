@@ -277,7 +277,7 @@ char* hex_dump_to_char(const unsigned char* buffer, size_t length) {
 
     for (size_t i = 0; i < length; i++) {
         if (isprint(buffer[i])) {
-            output[pos++] = buffer[i]
+            output[pos++] = buffer[i];
         }
         else {
             output[pos++] = '?';
