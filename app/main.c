@@ -243,8 +243,8 @@ int process_command(char* command, char* encoded_str) {
         value_delete(result);
     }
     else if (strcmp(command, "info") == 0) {
-        char c;
-        char str[1000];
+        unsigned char c;
+        unsigned char str[1000];
         FILE* fptr;
 
         if ((fptr = fopen(encoded_str, "r")) == NULL) {
