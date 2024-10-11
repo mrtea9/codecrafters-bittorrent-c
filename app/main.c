@@ -253,6 +253,12 @@ int process_command(char* command, char* encoded_str) {
             exit(1);
         }
 
+        for (int i = 0; c != EOF; i++) {
+
+            c = fgetc(fptr);
+            printf("%s", c);
+        }
+
 
         fclose(fptr);
         //value* result = decode_bencode(str);
