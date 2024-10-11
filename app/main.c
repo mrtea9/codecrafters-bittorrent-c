@@ -150,7 +150,6 @@ value* decode_string(char** bencoded_value) {
     if (colon_index != NULL) {
         char* start = colon_index + 1;
         char* decoded_str = (char*)malloc(length + 1);
-
         strncpy(decoded_str, start, length);
         decoded_str[length] = '\0';
 
@@ -214,8 +213,12 @@ value* decode_dict(char** bencoded_value) {
     (*bencoded_value)++; // Skip the 'd'
     value* result = value_dict();
 
+    printf("da\n");
+
+
     while (**bencoded_value != 'e') {
         value* element = value_take(bencoded_value);
+        value_println(element);
         result = value_add(result, element);
     }
     (*bencoded_value)++; // Skip the 'e'
