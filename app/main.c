@@ -263,10 +263,10 @@ void print_hex_dump(const unsigned char* buffer, size_t length) {
     for (size_t i = 0; i < length; i++) {
         // Print ASCII representation if printable, otherwise a dot
         if (isprint(buffer[i])) {
-            printf("(%c) ", buffer[i]);
+            printf("%c", buffer[i]);
         }
         else {
-            printf("(.) ");
+            printf(".");
         }
 
         // Print a new line every 16 bytes for readability
