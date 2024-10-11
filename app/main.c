@@ -52,7 +52,7 @@ value* value_list(void) {
 
 value* value_add(value* val1, value* val2) {
     val1->count++;
-    val1->list = realloc(val1->list, sizeof(value) * val1->count);
+    val1->list = realloc(val1->list, sizeof(value*) * val1->count);
     val1->list[val1->count - 1] = val2;
     return val1;
 }
@@ -79,12 +79,6 @@ void value_print(value* value) {
             value_print_list(value);
             break;
     }
-}
-
-value* value_take(char* string, int start) {
-
-
-    return value_string("sad");
 }
 
 value* decode_string(char* bencoded_value) {
@@ -128,6 +122,16 @@ value* decode_integer(char* bencoded_value) {
     }
 }
 
+value* value_take(char** string, int start) {
+    value* result = decode_string(*string);
+    value_print(result);
+    printf("string = %s\n", *string);
+    *string = *string + strlen(result->string) + 2;
+    printf("string = %s\n", *string);
+
+    return result;
+}
+
 value* decode_list(char* bencoded_value) {
     int length = strlen(bencoded_value) - 2;
     char* encoded = bencoded_value + 1;
@@ -142,8 +146,9 @@ value* decode_list(char* bencoded_value) {
     for (int i = 0; i < length; i++) {
 
         if (is_digit(encoded[i])) {
-            value_add(result, value_take(encoded, i));
-            printf("dadadada\n");
+            printf("encoded = %s\n", encoded);
+            value_print(value_take(&encoded, 1));
+            printf("encoded = %s\n", encoded);
 
             exit(1);
         }
