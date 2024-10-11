@@ -141,7 +141,7 @@ value* decode_integer(char* bencoded_value) {
 value* value_take(char** string, int start) {
     value* result;
     int total_len = strlen(*string);
-    printf("string begin = %s\n", *string);
+    //printf("string begin = %s\n", *string);
 
     if (is_digit(*string[0])) {
         result = decode_string(*string);
@@ -156,16 +156,16 @@ value* value_take(char** string, int start) {
     }
 
     if (*string[0] == 'l') {
-        printf("string1 = %s\n", *string);
+       // printf("string1 = %s\n", *string);
         result = decode_list(*string);
-        printf("string2 = %s\n", *string);
-        printf("tot len = %i\n", total_len);
+       // printf("string2 = %s\n", *string);
+       // printf("tot len = %i\n", total_len);
         *string = *string + total_len;
-        printf("string3 = %s\n", *string);
+        //printf("string3 = %s\n", *string);
         return result;
     }
 
-    printf("string end = %s\n", *string);
+    //printf("string end = %s\n", *string);
 
     return result;
 }
@@ -183,9 +183,9 @@ value* decode_list(char* bencoded_value) {
 
 
     while (*encoded != '\0') {
-        printf("encoded = %s\n", encoded);
+       // printf("encoded = %s\n", encoded);
         result = value_add(result, value_take(&encoded, 1));
-        printf("encoded = %s\n", encoded);
+       // printf("encoded = %s\n", encoded);
         value_println(result);
     }
 
