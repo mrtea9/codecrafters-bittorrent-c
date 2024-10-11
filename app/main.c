@@ -236,6 +236,28 @@ value* decode_bencode(char* bencoded_value) {
     exit(1);
 }
 
+unsigned char* read_file(const char* filename, size_t* length) {
+    FILE* file = fopen(filename, "rb");
+    if (!file) {
+        perror("File opening failed");
+        return NULL;
+    }
+    fseek(file, 0, SEEK_END);
+    *length = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    unsigned char* buffer = malloc(*length + 1);
+    if (!buffer) {
+        perror("Memory allocation failed");
+        fclose(file);
+        return NULL;
+    }
+    fread(buffer, 1, *length, file);
+    buffer[*length] = '\0';  // Null-terminate for safety
+    fclose(file);
+    return buffer;
+}
+
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
@@ -243,36 +265,14 @@ int process_command(char* command, char* encoded_str) {
         value_delete(result);
     }
     else if (strcmp(command, "info") == 0) {
-        unsigned char c;
-        unsigned char str[1000] = "sad";
-        size_t length;
-        FILE* file;
+        
+        size_t file_length;
+        unsigned char* file_content = read_file(encoded_str, &file_length);
 
-        if ((file = fopen(encoded_str, "rb")) == NULL) {
-            printf("Error! opening file");
+        printf("daa\n");
+        printf("%s\n", file_content);
 
-            exit(1);
-        }
-
-        fseek(file, 0, SEEK_END);
-        length = ftell(file);
-        fseek(file, 0, SEEK_SET);
-
-        unsigned char* buffer = malloc(length + 1);
-        if (!buffer) {
-            perror("Memory allocation failed");
-            fclose(file);
-            exit(1);
-        }
-        fread(buffer, 1, length, file);
-        buffer[length] = '\0';  // Null-terminate for safety
-
-
-        fclose(file);
-        //value* result = decode_bencode(str);
-        //value_println(result);
-        //value_delete(result);
-        return 1;
+        exit(1);
     }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
