@@ -240,7 +240,18 @@ int process_command(char* command, char* encoded_str) {
         value_delete(result);
     }
     else if (strcmp(command, "info") == 0) {
-        printf("str = %s", encoded_str);
+        int num;
+        FILE* fptr;
+
+        if ((fptr = fopen(encoded_str, "r")) == NULL) {
+            printf("Error! opening file");
+
+            exit(1);
+        }
+        fscanf(fptr, "%d", &num);
+
+        printf("Value of n=%d", num);
+        fclose(fptr);
         return 1;
     }
     else {
