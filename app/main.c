@@ -18,10 +18,14 @@ typedef struct value {
     char* string;
 
     int count;
-    value* list;
+    value** list;
 } value;
 
 void value_print(value* value);
+
+bool is_digit(char c) {
+    return c >= '0' && c <= '9';
+}
 
 value* value_number(int number) {
     value* val = malloc(sizeof(value));
@@ -46,10 +50,17 @@ value* value_list(void) {
     return val;
 }
 
+value* value_add(value* val1, value* val2) {
+    val1->count++;
+    val1->list = realloc(val1->list, sizeof(value) * val1->count);
+    val1->list[val1->count - 1] = val2;
+    return val1;
+}
+
 void value_print_list(value* value) {
     putchar('[');
     for (int i = 0; i < value->count; i++) {
-        value_print(value->list);
+        value_print(value->list[i]);
 
         putchar(',');
     }
@@ -70,9 +81,9 @@ void value_print(value* value) {
     }
 }
 
-bool is_digit(char c) {
-    return c >= '0' && c <= '9';
-}
+//value* value_take(char* string, int index) {
+//
+//}
 
 value* decode_string(char* bencoded_value) {
     int length = atoi(bencoded_value);
@@ -126,18 +137,25 @@ value* decode_list(char* bencoded_value) {
         return value_list();
     }
 
-    for (int i = 0; i < length; i++) {
+    value* test = value_list();
 
-        if (is_digit(encoded[i])) {
+    value_add(test, value_number(2));
 
-            printf("dadadada\n");
+    value_print(test);
 
-            exit(1);
-        }
+    //for (int i = 0; i < length; i++) {
 
-        printf("%c ", encoded[i]);
+    //    if (is_digit(encoded[i])) {
 
-    }
+    //        value_take(encoded, i);
+    //        printf("dadadada\n");
+
+    //        exit(1);
+    //    }
+
+    //    printf("%c ", encoded[i]);
+
+    //}
 
     printf("%s\n%i\n", encoded, length);
 
