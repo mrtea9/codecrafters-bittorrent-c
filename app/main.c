@@ -240,7 +240,8 @@ int process_command(char* command, char* encoded_str) {
         value_delete(result);
     }
     else if (strcmp(command, "info") == 0) {
-        char ch;
+        char c;
+        char str[1000];
         FILE* fptr;
 
         if ((fptr = fopen(encoded_str, "r")) == NULL) {
@@ -249,11 +250,16 @@ int process_command(char* command, char* encoded_str) {
             exit(1);
         }
 
-        while ((ch = fgetc(fptr)) != EOF) {
-            printf("%c", ch);
+        for (int i = 0; c != EOF; i++) {
+
+            c = fgetc(fptr);
+
+            str[i] = c;
         }
 
         fclose(fptr);
+
+        printf("%s", str);
         return 1;
     }
     else {
