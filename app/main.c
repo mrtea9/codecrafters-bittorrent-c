@@ -237,66 +237,43 @@ value* decode_bencode(char* bencoded_value) {
 }
 
 unsigned char* read_file(const char* filename, size_t* length) {
-    FILE* file = fopen(filename, "rb");
-    if (!file) {
-        perror("File opening failed");
+    FILE* fileHandle = fopen(fileName, "r");
+    if (fileHandle == NULL) {
         return NULL;
     }
-    fseek(file, 0, SEEK_END);
-    *length = ftell(file);
-    fseek(file, 0, SEEK_SET);
-
-    unsigned char* buffer = malloc(*length + 1);
-    if (!buffer) {
-        perror("Memory allocation failed");
-        fclose(file);
+    if (fseek(fileHandle, 0, SEEK_END) != 0) {
+        fclose(fileHandle);
         return NULL;
     }
-    fread(buffer, 1, *length, file);
-    buffer[*length] = '\0';  // Null-terminate for safety
-    fclose(file);
+    int fileSize = ftell(fileHandle);
+    if (fileSize == 0) {
+        fclose(fileHandle);
+        return NULL;
+    }
+    fseek(fileHandle, 0, SEEK_SET);
+    char* buffer = malloc(fileSize);
+    if (buffer == 0) {
+        fclose(fileHandle);
+        return NULL;
+    }
+    *bytesRead = fread(buffer, sizeof(char), fileSize, fileHandle);
+    fclose(fileHandle);
     return buffer;
 }
 
-void print_hex_dump(const unsigned char* buffer, size_t length) {
-    printf("Hex dump of file contents:\n");
-    for (size_t i = 0; i < length; i++) {
-        // Print ASCII representation if printable, otherwise a dot
-        if (isprint(buffer[i])) {
-            printf("%c", buffer[i]);
-        }
-        else {
-            switch (buffer[i]) {
-            case '\n':
-                printf("\\n"); // Newline
-                break;
-            case '\t':
-                printf("\\t"); // Tab
-                break;
-            case '\r':
-                printf("\\r"); // Carriage return
-                break;
-            case '\a':
-                printf("\\a"); // Alert (bell)
-                break;
-            case '\b':
-                printf("\\b"); // Backspace
-                break;
-            case '\f':
-                printf("\\f"); // Form feed
-                break;
-            case '\v':
-                printf("\\v"); // Vertical tab
-                break;
-            default:
-                // For other non-printable characters, print their hex representation
-                printf("\\x%02x", buffer[i]);
-                break;
-            }
-        }
-    }
-    printf("\n");
-}
+//void print_hex_dump(const unsigned char* buffer, size_t length) {
+//    printf("Hex dump of file contents:\n");
+//    for (size_t i = 0; i < length; i++) {
+//        // Print ASCII representation if printable, otherwise a dot
+//        if (isprint(buffer[i])) {
+//            printf("%c", buffer[i]);
+//        }
+//        else {
+//            printf("(.) ");
+//        }
+//    }
+//    printf("\n");
+//}
 
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
@@ -306,7 +283,7 @@ int process_command(char* command, char* encoded_str) {
     }
     else if (strcmp(command, "info") == 0) {
         
-        size_t file_length;
+        size_t file_length = 0;
         unsigned char* file_content = read_file(encoded_str, &file_length);
 
         printf("daa\n");
