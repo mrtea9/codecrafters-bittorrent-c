@@ -239,9 +239,8 @@ value* decode_bencode(char* bencoded_value) {
 unsigned char* read_file(const char* filename, size_t* bytesRead) {
     FILE* file = fopen(filename, "r");
 
-    if (file == NULL) {
-        return NULL;
-    }
+    if (file == NULL) return NULL;
+
 
     if (fseek(file, 0, SEEK_END) != 0) {
         fclose(file);
@@ -270,18 +269,23 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     return buffer;
 }
 
-void print_hex_dump(const unsigned char* buffer, size_t length) {
-    printf("Hex dump of file contents:\n");
+char* hex_dump_to_char(const unsigned char* buffer, size_t length) {
+    char* output = malloc(length * 3 + 1);
+    if (!output) return NULL;
+
+    size_t pos = 0;
+
     for (size_t i = 0; i < length; i++) {
-        // Print ASCII representation if printable, otherwise a dot
         if (isprint(buffer[i])) {
-            printf("%c", buffer[i]);
+            output[pos++] = buffer[i]
         }
         else {
-            printf("?");
+            output[pos++] = '?';
         }
     }
-    printf("\n");
+    output[pos] = '\0';
+
+    return output;
 }
 
 int process_command(char* command, char* encoded_str) {
@@ -295,7 +299,7 @@ int process_command(char* command, char* encoded_str) {
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
 
-        print_hex_dump(file_content, bytesRead);
+        printf("%s", hex_dump_to_char(file_content, bytesRead));
 
         exit(1);
     }
