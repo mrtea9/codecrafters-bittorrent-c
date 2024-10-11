@@ -240,7 +240,7 @@ int process_command(char* command, char* encoded_str) {
         value_delete(result);
     }
     else if (strcmp(command, "info") == 0) {
-        char myString[100];
+        char ch;
         FILE* fptr;
 
         if ((fptr = fopen(encoded_str, "r")) == NULL) {
@@ -249,8 +249,8 @@ int process_command(char* command, char* encoded_str) {
             exit(1);
         }
 
-        while (fgets(myString, 100, fptr)) {
-            printf("%s", myString);
+        while ((ch = fgetc(fptr)) != EOF) {
+            printf("%c", ch);
         }
 
         fclose(fptr);
