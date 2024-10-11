@@ -236,7 +236,7 @@ value* decode_bencode(char* bencoded_value) {
     exit(1);
 }
 
-unsigned char* read_file(const char* filename, size_t* filesize) {
+unsigned char* read_file(const char* filename, size_t* bytesRead) {
     FILE* file = fopen(filename, "r");
 
     if (file == NULL) {
@@ -264,7 +264,7 @@ unsigned char* read_file(const char* filename, size_t* filesize) {
         return NULL;
     }
 
-    *length = fread(buffer, sizeof(char), filesize, file);
+    *bytesRead = fread(buffer, sizeof(char), filesize, file);
 
     fclose(file);
     return buffer;
@@ -292,8 +292,8 @@ int process_command(char* command, char* encoded_str) {
     }
     else if (strcmp(command, "info") == 0) {
         
-        size_t file_length = 0;
-        unsigned char* file_content = read_file(encoded_str, &file_length);
+        size_t bytesRead = 0;
+        unsigned char* file_content = read_file(encoded_str, &bytesRead);
 
         print_hex_dump(file_content, file_length);
 
