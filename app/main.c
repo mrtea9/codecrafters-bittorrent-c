@@ -261,11 +261,10 @@ int process_command(char* command, char* encoded_str) {
         }
 
         fclose(fptr);
-        value* result = decode_bencode(str);
-        value_println(result);
-        value_delete(result);
+        //value* result = decode_bencode(str);
+        //value_println(result);
+        //value_delete(result);
         printf("%s\n", str);
-        printf("%x", str);
         return 1;
     }
     else {
