@@ -298,8 +298,9 @@ int process_command(char* command, char* encoded_str) {
         
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
-
-        printf("%s", hex_dump_to_char(file_content, bytesRead));
+        value* result = decode_bencode(hex_dump_to_char(file_content, bytesRead)));
+        value_println(result);
+        value_delete(result);
 
         exit(1);
     }
