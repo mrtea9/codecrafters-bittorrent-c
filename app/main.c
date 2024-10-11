@@ -266,7 +266,33 @@ void print_hex_dump(const unsigned char* buffer, size_t length) {
             printf("%c", buffer[i]);
         }
         else {
-            printf("\\x%02x", buffer[i]);
+            switch (c) {
+            case '\n':
+                printf("\\n"); // Newline
+                break;
+            case '\t':
+                printf("\\t"); // Tab
+                break;
+            case '\r':
+                printf("\\r"); // Carriage return
+                break;
+            case '\a':
+                printf("\\a"); // Alert (bell)
+                break;
+            case '\b':
+                printf("\\b"); // Backspace
+                break;
+            case '\f':
+                printf("\\f"); // Form feed
+                break;
+            case '\v':
+                printf("\\v"); // Vertical tab
+                break;
+            default:
+                // For other non-printable characters, print their hex representation
+                printf("\\x%02x", c);
+                break;
+            }
         }
     }
     printf("\n");
