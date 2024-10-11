@@ -125,7 +125,7 @@ value* decode_integer(char* bencoded_value) {
 
 value* value_take(char** string, int start) {
     value* result;
-    printf("string begin = %s\n", *string);
+    //printf("string begin = %s\n", *string);
 
     if (is_digit(*string[0])) {
         result = decode_string(*string);
@@ -138,7 +138,7 @@ value* value_take(char** string, int start) {
         //*string = *string + strlen((char)result->number) + 2;
     }
 
-    printf("string end = %s\n", *string);
+    //printf("string end = %s\n", *string);
 
     return result;
 }
@@ -155,13 +155,13 @@ value* decode_list(char* bencoded_value) {
     }
 
     for (int i = 0; i < 2; i++) {
-        printf("encoded = %s\n", encoded);
+        //printf("encoded = %s\n", encoded);
         result = value_add(result, value_take(&encoded, 1));
-        printf("encoded = %s\n", encoded);
+       // printf("encoded = %s\n", encoded);
         value_print(result);
     }
 
-    printf("%s\n%i\n", encoded, length);
+   // printf("%s\n%i\n", encoded, length);
 
     return result;
 }
