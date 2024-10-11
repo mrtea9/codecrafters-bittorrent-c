@@ -286,8 +286,8 @@ int process_command(char* command, char* encoded_str) {
         size_t file_length = 0;
         unsigned char* file_content = read_file(encoded_str, &file_length);
 
-        printf("daa\n");
-        print_hex_dump(file_content, file_length);
+        printf("daa %s\n", file_content);
+        //print_hex_dump(file_content, file_length);
 
         exit(1);
     }
