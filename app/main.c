@@ -37,7 +37,7 @@ int num_of_digits(int number) {
     return count;
 }
 
-value* value_number(int number) {
+value* value_number(long number) {
     value* val = malloc(sizeof(value));
     val->type = VAL_NUMBER;
     val->number = number;
@@ -119,8 +119,7 @@ value* decode_string(char** bencoded_value) {
 
 value* decode_integer(char** bencoded_value) {
     (*bencoded_value)++; // Skip the 'i'
-    printf("int = %s\n", *bencoded_value)
-    int result = atoi(*bencoded_value);
+    long result = atol(*bencoded_value);
 
     while (**bencoded_value != 'e') {
         (*bencoded_value)++;
