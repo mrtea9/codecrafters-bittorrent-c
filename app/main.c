@@ -266,12 +266,7 @@ void print_hex_dump(const unsigned char* buffer, size_t length) {
             printf("%c", buffer[i]);
         }
         else {
-            printf(".");
-        }
-
-        // Print a new line every 16 bytes for readability
-        if ((i + 1) % 16 == 0) {
-            printf("\n");
+            printf("?");
         }
     }
     printf("\n");
