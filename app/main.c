@@ -92,6 +92,11 @@ void value_delete(value* value) {
                 value_delete(value->cell[i]);
             }
             break;
+        case VAL_DICT:
+            for (int i = 0; i < value->count; i++) {
+                value_delete(value->cell[i]);
+            }
+            break;
     }
 
     free(value);
@@ -110,7 +115,8 @@ void value_print_dict(value* val) {
     putchar('{');
     for (int i = 0; i < val->count; i++) {
         value_print(val->cell[i]);
-        if (i != (val->count - 1)) putchar(':');
+        if (i % 2 != 0 && i != (val->count - 1)) putchar(',');
+        else if (i != (val->count - 1)) putchar(':');
     }
     putchar('}');
 }
