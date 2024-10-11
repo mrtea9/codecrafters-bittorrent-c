@@ -290,7 +290,7 @@ void print_hex_dump(const unsigned char* buffer, size_t length) {
                 break;
             default:
                 // For other non-printable characters, print their hex representation
-                printf("\\x%02x", c);
+                printf("\\x%02x", buffer[i]);
                 break;
             }
         }
