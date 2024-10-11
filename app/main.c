@@ -62,18 +62,19 @@ void value_print_list(value* value) {
     for (int i = 0; i < value->count; i++) {
         value_print(value->list[i]);
 
-        putchar(',');
+        if (i != (value->count - 1)) putchar(',');
     }
-    printf("]\n");
+    putchar(']');
+    putchar('\n');
 }
 
 void value_print(value* value) {
     switch (value->type) {
         case VAL_NUMBER:
-            printf("%i\n", value->number);
+            printf("%i", value->number);
             break;
         case VAL_STRING:
-            printf("\"%s\"\n", value->string);
+            printf("\"%s\"", value->string);
             break;
         case VAL_LIST:
             value_print_list(value);
@@ -129,6 +130,7 @@ value* value_take(char** string, int start) {
     if (is_digit(*string[0])) {
         result = decode_string(*string);
         *string = *string + strlen(result->string) + 2;
+        return result;
     }
 
     if (*string[0] == 'i') {
@@ -144,7 +146,7 @@ value* value_take(char** string, int start) {
 value* decode_list(char* bencoded_value) {
     int length = strlen(bencoded_value) - 2;
     char* encoded = bencoded_value + 1;
-    value* result;
+    value* result = value_list();
 
     encoded[length] = '\0';
 
@@ -152,16 +154,11 @@ value* decode_list(char* bencoded_value) {
         return value_list();
     }
 
-    for (int i = 0; i < length; i++) {
-
-        if (is_digit(encoded[i])) {
-            printf("encoded = %s\n", encoded);
-            value_print(value_take(&encoded, 1));
-            printf("encoded = %s\n", encoded);
-
-            exit(1);
-        }
-        printf("%c ", encoded[i]);
+    for (int i = 0; i < 2; i++) {
+        printf("encoded = %s\n", encoded);
+        result = value_add(result, value_take(&encoded, 1));
+        printf("encoded = %s\n", encoded);
+        value_print(result);
     }
 
     printf("%s\n%i\n", encoded, length);
