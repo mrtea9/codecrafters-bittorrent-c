@@ -81,9 +81,11 @@ void value_print(value* value) {
     }
 }
 
-//value* value_take(char* string, int index) {
-//
-//}
+value* value_take(char* string, int start) {
+
+
+    return value_string("sad");
+}
 
 value* decode_string(char* bencoded_value) {
     int length = atoi(bencoded_value);
@@ -129,7 +131,7 @@ value* decode_integer(char* bencoded_value) {
 value* decode_list(char* bencoded_value) {
     int length = strlen(bencoded_value) - 2;
     char* encoded = bencoded_value + 1;
-    char* result;
+    value* result;
 
     encoded[length] = '\0';
 
@@ -137,29 +139,20 @@ value* decode_list(char* bencoded_value) {
         return value_list();
     }
 
-    value* test = value_list();
+    for (int i = 0; i < length; i++) {
 
-    value_add(test, value_number(2));
+        if (is_digit(encoded[i])) {
+            value_add(result, value_take(encoded, i));
+            printf("dadadada\n");
 
-    value_print(test);
-
-    //for (int i = 0; i < length; i++) {
-
-    //    if (is_digit(encoded[i])) {
-
-    //        value_take(encoded, i);
-    //        printf("dadadada\n");
-
-    //        exit(1);
-    //    }
-
-    //    printf("%c ", encoded[i]);
-
-    //}
+            exit(1);
+        }
+        printf("%c ", encoded[i]);
+    }
 
     printf("%s\n%i\n", encoded, length);
 
-    return value_list();
+    return result;
 }
 
 value* decode_bencode(char* bencoded_value) {
