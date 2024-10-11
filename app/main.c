@@ -11,7 +11,7 @@ enum {
     VAL_LIST
 };
 
-typedef struct value {
+struct value {
     int type;
 
     int number;
@@ -19,10 +19,10 @@ typedef struct value {
 
     int count;
     value** list;
-} value;
+};
 
-void value_print(value* value);
-value* decode_list(char* bencoded_value);
+void value_print(value* val);
+value* decode_list(char** bencoded_value);
 
 bool is_digit(char c) {
     return c >= '0' && c <= '9';
@@ -34,7 +34,6 @@ int num_of_digits(int number) {
         number /= 10;
         ++count;
     } while (number != 0);
-
     return count;
 }
 
@@ -68,38 +67,37 @@ value* value_add(value* val1, value* val2) {
     return val1;
 }
 
-void value_print_list(value* value) {
+void value_print_list(value* val) {
     putchar('[');
-    for (int i = 0; i < value->count; i++) {
-        value_print(value->list[i]);
-
-        if (i != (value->count - 1)) putchar(',');
+    for (int i = 0; i < val->count; i++) {
+        value_print(val->list[i]);
+        if (i != (val->count - 1)) putchar(',');
     }
     putchar(']');
 }
 
-void value_print(value* value) {
-    switch (value->type) {
-        case VAL_NUMBER:
-            printf("%i", value->number);
-            break;
-        case VAL_STRING:
-            printf("\"%s\"", value->string);
-            break;
-        case VAL_LIST:
-            value_print_list(value);
-            break;
+void value_print(value* val) {
+    switch (val->type) {
+    case VAL_NUMBER:
+        printf("%i", val->number);
+        break;
+    case VAL_STRING:
+        printf("\"%s\"", val->string);
+        break;
+    case VAL_LIST:
+        value_print_list(val);
+        break;
     }
 }
 
-void value_println(value* value) {
-    value_print(value);
+void value_println(value* val) {
+    value_print(val);
     putchar('\n');
 }
 
-value* decode_string(char* bencoded_value) {
-    int length = atoi(bencoded_value);
-    char* colon_index = strchr(bencoded_value, ':');
+value* decode_string(char** bencoded_value) {
+    int length = atoi(*bencoded_value);
+    char* colon_index = strchr(*bencoded_value, ':');
 
     if (colon_index != NULL) {
         char* start = colon_index + 1;
@@ -108,103 +106,68 @@ value* decode_string(char* bencoded_value) {
         strncpy(decoded_str, start, length);
         decoded_str[length] = '\0';
 
-        return value_string(decoded_str);
-    }
-    else {
-        fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
-        exit(1);
-    }
-}
-
-value* decode_integer(char* bencoded_value) {
-    int length = strlen(bencoded_value) - 2;
-    char* colon_index = strchr(bencoded_value, 'i');
-
-    if (colon_index != NULL) {
-        char* start = colon_index + 1;
-        char* decoded_str = (char*)malloc(length + 1);
-        int result;
-
-        strncpy(decoded_str, start, length);
-        decoded_str[length] = '\0';
-        result = atoi(decoded_str);
-
+        *bencoded_value = start + length; // Move the pointer past the string
+        value* result = value_string(decoded_str);
         free(decoded_str);
-        return value_number(result);
+        return result;
     }
     else {
-        fprintf(stderr, "Invalid encoded value: %s\n", bencoded_value);
+        fprintf(stderr, "Invalid encoded value: %s\n", *bencoded_value);
         exit(1);
     }
 }
 
-value* value_take(char** string, int start) {
-    value* result;
-    int total_len = strlen(*string);
-    //printf("string begin = %s\n", *string);
+value* decode_integer(char** bencoded_value) {
+    (*bencoded_value)++; // Skip the 'i'
+    int result = atoi(*bencoded_value);
 
-    if (is_digit(*string[0])) {
-        result = decode_string(*string);
-        *string = *string + strlen(result->string) + 2;
-        return result;
+    while (**bencoded_value != 'e') {
+        (*bencoded_value)++;
     }
+    (*bencoded_value)++; // Skip the 'e'
 
-    if (*string[0] == 'i') {
-        result = decode_integer(*string);
-        *string = *string + num_of_digits(result->number) + 2;
-        return result;
-    }
-
-    if (*string[0] == 'l') {
-       // printf("string1 = %s\n", *string);
-        result = decode_list(*string);
-       // printf("string2 = %s\n", *string);
-       // printf("tot len = %i\n", total_len);
-        *string = *string + total_len;
-        //printf("string3 = %s\n", *string);
-        return result;
-    }
-
-    //printf("string end = %s\n", *string);
-
-    return result;
+    return value_number(result);
 }
 
-value* decode_list(char* bencoded_value) {
-    int length = strlen(bencoded_value) - 2;
-    char* encoded = bencoded_value + 1;
+value* value_take(char** string) {
+    if (is_digit(**string)) {
+        return decode_string(string);
+    }
+
+    if (**string == 'i') {
+        return decode_integer(string);
+    }
+
+    if (**string == 'l') {
+        return decode_list(string);
+    }
+
+    return NULL;
+}
+
+value* decode_list(char** bencoded_value) {
+    (*bencoded_value)++; // Skip the 'l'
     value* result = value_list();
 
-    encoded[length] = '\0';
-
-    if (length == 0) {
-        return value_list();
+    while (**bencoded_value != 'e') {
+        value* element = value_take(bencoded_value);
+        result = value_add(result, element);
     }
-
-
-    while (*encoded != '\0') {
-       // printf("encoded = %s\n", encoded);
-        result = value_add(result, value_take(&encoded, 1));
-       // printf("encoded = %s\n", encoded);
-       // value_println(result);
-    }
+    (*bencoded_value)++; // Skip the 'e'
 
     return result;
 }
 
 value* decode_bencode(char* bencoded_value) {
-    int len = strlen(bencoded_value) - 1;
+    if (is_digit(bencoded_value[0])) return decode_string(&bencoded_value);
+    if (bencoded_value[0] == 'i') return decode_integer(&bencoded_value);
+    if (bencoded_value[0] == 'l') return decode_list(&bencoded_value);
 
-    if (is_digit(bencoded_value[0])) return decode_string(bencoded_value);
-    if (bencoded_value[0] == 'i' && bencoded_value[len] == 'e') return decode_integer(bencoded_value);
-    if (bencoded_value[0] == 'l' && bencoded_value[len] == 'e') return decode_list(bencoded_value);
-
-    fprintf(stderr, "Only strings and integer are supported at the moment\n");
+    fprintf(stderr, "Invalid bencoded value: %s\n", bencoded_value);
     exit(1);
-    }
+}
 
 int process_command(char* command, char* encoded_str) {
-
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
         value_println(result);
@@ -218,9 +181,9 @@ int process_command(char* command, char* encoded_str) {
 }
 
 int main(int argc, char* argv[]) {
-	// Disable output buffering
-	setbuf(stdout, NULL);
- 	setbuf(stderr, NULL);
+    // Disable output buffering
+    setbuf(stdout, NULL);
+    setbuf(stderr, NULL);
 
     if (argc < 3) {
         fprintf(stderr, "Usage: your_bittorrent.sh <command> <args>\n");
