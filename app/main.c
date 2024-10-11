@@ -248,7 +248,7 @@ int process_command(char* command, char* encoded_str) {
 }
 
 int main(int argc, char* argv[]) {
-    // Disable output buffering
+    // Disable  output buffering
     setbuf(stdout, NULL);
     setbuf(stderr, NULL);
 
