@@ -295,7 +295,7 @@ int process_command(char* command, char* encoded_str) {
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
 
-        print_hex_dump(file_content, file_length);
+        print_hex_dump(file_content, bytesRead);
 
         exit(1);
     }
