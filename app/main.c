@@ -266,7 +266,7 @@ void print_hex_dump(const unsigned char* buffer, size_t length) {
             printf("%c", buffer[i]);
         }
         else {
-            switch (c) {
+            switch (buffer[i]) {
             case '\n':
                 printf("\\n"); // Newline
                 break;
