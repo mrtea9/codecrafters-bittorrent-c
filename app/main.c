@@ -244,7 +244,7 @@ int process_command(char* command, char* encoded_str) {
     }
     else if (strcmp(command, "info") == 0) {
         unsigned char c;
-        unsigned char str[1000];
+        unsigned char str[1000] = "sad";
         FILE* fptr;
 
         if ((fptr = fopen(encoded_str, "r")) == NULL) {
@@ -253,12 +253,6 @@ int process_command(char* command, char* encoded_str) {
             exit(1);
         }
 
-        for (int i = 0; c != EOF; i++) {
-
-            c = fgetc(fptr);
-
-            str[i] = c;
-        }
 
         fclose(fptr);
         //value* result = decode_bencode(str);
