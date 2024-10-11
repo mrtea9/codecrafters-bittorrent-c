@@ -22,9 +22,20 @@ typedef struct value {
 } value;
 
 void value_print(value* value);
+value* decode_list(char* bencoded_value);
 
 bool is_digit(char c) {
     return c >= '0' && c <= '9';
+}
+
+int num_of_digits(int number) {
+    int count = 0;
+    do {
+        number /= 10;
+        ++count;
+    } while (number != 0);
+
+    return count;
 }
 
 value* value_number(int number) {
@@ -65,7 +76,6 @@ void value_print_list(value* value) {
         if (i != (value->count - 1)) putchar(',');
     }
     putchar(']');
-    putchar('\n');
 }
 
 void value_print(value* value) {
@@ -80,6 +90,11 @@ void value_print(value* value) {
             value_print_list(value);
             break;
     }
+}
+
+void value_println(value* value) {
+    value_print(value);
+    putchar('\n');
 }
 
 value* decode_string(char* bencoded_value) {
@@ -125,7 +140,8 @@ value* decode_integer(char* bencoded_value) {
 
 value* value_take(char** string, int start) {
     value* result;
-    //printf("string begin = %s\n", *string);
+    int total_len = strlen(*string);
+    printf("string begin = %s\n", *string);
 
     if (is_digit(*string[0])) {
         result = decode_string(*string);
@@ -135,10 +151,21 @@ value* value_take(char** string, int start) {
 
     if (*string[0] == 'i') {
         result = decode_integer(*string);
-        //*string = *string + strlen((char)result->number) + 2;
+        *string = *string + num_of_digits(result->number) + 2;
+        return result;
     }
 
-    //printf("string end = %s\n", *string);
+    if (*string[0] == 'l') {
+        printf("string1 = %s\n", *string);
+        result = decode_list(*string);
+        printf("string2 = %s\n", *string);
+        printf("tot len = %i\n", total_len);
+        *string = *string + total_len;
+        printf("string3 = %s\n", *string);
+        return result;
+    }
+
+    printf("string end = %s\n", *string);
 
     return result;
 }
@@ -154,14 +181,13 @@ value* decode_list(char* bencoded_value) {
         return value_list();
     }
 
-    for (int i = 0; i < 2; i++) {
-        //printf("encoded = %s\n", encoded);
-        result = value_add(result, value_take(&encoded, 1));
-       // printf("encoded = %s\n", encoded);
-        //value_print(result);
-    }
 
-   // printf("%s\n%i\n", encoded, length);
+    while (*encoded != '\0') {
+        printf("encoded = %s\n", encoded);
+        result = value_add(result, value_take(&encoded, 1));
+        printf("encoded = %s\n", encoded);
+        value_println(result);
+    }
 
     return result;
 }
@@ -181,7 +207,7 @@ int process_command(char* command, char* encoded_str) {
 
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
-        value_print(result);
+        value_println(result);
     }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
