@@ -240,7 +240,7 @@ int process_command(char* command, char* encoded_str) {
         value_delete(result);
     }
     else if (strcmp(command, "info") == 0) {
-        printf("daa");
+        printf("str = %s", encoded_str);
         return 1;
     }
     else {
