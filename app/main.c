@@ -125,7 +125,7 @@ value* decode_integer(char** bencoded_value) {
         (*bencoded_value)++;
     }
     (*bencoded_value)++; // Skip the 'e'
-    printf("%ld\n", result);
+
     return value_number(result);
 }
 
