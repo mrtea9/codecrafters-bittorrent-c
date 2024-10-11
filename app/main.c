@@ -123,11 +123,20 @@ value* decode_integer(char* bencoded_value) {
 }
 
 value* value_take(char** string, int start) {
-    value* result = decode_string(*string);
-    value_print(result);
-    printf("string = %s\n", *string);
-    *string = *string + strlen(result->string) + 2;
-    printf("string = %s\n", *string);
+    value* result;
+    printf("string begin = %s\n", *string);
+
+    if (is_digit(*string[0])) {
+        result = decode_string(*string);
+        *string = *string + strlen(result->string) + 2;
+    }
+
+    if (*string[0] == 'i') {
+        result = decode_integer(*string);
+        //*string = *string + strlen((char)result->number) + 2;
+    }
+
+    printf("string end = %s\n", *string);
 
     return result;
 }
