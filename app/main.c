@@ -8,7 +8,8 @@ typedef struct value value;
 enum {
     VAL_NUMBER,
     VAL_STRING,
-    VAL_LIST
+    VAL_LIST,
+    VAL_DICT
 };
 
 struct value {
@@ -18,11 +19,12 @@ struct value {
     char* string;
 
     int count;
-    value** list;
+    value** cell;
 };
 
 void value_print(value* val);
 value* decode_list(char** bencoded_value);
+value* decode_dict(char** bencoded_value);
 
 bool is_digit(char c) {
     return c >= '0' && c <= '9';
@@ -56,14 +58,22 @@ value* value_list(void) {
     value* val = malloc(sizeof(value));
     val->type = VAL_LIST;
     val->count = 0;
-    val->list = NULL;
+    val->cell = NULL;
+    return val;
+}
+
+value* value_dict(void) {
+    value* val = malloc(sizeof(value));
+    val->type = VAL_DICT;
+    val->count = 0;
+    val->cell = NULL;
     return val;
 }
 
 value* value_add(value* val1, value* val2) {
     val1->count++;
-    val1->list = realloc(val1->list, sizeof(value*) * val1->count);
-    val1->list[val1->count - 1] = val2;
+    val1->cell = realloc(val1->cell, sizeof(value*) * val1->count);
+    val1->cell[val1->count - 1] = val2;
     return val1;
 }
 
@@ -79,7 +89,7 @@ void value_delete(value* value) {
 
         case VAL_LIST:
             for (int i = 0; i < value->count; i++) {
-                value_delete(value->list[i]);
+                value_delete(value->cell[i]);
             }
             break;
     }
@@ -90,23 +100,35 @@ void value_delete(value* value) {
 void value_print_list(value* val) {
     putchar('[');
     for (int i = 0; i < val->count; i++) {
-        value_print(val->list[i]);
+        value_print(val->cell[i]);
         if (i != (val->count - 1)) putchar(',');
     }
     putchar(']');
 }
 
+void value_print_dict(value* val) {
+    putchar('{');
+    for (int i = 0; i < val->count; i++) {
+        value_print(val->cell[i]);
+        if (i != (val->count - 1)) putchar(':');
+    }
+    putchar('}');
+}
+
 void value_print(value* val) {
     switch (val->type) {
-    case VAL_NUMBER:
-        printf("%ld", val->number);
-        break;
-    case VAL_STRING:
-        printf("\"%s\"", val->string);
-        break;
-    case VAL_LIST:
-        value_print_list(val);
-        break;
+        case VAL_NUMBER:
+            printf("%ld", val->number);
+            break;
+        case VAL_STRING:
+            printf("\"%s\"", val->string);
+            break;
+        case VAL_LIST:
+            value_print_list(val);
+            break;
+        case VAL_DICT:
+            value_print_dict(val);
+            break;
     }
 }
 
@@ -162,6 +184,10 @@ value* value_take(char** string) {
         return decode_list(string);
     }
 
+    if (**string == 'd') {
+        return decode_dict(string);
+    }
+
     return NULL;
 }
 
@@ -178,10 +204,25 @@ value* decode_list(char** bencoded_value) {
     return result;
 }
 
+value* decode_dict(char** bencoded_value) {
+    (*bencoded_value)++; // Skip the 'd'
+    value* result = value_dict();
+
+    while (**bencoded_value != 'e') {
+        value* element = value_take(bencoded_value);
+        result = value_add(result, element);
+    }
+    (*bencoded_value)++; // Skip the 'e'
+
+    return result;
+}
+
+
 value* decode_bencode(char* bencoded_value) {
     if (is_digit(bencoded_value[0])) return decode_string(&bencoded_value);
     if (bencoded_value[0] == 'i') return decode_integer(&bencoded_value);
     if (bencoded_value[0] == 'l') return decode_list(&bencoded_value);
+    if (bencoded_value[0] == 'd') return decode_dict(&bencoded_value);
 
     fprintf(stderr, "Invalid bencoded value: %s\n", bencoded_value);
     exit(1);
