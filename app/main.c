@@ -204,7 +204,7 @@ value* value_get(value* val, char* name) {
     for (int i = 0; i < val->count; i++) {
 
         if (strcmp(val->cell[i]->string, name) == 0) {
-            value_print(val->cell[i]);
+            value_print(val->cell[i + 1]);
         }
     }
 
