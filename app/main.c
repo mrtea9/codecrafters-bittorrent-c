@@ -203,8 +203,7 @@ value* value_get(value* val, char* name) {
 
     for (int i = 0; i < val->count; i += 2) {
         value_print(val->cell[i]);
-        if (i % 2 != 0 && i != (val->count - 1)) putchar(',');
-        else if (i != (val->count - 1)) putchar(':');
+        putchar(' ');
     }
 
     return val;
@@ -301,6 +300,7 @@ int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
         value_println(result);
+        value_get(result, "announce");
         value_delete(result);
     }
     else if (strcmp(command, "info") == 0) {
