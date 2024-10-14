@@ -197,9 +197,9 @@ value* value_take(char** string) {
     return NULL;
 }
 
-value* value_get(value* value, char* name) {
+value* value_get(value* val, char* name) {
 
-    if (value->type != VAL_DICT) exit(1);
+    if (val->type != VAL_DICT) exit(1);
 
     for (int i = 0; i < val->count; i += 2) {
         value_print(val->cell[i]);
@@ -207,7 +207,7 @@ value* value_get(value* value, char* name) {
         else if (i != (val->count - 1)) putchar(':');
     }
 
-    return value;
+    return val;
 }
 
 value* decode_list(char** bencoded_value) {
