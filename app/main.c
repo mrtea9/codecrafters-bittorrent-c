@@ -197,6 +197,19 @@ value* value_take(char** string) {
     return NULL;
 }
 
+value* value_get(value* value, char* name) {
+
+    if (value->type != VAL_DICT) exit(1);
+
+    for (int i = 0; i < val->count; i += 2) {
+        value_print(val->cell[i]);
+        if (i % 2 != 0 && i != (val->count - 1)) putchar(',');
+        else if (i != (val->count - 1)) putchar(':');
+    }
+
+    return value;
+}
+
 value* decode_list(char** bencoded_value) {
     (*bencoded_value)++; // Skip the 'l'
     value* result = value_list();
@@ -295,7 +308,8 @@ int process_command(char* command, char* encoded_str) {
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
         value* result = decode_bencode(hex_dump_to_char(file_content, bytesRead));
-        value_println(result);
+       // value_println(result);
+        value_get(result, "announce");
         value_delete(result);
 
     }
