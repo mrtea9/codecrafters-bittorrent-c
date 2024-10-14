@@ -206,6 +206,10 @@ value* value_get(value* val, char* name) {
         if (strcmp(val->cell[i]->string, name) == 0) {
             value_print(val->cell[i + 1]);
         }
+
+        if (val->cell[i]->type == VAL_DICT) {
+            printf("daaa");
+        }
     }
 
     return val;
