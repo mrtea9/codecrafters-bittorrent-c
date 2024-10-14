@@ -207,6 +207,7 @@ void value_get(value* val, char* name) {
         }
 
         if (strcmp(val->cell[i]->string, name) == 0) {
+            printf("%s = %s\n", val->cell[i]->string, name);
             value_println(val->cell[i + 1]);
             break;
         }
@@ -306,6 +307,7 @@ int process_command(char* command, char* encoded_str) {
         value_println(result);
         value_get(result, "announce");
         value_get(result, "length");
+        printf("daaa");
         value_delete(result);
     }
     else if (strcmp(command, "info") == 0) {
