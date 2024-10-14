@@ -248,7 +248,7 @@ value* value_take(char** string) {
 value* value_get(value* val, char* name) {
     value* result;
 
-    if (val->type != VAL_DICT) printf("nuuu\n");
+    if (val->type != VAL_DICT) continue;
 
     for (int i = 0; i < val->count; i++) {
 
