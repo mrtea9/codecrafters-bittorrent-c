@@ -87,6 +87,7 @@ void value_delete(value* value) {
 
         case VAL_STRING:
             free(value->string);
+            break;
 
         case VAL_LIST:
             for (int i = 0; i < value->count; i++) {
@@ -156,7 +157,7 @@ value* decode_string(char** bencoded_value) {
 
         *bencoded_value = start + length; // Move the pointer past the string
         value* result = value_string(decoded_str);
-        free(decoded_str);
+        //free(decoded_str);
         return result;
     }
     else {
@@ -202,12 +203,14 @@ void value_get(value* val, char* name) {
     if (val->type != VAL_DICT) printf("nuuu\n");
 
     for (int i = 0; i < val->count; i++) {
+
         if (val->cell[i]->type == VAL_DICT) {
             value_get(val->cell[i], name);
         }
 
+        if (val->cell[i]->type != VAL_STRING) continue;
+
         if (strcmp(val->cell[i]->string, name) == 0) {
-            printf("%s = %s\n", val->cell[i]->string, name);
             value_println(val->cell[i + 1]);
             break;
         }
@@ -305,9 +308,8 @@ int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
         value_println(result);
-        value_get(result, "announce");
-        value_get(result, "length");
-        printf("daaa");
+        //value_get(result, "announce");
+        //value_get(result, "length");
         value_delete(result);
     }
     else if (strcmp(command, "info") == 0) {
