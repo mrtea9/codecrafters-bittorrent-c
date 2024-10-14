@@ -314,6 +314,7 @@ int process_command(char* command, char* encoded_str) {
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
         printf("Tracker URL: %s", announce->string);
+        printf("Length: %i", length->number);
         value_delete(result);
     }
     else if (strcmp(command, "info") == 0) {
@@ -324,7 +325,7 @@ int process_command(char* command, char* encoded_str) {
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
         printf("Tracker URL: %s", announce->string);
-        printf("Tracker URL: %s", length->string);
+        printf("Length: %i", length->number);
         value_delete(result);
     }
     else {
