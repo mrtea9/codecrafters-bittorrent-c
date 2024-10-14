@@ -24,6 +24,7 @@ struct value {
 };
 
 void value_print(value* val);
+value* value_copy(value* val);
 value* decode_list(char** bencoded_value);
 value* decode_dict(char** bencoded_value);
 
@@ -78,30 +79,59 @@ value* value_add(value* val1, value* val2) {
     return val1;
 }
 
-void value_delete(value* value) {
+value* value_copy(value* val) {
+    
+    value* x = malloc(sizeof(value));
+    x->type = val->type;
 
-    switch (value->type) {
+    switch (val->type) {
+        case VAL_NUMBER:
+            x->number = val->number;
+            break;
+
+        case VAL_STRING:
+            x->string = malloc(strlen(val->string) + 1);
+            strcpy(x->string, val->string);
+            break;
+
+        case VAL_LIST:
+        case VAL_DICT:
+            x->count = val->count;
+            x->cell = malloc(sizeof(value*) * x->count);
+            for (int i = 0; i < x->count; i++) {
+                x->cell[i] = value_copy(val->cell[i]);
+            }
+
+            break;
+    }
+
+    return x;
+}
+
+void value_delete(value* val) {
+
+    switch (val->type) {
 
         case VAL_NUMBER:
             break;
 
         case VAL_STRING:
-            free(value->string);
+            free(val->string);
             break;
 
         case VAL_LIST:
-            for (int i = 0; i < value->count; i++) {
-                value_delete(value->cell[i]);
+            for (int i = 0; i < val->count; i++) {
+                value_delete(val->cell[i]);
             }
             break;
         case VAL_DICT:
-            for (int i = 0; i < value->count; i++) {
-                value_delete(value->cell[i]);
+            for (int i = 0; i < val->count; i++) {
+                value_delete(val->cell[i]);
             }
             break;
     }
 
-    free(value);
+    free(val);
 }
 
 void value_print_list(value* val) {
@@ -143,6 +173,23 @@ void value_print(value* val) {
 void value_println(value* val) {
     value_print(val);
     putchar('\n');
+}
+
+void value_print_info(value* val) {
+    switch (val->type) {
+    case VAL_NUMBER:
+        printf("Length: %ld", val->number);
+        break;
+    case VAL_STRING:
+        printf("Tracker URL: %s", val->string);
+        break;
+    case VAL_LIST:
+        value_print_list(val);
+        break;
+    case VAL_DICT:
+        value_print_dict(val);
+        break;
+    }
 }
 
 value* decode_string(char** bencoded_value) {
@@ -206,18 +253,18 @@ value* value_get(value* val, char* name) {
     for (int i = 0; i < val->count; i++) {
 
         if (val->cell[i]->type == VAL_DICT) {
-            value_get(val->cell[i], name);
+            return value_get(val->cell[i], name);
         }
 
         if (val->cell[i]->type != VAL_STRING) continue;
 
         if (strcmp(val->cell[i]->string, name) == 0) {
-            result = val->cell[i + 1];
+            result = value_copy(val->cell[i + 1]);
             return result;
         }
     }
 
-    return NULL;
+    return value_dict();
 }
 
 value* decode_list(char** bencoded_value) {
@@ -310,12 +357,14 @@ char* hex_dump_to_char(const unsigned char* buffer, size_t length) {
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
-        value_println(result);
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
-        printf("Tracker URL: %s", announce->string);
-        printf("Length: %i", length->number);
+
+        value_println(result);
+
         value_delete(result);
+        value_delete(announce);
+        value_delete(length);
     }
     else if (strcmp(command, "info") == 0) {
         
@@ -324,9 +373,15 @@ int process_command(char* command, char* encoded_str) {
         value* result = decode_bencode(hex_dump_to_char(file_content, bytesRead));
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
-        printf("Tracker URL: %s", announce->string);
-        printf("Length: %i", length->number);
+        
+        value_print_info(announce);
+        putchar('\n');
+        value_print_info(length);
+        putchar('\n');
+
         value_delete(result);
+        value_delete(announce);
+        value_delete(length);
     }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
