@@ -214,12 +214,8 @@ value* decode_dict(char** bencoded_value) {
     (*bencoded_value)++; // Skip the 'd'
     value* result = value_dict();
 
-    printf("da\n");
-
-
     while (**bencoded_value != 'e') {
         value* element = value_take(bencoded_value);
-        value_println(element);
         result = value_add(result, element);
     }
     (*bencoded_value)++; // Skip the 'e'
@@ -241,7 +237,6 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     FILE* file = fopen(filename, "r");
 
     if (file == NULL) return NULL;
-
 
     if (fseek(file, 0, SEEK_END) != 0) {
         fclose(file);
