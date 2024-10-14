@@ -203,18 +203,14 @@ void value_get(value* val, char* name) {
 
     for (int i = 0; i < val->count; i++) {
         if (val->cell[i]->type == VAL_DICT) {
-            printf("dict\n");
             value_get(val->cell[i], name);
         }
 
-        printf("i = %d\n", i);
-        value_println(val->cell[i]);
         if (strcmp(val->cell[i]->string, name) == 0) {
             value_println(val->cell[i + 1]);
             break;
         }
     }
-
 }
 
 value* decode_list(char** bencoded_value) {
@@ -309,6 +305,7 @@ int process_command(char* command, char* encoded_str) {
         value* result = decode_bencode(encoded_str);
         value_println(result);
         value_get(result, "announce");
+        value_get(result, "length");
         value_delete(result);
     }
     else if (strcmp(command, "info") == 0) {
@@ -316,9 +313,7 @@ int process_command(char* command, char* encoded_str) {
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
         value* result = decode_bencode(hex_dump_to_char(file_content, bytesRead));
-        value_println(result);
         value_get(result, "announce");
-        printf("daaa\n");
         value_get(result, "length");
         value_delete(result);
     }
