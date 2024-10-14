@@ -213,6 +213,7 @@ value* decode_string(char** bencoded_value) {
     }
 }
 
+
 value* decode_integer(char** bencoded_value) {
     (*bencoded_value)++; // Skip the 'i'
     long result = atol(*bencoded_value);
