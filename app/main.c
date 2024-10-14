@@ -311,8 +311,9 @@ int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
         value_println(result);
-        //value_get(result, "announce");
-        //value_get(result, "length");
+        value* announce = value_get(result, "announce");
+        value* length = value_get(result, "length");
+        printf("Tracker URL: %s", announce->string);
         value_delete(result);
     }
     else if (strcmp(command, "info") == 0) {
@@ -324,8 +325,6 @@ int process_command(char* command, char* encoded_str) {
         value* length = value_get(result, "length");
         printf("Tracker URL: %s", announce->string);
         value_delete(result);
-        value_delete(announce);
-        value_delete(length);
     }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
