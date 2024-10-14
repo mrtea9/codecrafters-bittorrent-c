@@ -197,18 +197,24 @@ value* value_take(char** string) {
     return NULL;
 }
 
-value* value_get(value* val, char* name) {
+void value_get(value* val, char* name) {
 
-    if (val->type != VAL_DICT) exit(1);
+    if (val->type != VAL_DICT) printf("nuuu\n");
 
     for (int i = 0; i < val->count; i++) {
+        if (val->cell[i]->type == VAL_DICT) {
+            printf("dict\n");
+            value_get(val->cell[i], name);
+        }
 
+        printf("i = %d\n", i);
+        value_println(val->cell[i]);
         if (strcmp(val->cell[i]->string, name) == 0) {
-            value_print(val->cell[i + 1]);
-        } 
+            value_println(val->cell[i + 1]);
+            break;
+        }
     }
 
-    return val;
 }
 
 value* decode_list(char** bencoded_value) {
@@ -312,8 +318,9 @@ int process_command(char* command, char* encoded_str) {
         value* result = decode_bencode(hex_dump_to_char(file_content, bytesRead));
         value_println(result);
         value_get(result, "announce");
+        printf("daaa\n");
+        value_get(result, "length");
         value_delete(result);
-
     }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
