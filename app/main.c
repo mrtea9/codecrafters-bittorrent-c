@@ -202,6 +202,10 @@ value* value_get(value* val, char* name) {
     if (val->type != VAL_DICT) exit(1);
 
     for (int i = 0; i < val->count; i += 2) {
+        if (val->cell[i]->type == VAL_DICT) {
+            value_get(val, name);
+        }
+
         value_print(val->cell[i]);
         putchar(' ');
     }
