@@ -361,11 +361,11 @@ int process_command(char* command, char* encoded_str) {
         value* length = value_get(result, "length");
 
         printf("%s\n", encoded_str);
-        value_println(result);
-        value_print_info(announce);
-        putchar('\n');
-        value_print_info(length);
-        putchar('\n');
+       // value_println(result);
+     //   value_print_info(announce);
+       // putchar('\n');
+      //  value_print_info(length);
+       // putchar('\n');
 
         value_delete(result);
         value_delete(announce);
