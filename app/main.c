@@ -442,15 +442,15 @@ int process_command(char* command, char* encoded_str) {
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
 
-        value_println(info);
+        //value_println(info);
 
         unsigned char* test = encode(info);
-        printf("%s\n", test);
+       // printf("%s\n", test);
         size_t len = strlen(test);
 
         unsigned char hash[SHA_DIGEST_LENGTH];
         SHA1(test, len, hash);
-        printf("hash = %s\n", hash);
+       // printf("hash = %s\n", hash);
 
         char sha1_str[SHA_DIGEST_LENGTH * 2 + 1];
         for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
@@ -458,7 +458,7 @@ int process_command(char* command, char* encoded_str) {
         }
         sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';  // Null-terminate the string
 
-        printf("SHA1 Hash: %s\n", sha1_str);
+        printf("Info Hash: %s\n", sha1_str);
         //value_println(result);
         //value_println(info);
         
