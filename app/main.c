@@ -418,6 +418,7 @@ int process_command(char* command, char* encoded_str) {
         value* info = value_get(result, "info");
 
         value_println(result);
+        printf("%s\n", encode(info));
         //printf("%s\n", encode(info));
      //   value_print_info(announce);
        // putchar('\n');
