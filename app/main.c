@@ -445,6 +445,7 @@ int process_command(char* command, char* encoded_str) {
         value_println(info);
         printf("%s\n", encode(info));
         char* test = encode(info);
+        printf("%s\n", test);
         size_t len = strlen(test);
 
         unsigned hash[SHA_DIGEST_LENGTH];
