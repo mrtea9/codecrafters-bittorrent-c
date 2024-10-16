@@ -177,23 +177,6 @@ void value_println(value* val) {
     putchar('\n');
 }
 
-void value_print_info(value* val) {
-    switch (val->type) {
-    case VAL_NUMBER:
-        printf("Length: %ld", val->number);
-        break;
-    case VAL_STRING:
-        printf("Tracker URL: %s", val->string);
-        break;
-    case VAL_LIST:
-        value_print_list(val);
-        break;
-    case VAL_DICT:
-        value_print_dict(val);
-        break;
-    }
-}
-
 value* decode_string(char** bencoded_value) {
     int length = atoi(*bencoded_value);
     char* colon_index = strchr(*bencoded_value, ':');
@@ -366,6 +349,22 @@ char* encode(value* decoded) {
     exit(1);
 }
 
+char* calculate_hash(value* value) {
+    char hash_string[SHA_DIGEST_LENGTH * 2 + 1];
+    char* encoded_value = encode(value);
+    size_t length = strlen(test);
+
+    unsigned char hash[SHA_DIGEST_LENGTH];
+    SHA1(encoded_value, length, hash);
+
+    for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
+        sprintf(hash_string + (i * 2), "%02x", hash[i]);
+    }
+    hash_string[SHA_DIGEST_LENGTH * 2] = '\0'; 
+
+    return hash_string;
+}
+
 unsigned char* read_file(const char* filename, size_t* bytesRead) {
     FILE* file = fopen(filename, "r");
 
@@ -398,25 +397,6 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     return buffer;
 }
 
-char* hex_dump_to_char(const unsigned char* buffer, size_t length) {
-    char* output = malloc(length * 3 + 1);
-    if (!output) return NULL;
-
-    size_t pos = 0;
-
-    for (size_t i = 0; i < length; i++) {
-        if (isprint(buffer[i])) {
-            output[pos++] = buffer[i];
-        }
-        else {
-            output[pos++] = '?';
-        }
-    }
-    output[pos] = '\0';
-
-    return output;
-}
-
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
@@ -434,41 +414,19 @@ int process_command(char* command, char* encoded_str) {
         value_delete(info);
     }
     else if (strcmp(command, "info") == 0) {
-        
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
-
-        value_println(info);
-
-        char* test = encode(info);
-        printf("%s\n", test);
-        size_t len = strlen(test);
-
-        unsigned char hash[SHA_DIGEST_LENGTH];
-        SHA1(test, len, hash);
-        printf("hash = %s\n", hash);
-
-        char sha1_str[SHA_DIGEST_LENGTH * 2 + 1];
-        for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
-            sprintf(sha1_str + (i * 2), "%02x", hash[i]);
-        }
-        sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';  // Null-terminate the string
-
-        printf("SHA1 Hash: %s\n", sha1_str);
-        //value_println(result);
-        //value_println(info);
-        
-        //value* encoded_info = encode(info);
+        char* hash = calculate_hash(info);
 
 
-        //value_print_info(announce);
-        //putchar('\n');
-        //value_print_info(length);
-        //putchar('\n');
+
+        printf("Track URL: %s\n", announce->string);
+        printf("Length: %ld\n", length->number);
+        printf("Info Hash: %s\n", hash);
 
         value_delete(result);
         value_delete(announce);
