@@ -346,7 +346,7 @@ char* hex_dump_to_char(const unsigned char* buffer, size_t length) {
             output[pos++] = buffer[i];
         }
         else {
-            pos += snprintf(output + pos, 5, "\\x%02x", buffer[i]);
+            pos += snprintf(output + pos, 5, "%02x", buffer[i]);
         }
     }
     output[pos] = '\0';
