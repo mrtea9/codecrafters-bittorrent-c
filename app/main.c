@@ -360,6 +360,7 @@ int process_command(char* command, char* encoded_str) {
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
 
+        printf("%s\n", encoded_str);
         value_println(result);
         value_print_info(announce);
         putchar('\n');
