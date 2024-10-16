@@ -354,25 +354,6 @@ char* hex_dump_to_char(const unsigned char* buffer, size_t length) {
     return output;
 }
 
-void print_hex_dump(const unsigned char* buffer, size_t length) {
-    printf("Hex dump of file contents:\n");
-    for (size_t i = 0; i < length; i++) {
-        // Print byte in hex format
-        printf("%02x ", buffer[i]);
-
-        // Print ASCII representation if printable, otherwise a dot
-        if (isprint(buffer[i])) {
-            printf("%c ", buffer[i]);
-        }
-
-        // Print a new line every 16 bytes for readability
-        if ((i + 1) % 16 == 0) {
-            printf("\n");
-        }
-    }
-    printf("\n");
-}
-
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
@@ -394,7 +375,7 @@ int process_command(char* command, char* encoded_str) {
         
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
-        //printf("%s\n", hex_dump_to_char(file_content, bytesRead));
+        printf("%s\n", file_content);
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
@@ -403,7 +384,7 @@ int process_command(char* command, char* encoded_str) {
         //value_println(result);
         //value_println(info);
         //printf("%s\n", file_content);
-        print_hex_dump(file_content, bytesRead);
+        
 
 
         //value_print_info(announce);
