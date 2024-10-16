@@ -398,6 +398,25 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     return buffer;
 }
 
+char* hex_dump_to_char(const unsigned char* buffer, size_t length) {
+    char* output = malloc(length * 3 + 1);
+    if (!output) return NULL;
+
+    size_t pos = 0;
+
+    for (size_t i = 0; i < length; i++) {
+        if (isprint(buffer[i])) {
+            output[pos++] = buffer[i];
+        }
+        else {
+            output[pos++] = '?';
+        }
+    }
+    output[pos] = '\0';
+
+    return output;
+}
+
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
@@ -425,7 +444,7 @@ int process_command(char* command, char* encoded_str) {
 
         value_println(info);
 
-        char* test = encode(info);
+        unsigned char* test = encode(info);
         printf("%s\n", test);
         size_t len = strlen(test);
 
