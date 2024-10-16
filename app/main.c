@@ -317,11 +317,11 @@ char* encode(value* decoded) {
 
     if (decoded->type == VAL_NUMBER) return encode_number(decoded);
 
-    if (decoded->type == VAL_STRING) return encode_string(decoded);
+    //if (decoded->type == VAL_STRING) return encode_string(decoded);
 
-    if (decoded->type == VAL_LIST) return encode_list(decoded);
+    //if (decoded->type == VAL_LIST) return encode_list(decoded);
 
-    if (decoded->type == VAL_DICT) return encode_dict(decoded);
+    //if (decoded->type == VAL_DICT) return encode_dict(decoded);
 
     return NULL;
 }
