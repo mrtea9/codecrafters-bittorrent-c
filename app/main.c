@@ -349,25 +349,6 @@ char* encode(value* decoded) {
     exit(1);
 }
 
-char* calculate_hash(value* value) {
-    char hash_string[SHA_DIGEST_LENGTH * 2 + 1];
-    char* encoded_value = encode(value);
-    size_t length = strlen(encoded_value);
-
-    unsigned char hash[SHA_DIGEST_LENGTH];
-    SHA1(encoded_value, length, hash);
-
-    for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
-        sprintf(hash_string + (i * 2), "%02x", hash[i]);
-    }
-
-    hash_string[SHA_DIGEST_LENGTH * 2] = '\0'; 
-
-    printf("Info Hash: %s\n", hash_string);
-
-    return hash_string;
-}
-
 unsigned char* read_file(const char* filename, size_t* bytesRead) {
     FILE* file = fopen(filename, "r");
 
@@ -417,19 +398,35 @@ int process_command(char* command, char* encoded_str) {
         value_delete(info);
     }
     else if (strcmp(command, "info") == 0) {
+        
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
-        char* hash = calculate_hash(info);
 
+        value_println(info);
+
+        char* test = encode(info);
+        printf("%s\n", test);
+        size_t len = strlen(test);
+
+        unsigned char hash[SHA_DIGEST_LENGTH];
+        SHA1(test, len, hash);
+        printf("hash = %s\n", hash);
+
+        char sha1_str[SHA_DIGEST_LENGTH * 2 + 1];
+        for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
+            sprintf(sha1_str + (i * 2), "%02x", hash[i]);
+        }
+        sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';  // Null-terminate the string
+
+        printf("SHA1 Hash: %s\n", sha1_str);
 
 
         printf("Track URL: %s\n", announce->string);
         printf("Length: %ld\n", length->number);
-        printf("Info Hash: %s\n", hash);
 
         value_delete(result);
         value_delete(announce);
