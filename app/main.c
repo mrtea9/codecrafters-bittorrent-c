@@ -380,13 +380,14 @@ int process_command(char* command, char* encoded_str) {
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
         
-        value_println(result);
-        value_println(info);
+        //value_println(result);
+        //value_println(info);
+        printf("%s\n", encoded_str);
 
-        value_print_info(announce);
-        putchar('\n');
-        value_print_info(length);
-        putchar('\n');
+        //value_print_info(announce);
+        //putchar('\n');
+        //value_print_info(length);
+        //putchar('\n');
 
         value_delete(result);
         value_delete(announce);
