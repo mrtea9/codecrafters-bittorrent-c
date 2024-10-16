@@ -27,6 +27,7 @@ void value_print(value* val);
 value* value_copy(value* val);
 value* decode_list(char** bencoded_value);
 value* decode_dict(char** bencoded_value);
+char* encode(value* decoded);
 
 bool is_digit(char c) {
     return c >= '0' && c <= '9';
@@ -304,24 +305,56 @@ value* decode_bencode(char* bencoded_value) {
 }
 
 char* encode_number(value* decoded) {
-
     char* encoded_number = malloc(num_of_digits(decoded->number) + 3);
     sprintf(encoded_number, "i%lde", decoded->number);
 
-    printf(encoded_number);
-
     return encoded_number;
+}
+
+char* encode_string(value* decoded) {
+    char* encoded_string = malloc(strlen(decoded->string) + 3);
+    sprintf(encoded_string, "%i:%s", strlen(decoded->string), decoded->string);
+
+    return encoded_string;
+}
+
+char* encode_list(value* decoded) {
+    char* encoded_list = malloc(2 * sizeof(char));
+    strcpy(encoded_list, "l");
+
+    for (int i = 0; i < decoded->count; i++) {
+        encoded_list = realloc(encoded_list, strlen(encoded_list) + strlen(encode(decoded->cell[i])) + 1);
+        sprintf(encoded_list, "%s%s", encoded_list, encode(decoded->cell[i]));
+    }
+    encoded_list = realloc(encoded_list, strlen(encoded_list) + 2);
+    sprintf(encoded_list, "%se", encoded_list);
+
+    return encoded_list;
+}
+
+char* encode_dict(value* decoded) {
+    char* encoded_dict = malloc(2 * sizeof(char));
+    strcpy(encoded_dict, "d");
+
+    for (int i = 0; i < decoded->count; i++) {
+        encoded_dict = realloc(encoded_dict, strlen(encoded_dict) + strlen(encode(decoded->cell[i])) + 1);
+        sprintf(encoded_dict, "%s%s", encoded_dict, encode(decoded->cell[i]));
+    }
+    encoded_dict = realloc(encoded_dict, strlen(encoded_dict) + 2);
+    sprintf(encoded_dict, "%se", encoded_dict);
+
+    return encoded_dict;
 }
 
 char* encode(value* decoded) {
 
     if (decoded->type == VAL_NUMBER) return encode_number(decoded);
 
-    //if (decoded->type == VAL_STRING) return encode_string(decoded);
+    if (decoded->type == VAL_STRING) return encode_string(decoded);
 
-    //if (decoded->type == VAL_LIST) return encode_list(decoded);
+    if (decoded->type == VAL_LIST) return encode_list(decoded);
 
-    //if (decoded->type == VAL_DICT) return encode_dict(decoded);
+    if (decoded->type == VAL_DICT) return encode_dict(decoded);
 
     return NULL;
 }
@@ -380,19 +413,17 @@ char* hex_dump_to_char(const unsigned char* buffer, size_t length) {
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
-        value* announce = value_get(result, "announce");
-        value* length = value_get(result, "length");
+        value* info = value_get(result, "info");
 
-        printf("%s\n", encoded_str);
-       // value_println(result);
+        value_println(result);
+        printf("%s\n", encode(info));
      //   value_print_info(announce);
        // putchar('\n');
       //  value_print_info(length);
        // putchar('\n');
 
         value_delete(result);
-        value_delete(announce);
-        value_delete(length);
+        value_delete(info);
     }
     else if (strcmp(command, "info") == 0) {
         
