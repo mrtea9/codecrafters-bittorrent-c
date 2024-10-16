@@ -363,7 +363,7 @@ char* calculate_hash(value* value) {
 
     hash_string[SHA_DIGEST_LENGTH * 2] = '\0'; 
 
-    return *hash_string;
+    return &hash_string;
 }
 
 unsigned char* read_file(const char* filename, size_t* bytesRead) {
