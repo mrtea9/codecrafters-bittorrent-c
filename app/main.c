@@ -366,7 +366,6 @@ int process_command(char* command, char* encoded_str) {
         value_print_info(length);
         putchar('\n');
 
-
         value_delete(result);
         value_delete(announce);
         value_delete(length);
@@ -379,6 +378,8 @@ int process_command(char* command, char* encoded_str) {
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
         
+        value_println(result);
+
         value_print_info(announce);
         putchar('\n');
         value_print_info(length);
