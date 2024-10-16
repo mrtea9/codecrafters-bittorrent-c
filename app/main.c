@@ -356,7 +356,7 @@ char* encode(value* decoded) {
 
     if (decoded->type == VAL_DICT) return encode_dict(decoded);
 
-    return NULL;
+    exit(1);
 }
 
 unsigned char* read_file(const char* filename, size_t* bytesRead) {
@@ -436,7 +436,7 @@ int process_command(char* command, char* encoded_str) {
         
         printf("%s\n", file_content);
         value_println(info);
-        printf("%s", encode(value_number(123141)));
+        printf("%s", encode(announce));
         //value_println(result);
         //value_println(info);
         
