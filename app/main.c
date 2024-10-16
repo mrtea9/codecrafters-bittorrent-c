@@ -448,13 +448,13 @@ int process_command(char* command, char* encoded_str) {
         printf("%s\n", test);
         size_t len = strlen(test);
 
-        unsigned hash[SHA_DIGEST_LENGTH];
+        unsigned char* hash[SHA_DIGEST_LENGTH];
         SHA1(test, len, hash);
         printf("hash = %s\n", hash);
 
         char sha1_str[SHA_DIGEST_LENGTH * 2 + 1];
         for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
-            sprintf(sha1_str + (i * 2), "%03x", hash[i]);
+            sprintf(sha1_str + (i * 2), "%02x", hash[i]);
         }
         sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';  // Null-terminate the string
 
