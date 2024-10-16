@@ -445,7 +445,7 @@ int process_command(char* command, char* encoded_str) {
         //value_println(info);
 
         unsigned char* test = encode(info);
-       // printf("%s\n", test);
+        printf("%s\n", test);
         size_t len = strlen(test);
 
 
