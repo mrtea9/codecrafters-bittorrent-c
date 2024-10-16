@@ -303,6 +303,29 @@ value* decode_bencode(char* bencoded_value) {
     exit(1);
 }
 
+char* encode_number(value* decoded) {
+
+    char* encoded_number = malloc(num_of_digits(decoded->number) + 3);
+    sprintf(encoded_number, "i%lde", decoded->number);
+
+    printf(encoded_number);
+
+    return encoded_number;
+}
+
+char* encode(value* decoded) {
+
+    if (decoded->type == VAL_NUMBER) return encode_number(decoded);
+
+    if (decoded->type == VAL_STRING) return encode_string(decoded);
+
+    if (decoded->type == VAL_LIST) return encode_list(decoded);
+
+    if (decoded->type == VAL_DICT) return encode_dict(decoded);
+
+    return NULL;
+}
+
 unsigned char* read_file(const char* filename, size_t* bytesRead) {
     FILE* file = fopen(filename, "r");
 
@@ -380,10 +403,12 @@ int process_command(char* command, char* encoded_str) {
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
         
-        value_println(result);
-        value_println(info);
+        printf("%s", file_content);
+        //value_println(result);
+        //value_println(info);
         //printf("%s\n", file_content);
         
+        //value* encoded_info = encode(info);
 
 
         //value_print_info(announce);
