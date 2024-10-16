@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <sha.h>
 
 typedef struct value value;
 
@@ -443,6 +444,12 @@ int process_command(char* command, char* encoded_str) {
 
         value_println(info);
         printf("%s\n", encode(info));
+        char* test = encode(info);
+        size_t len = strlen(test);
+
+        unsigned hash[SHA_DIGEST_LENGTH];
+        SHA1(test, len, hash);
+        printf("hash = %s", hash);
         //value_println(result);
         //value_println(info);
         
