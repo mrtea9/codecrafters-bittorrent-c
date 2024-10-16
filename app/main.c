@@ -144,13 +144,13 @@ void value_print_list(value* val) {
 }
 
 void value_print_dict(value* val) {
-    putchar('{');
+    //putchar('{');
     for (int i = 0; i < val->count; i++) {
         value_print(val->cell[i]);
-        if (i % 2 != 0 && i != (val->count - 1)) putchar(',');
-        else if (i != (val->count - 1)) putchar(':');
+        //if (i % 2 != 0 && i != (val->count - 1)) putchar(',');
+        //else if (i != (val->count - 1)) putchar(':');
     }
-    putchar('}');
+    //putchar('}');
 }
 
 void value_print(value* val) {
