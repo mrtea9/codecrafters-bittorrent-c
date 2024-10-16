@@ -436,7 +436,7 @@ int process_command(char* command, char* encoded_str) {
         value* info = value_get(result, "info");
 
         value_println(info);
-        printf("%s\n", file_content);
+        printf("%s\n", encode(result));
         //value_println(result);
         //value_println(info);
         
