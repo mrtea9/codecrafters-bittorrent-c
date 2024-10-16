@@ -213,7 +213,6 @@ value* decode_string(char** bencoded_value) {
     }
 }
 
-
 value* decode_integer(char** bencoded_value) {
     (*bencoded_value)++; // Skip the 'i'
     long result = atol(*bencoded_value);
@@ -362,6 +361,10 @@ int process_command(char* command, char* encoded_str) {
         value* length = value_get(result, "length");
 
         value_println(result);
+        value_print_info(announce);
+        putchar('\n');
+        value_print_info(length);
+        putchar('\n');
 
         value_delete(result);
         value_delete(announce);
