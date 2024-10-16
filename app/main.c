@@ -350,7 +350,7 @@ char* encode(value* decoded) {
 }
 
 char* calculate_hash(value* value) {
-    char hash_string[SHA_DIGEST_LENGTH * 2 + 1];
+    char* hash_string[SHA_DIGEST_LENGTH * 2 + 1];
     char* encoded_value = encode(value);
     size_t length = strlen(encoded_value);
 
@@ -360,6 +360,7 @@ char* calculate_hash(value* value) {
     for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
         sprintf(hash_string + (i * 2), "%02x", hash[i]);
     }
+
     hash_string[SHA_DIGEST_LENGTH * 2] = '\0'; 
 
     return hash_string;
