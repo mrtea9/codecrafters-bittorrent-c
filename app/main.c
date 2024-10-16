@@ -377,8 +377,10 @@ int process_command(char* command, char* encoded_str) {
         value* result = decode_bencode(hex_dump_to_char(file_content, bytesRead));
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
+        value* info = value_get(result, "info");
         
         value_println(result);
+        value_println(info);
 
         value_print_info(announce);
         putchar('\n');
@@ -388,6 +390,7 @@ int process_command(char* command, char* encoded_str) {
         value_delete(result);
         value_delete(announce);
         value_delete(length);
+        value_delete(info);
     }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
