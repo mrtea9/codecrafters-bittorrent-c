@@ -337,9 +337,10 @@ char* encode_dict(value* decoded) {
     strcpy(encoded_dict, "d");
 
     for (int i = 0; i < decoded->count; i++) {
+        printf("encoded1 = %s\n", encoded_dict);
         encoded_dict = realloc(encoded_dict, strlen(encoded_dict) + strlen(encode(decoded->cell[i])) + 1);
         sprintf(encoded_dict, "%s%s", encoded_dict, encode(decoded->cell[i]));
-        printf("encoded = %s\n", encoded_dict);
+        printf("encoded2 = %s\n", encoded_dict);
     }
     encoded_dict = realloc(encoded_dict, strlen(encoded_dict) + 2);
     sprintf(encoded_dict, "%se", encoded_dict);
