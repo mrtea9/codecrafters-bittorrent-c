@@ -177,6 +177,23 @@ void value_println(value* val) {
     putchar('\n');
 }
 
+void value_print_info(value* val) {
+    switch (val->type) {
+    case VAL_NUMBER:
+        printf("Length: %ld", val->number);
+        break;
+    case VAL_STRING:
+        printf("Tracker URL: %s", val->string);
+        break;
+    case VAL_LIST:
+        value_print_list(val);
+        break;
+    case VAL_DICT:
+        value_print_dict(val);
+        break;
+    }
+}
+
 value* decode_string(char** bencoded_value) {
     int length = atoi(*bencoded_value);
     char* colon_index = strchr(*bencoded_value, ':');
@@ -423,10 +440,16 @@ int process_command(char* command, char* encoded_str) {
         sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';  // Null-terminate the string
 
         printf("SHA1 Hash: %s\n", sha1_str);
+        //value_println(result);
+        //value_println(info);
+        
+        //value* encoded_info = encode(info);
 
 
-        printf("Track URL: %s\n", announce->string);
-        printf("Length: %ld\n", length->number);
+        //value_print_info(announce);
+        //putchar('\n');
+        //value_print_info(length);
+        //putchar('\n');
 
         value_delete(result);
         value_delete(announce);
