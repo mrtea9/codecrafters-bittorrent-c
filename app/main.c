@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
-#include <sha.h>
+#include <openssl/sha.h>
 
 typedef struct value value;
 
