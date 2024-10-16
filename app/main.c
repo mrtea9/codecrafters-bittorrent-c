@@ -458,7 +458,7 @@ int process_command(char* command, char* encoded_str) {
         }
         sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';  // Null-terminate the string
 
-        printf("Info Hash: %s\n", sha1_str);
+        printf("Info Hash: %s", sha1_str);
         //value_println(result);
         //value_println(info);
         
