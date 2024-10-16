@@ -402,7 +402,7 @@ char* hex_dump_to_char(const unsigned char* buffer, size_t length) {
             output[pos++] = buffer[i];
         }
         else {
-            pos += snprintf(output + pos, 5, "%02x", buffer[i]);
+            output[pos++] = '?';
         }
     }
     output[pos] = '\0';
