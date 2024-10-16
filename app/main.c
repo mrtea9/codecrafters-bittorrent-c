@@ -366,6 +366,7 @@ int process_command(char* command, char* encoded_str) {
         value_print_info(length);
         putchar('\n');
 
+
         value_delete(result);
         value_delete(announce);
         value_delete(length);
