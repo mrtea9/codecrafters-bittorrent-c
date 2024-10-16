@@ -429,7 +429,7 @@ int process_command(char* command, char* encoded_str) {
         
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
-        value* result = decode_bencode(file_content);
+        value* result = decode_bencode(hex_dump_to_char(file_content, bytesRead));
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
