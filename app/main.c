@@ -456,6 +456,7 @@ int process_command(char* command, char* encoded_str) {
         char sha1_str[SHA_DIGEST_LENGTH * 2 + 1];
         for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
             sprintf(sha1_str + (i * 2), "%02x", hash[i]);
+            printf("%02x", hash[i]);
         }
         sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';  // Null-terminate the string
 
