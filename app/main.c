@@ -432,7 +432,7 @@ int process_command(char* command, char* encoded_str) {
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
         int i = strlen(file_content);
         printf("first %i, %i = ", i, bytesRead);
-        char* test = calculate_hash(file_content, bytesRead);
+        char* test = calculate_hash(file_content, i);
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
@@ -440,7 +440,7 @@ int process_command(char* command, char* encoded_str) {
 
         int j = strlen(encode(result));
         printf("first %i = ", j);
-        char* test2 = calculate_hash(encode(result), bytesRead);
+        char* test2 = calculate_hash(encode(result), i);
 
         char* hashed_value = calculate_hash(encode(info), strlen(encode(info)));
 
