@@ -430,12 +430,16 @@ int process_command(char* command, char* encoded_str) {
         
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
+        int i = strlen(file_content);
+        printf("first %i = ", i);
         char* test = calculate_hash(file_content);
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
 
+        int j = strlen(encode(result));
+        printf("first %i = ", j);
         char* test2 = calculate_hash(encode(result));
 
         //char* hashed_value = calculate_hash(encode(info));
