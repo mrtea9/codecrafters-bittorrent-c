@@ -435,6 +435,7 @@ int process_command(char* command, char* encoded_str) {
         printf("first %i, %i = ", len_file_content, bytesRead);
 
         calculate_hash(file_content);
+        printf("first string =\n %s\n", file_content);
 
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
@@ -448,6 +449,8 @@ int process_command(char* command, char* encoded_str) {
         printf("first %i = ", len_encoded_result);
 
         calculate_hash(encoded_result);
+
+        printf("second string =\n %s\n", encoded_result);
 
         calculate_hash(encoded_info);
 
