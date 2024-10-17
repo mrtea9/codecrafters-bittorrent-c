@@ -393,7 +393,7 @@ char* calculate_hash(unsigned char* data, size_t len) {
 
     char* sha1_str = malloc(SHA_DIGEST_LENGTH * 2 + 1);
     for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
-        sprintf(sha1_str + (i * 2), "%02x", hash[i]);
+        sprintf(sha1_str + (i * 2), "%01x", hash[i]);
     }
     sha1_str[SHA_DIGEST_LENGTH * 2] = '\0'; 
 
