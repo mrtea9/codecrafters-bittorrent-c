@@ -436,7 +436,7 @@ int process_command(char* command, char* encoded_str) {
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
 
-        hashed_value = calculate_hash(encode(info));
+        char* hashed_value = calculate_hash(encode(info));
 
         value_delete(result);
         value_delete(announce);
