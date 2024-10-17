@@ -443,13 +443,7 @@ int process_command(char* command, char* encoded_str) {
         printf("Tracker URL: %s\n", announce->string);
         printf("Length: %ld\n", length->number);
         printf("Piece Length: %ld\n", piece_length->number);
-
-        char* sha1_str = malloc(SHA_DIGEST_LENGTH * 2 + 1);
-        for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
-            sprintf(sha1_str + (i * 2), "%02x", pieces->string[i]);
-        }
-        sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';
-        printf("test = %s\n", sha1_str);
+        printf("%s\n", pieces->string);
 
         value_delete(result);
         value_delete(announce);
