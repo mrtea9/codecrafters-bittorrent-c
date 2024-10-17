@@ -315,8 +315,6 @@ char* encode_number(value* decoded) {
 char* encode_string(value* decoded) {
     char* encoded_string = malloc(strlen(decoded->string) + 3);
     sprintf(encoded_string, "%i:%s", strlen(decoded->string), decoded->string);
-    value_println(decoded);
-    printf("encoded = %s\n", encoded_string);
 
     return encoded_string;
 }
@@ -341,13 +339,11 @@ char* encode_dict(value* decoded) {
 
     for (int i = 0; i < decoded->count; i++) {
         char* encoded_value = encode(decoded->cell[i]);
-        printf("encoded2 = %s\n", encoded_value);
+
         size_t new_len = strlen(encoded_dict) + strlen(encoded_value) + 1;
 
         encoded_dict = realloc(encoded_dict, new_len);
         strcat(encoded_dict, encoded_value);
-        printf("encoded3 = %s\n", encoded_value);
-        //free(encoded_value);
     }
 
     encoded_dict = realloc(encoded_dict, strlen(encoded_dict) + 2);
@@ -358,9 +354,6 @@ char* encode_dict(value* decoded) {
 
 char* encode(value* decoded) {
 
-    value_println(decoded);
-    printf("%i\n", decoded->type);
-
     if (decoded->type == VAL_NUMBER) return encode_number(decoded);
 
     if (decoded->type == VAL_STRING) return encode_string(decoded);
@@ -368,8 +361,6 @@ char* encode(value* decoded) {
     if (decoded->type == VAL_LIST) return encode_list(decoded);
 
     if (decoded->type == VAL_DICT) return encode_dict(decoded);
-
-    printf("da\n");
 
     exit(1);
 }
