@@ -411,12 +411,6 @@ char* find_info(char* bencoded_value) {
         int depth = 1;
         char* p = info_start;
         while (*p && depth > 0) {
-            if (*p == 'd' || *p == 'l') {
-                depth++;  // Start of a new dictionary or list, increase depth
-            }
-            else if (*p == 'e') {
-                depth--;  // End of a dictionary or list, decrease depth
-            }
             p++;
             count++;
         }
