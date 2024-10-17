@@ -354,7 +354,6 @@ char* encode_dict(value* decoded) {
     encoded_dict = realloc(encoded_dict, strlen(encoded_dict) + 2);
     //strcat(encoded_dict, "e");
 
-
     return encoded_dict;
 }
 
