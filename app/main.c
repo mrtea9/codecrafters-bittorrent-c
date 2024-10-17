@@ -392,9 +392,9 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     return buffer;
 }
 
-char* calculate_hash(char* string, size_t len) {
+char* calculate_hash(char* string) {
     unsigned char* test = string;
-    //size_t len = strlen(test);
+    size_t len = strlen(test);
 
     unsigned char hash[SHA_DIGEST_LENGTH];
     SHA1(test, len, hash);
@@ -430,19 +430,26 @@ int process_command(char* command, char* encoded_str) {
         
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
-        int i = strlen(file_content);
-        printf("first %i, %i = ", i, bytesRead);
-        char* test = calculate_hash(file_content, i);
+        int len_file_content = strlen(file_content);
+
+        printf("first %i, %i = ", len_file_content, bytesRead);
+
+        calculate_hash(file_content);
+
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
 
-        int j = strlen(encode(result));
-        printf("first %i = ", j);
-        char* test2 = calculate_hash(encode(result), i);
+        char* encoded_result = encode(result);
+        char* encoded_info = encode(info);
 
-        char* hashed_value = calculate_hash(encode(info), strlen(encode(info)));
+        int len_encoded_result = strlen(encoded_result);
+        printf("first %i = ", len_encoded_result);
+
+        calculate_hash(encoded_result);
+
+        calculate_hash(encoded_info);
 
         value_delete(result);
         value_delete(announce);
