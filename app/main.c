@@ -431,6 +431,7 @@ int process_command(char* command, char* encoded_str) {
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
+        value* piece_length = value_get(result, "piece length");
 
         char* encoded_info = encode(info);
 
@@ -438,6 +439,7 @@ int process_command(char* command, char* encoded_str) {
         printf("Info Hash: c77829d2a77d6516f88cd7a3de1a26abcbfab0db\n");
         printf("Tracker URL: %s\n", announce->string);
         printf("Length: %ld\n", length->number);
+        printf("Piece Length: %ld\n", piece_length->number);
 
 
         value_delete(result);
