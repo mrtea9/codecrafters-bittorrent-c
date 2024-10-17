@@ -450,6 +450,9 @@ int process_command(char* command, char* encoded_str) {
         value_delete(length);
         value_delete(info);
     }
+    else if (strcmp(command, "peers") == 0) {
+        printf("%s\n", encoded_str);
+    }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
         return 1;
