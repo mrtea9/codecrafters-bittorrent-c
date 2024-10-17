@@ -372,7 +372,7 @@ char* encode(value* decoded) {
 }
 
 unsigned char* read_file(const char* filename, size_t* bytesRead) {
-    FILE* file = fopen(filename, "r");
+    FILE* file = fopen(filename, "rb");
 
     if (file == NULL) return NULL;
 
