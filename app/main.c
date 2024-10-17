@@ -390,9 +390,9 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
 
     fseek(file, 0, SEEK_SET);
 
-    unsigned char* buffer = malloc(filesize + 1);
+    unsigned char* buffer = malloc(filesize);
 
-    *bytesRead = fread(buffer, sizeof(char), filesize + 2, file);
+    *bytesRead = fread(buffer, sizeof(char), filesize, file);
 
     fclose(file);
     return buffer;
