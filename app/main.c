@@ -404,11 +404,14 @@ char* calculate_hash(char* string) {
     for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
         sprintf(sha1_str + (i * 2), "%02x", hash[i]);
     }
-    sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';  /
+    sha1_str[SHA_DIGEST_LENGTH * 2] = '\0'; 
 
     printf("Info Hash: %s\n", sha1_str);
 
-    return sha1_str;
+    char* result = malloc(strlen(sha1_str) + 1);
+    strcpy(result, sha1_str);
+
+    return result;
 }
 
 int process_command(char* command, char* encoded_str) {
