@@ -385,12 +385,7 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
 
     fseek(file, 0, SEEK_SET);
 
-    char* buffer = malloc(filesize);
-
-    if (buffer == 0) {
-        fclose(file);
-        return NULL;
-    }
+    unsigned char* buffer = malloc(filesize + 1);
 
     *bytesRead = fread(buffer, sizeof(char), filesize, file);
 
