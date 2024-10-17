@@ -429,6 +429,7 @@ void process_info_command(const char* torrent_file) {
 
     size_t info_len = 0;
     char* info_start = find_info_section((char*)file_content, &info_len);
+    printf("%s\n", info_start);
 
     if (info_start) {
         // Calculate the SHA-1 hash of the 'info' section directly from the file content
