@@ -417,9 +417,6 @@ int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
         value* info = value_get(result, "info");
-
-        value_println(result);
-        printf("%s\n", encode(info));
         //printf("%s\n", encode(info));
      //   value_print_info(announce);
        // putchar('\n');
@@ -438,8 +435,7 @@ int process_command(char* command, char* encoded_str) {
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
-        value_println(result);
-        printf("test = %s\n", encode(result));
+
         char* test2 = calculate_hash(encode(result));
 
         char* hashed_value = calculate_hash(encode(info));
