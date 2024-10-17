@@ -412,6 +412,15 @@ char* calculate_hash(unsigned char* data, size_t len) {
     return sha1_str;
 }
 
+void print_bytes(const unsigned char* data, size_t len) {
+    for (size_t i = 0; i < len; i++) {
+        // Print each byte in hexadecimal (02 ensures 2 digits, padded with zero if necessary)
+        printf("%02x", data[i]);
+    }
+    // Print a newline after the entire hex string
+    printf("\n");
+}
+
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
@@ -443,7 +452,9 @@ int process_command(char* command, char* encoded_str) {
         printf("Tracker URL: %s\n", announce->string);
         printf("Length: %ld\n", length->number);
         printf("Piece Length: %ld\n", piece_length->number);
-        printf("%s\n", pieces->string);
+        for (size_t i = 0; i < pieces->string_length; i += 20) {
+            print_bytes((unsigned char*)&pieces->string[i], 20);
+        }
 
         value_delete(result);
         value_delete(announce);
