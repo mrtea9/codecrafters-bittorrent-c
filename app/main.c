@@ -416,11 +416,8 @@ int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
         value* info = value_get(result, "info");
-        //printf("%s\n", encode(info));
-     //   value_print_info(announce);
-       // putchar('\n');
-      //  value_print_info(length);
-       // putchar('\n');
+        
+        value_println(result);
 
         value_delete(result);
         value_delete(info);
