@@ -392,9 +392,9 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     return buffer;
 }
 
-char* calculate_hash(char* string) {
+char* calculate_hash(char* string, size_t len) {
     unsigned char* test = string;
-    size_t len = strlen(test);
+    //size_t len = strlen(test);
 
     unsigned char hash[SHA_DIGEST_LENGTH];
     SHA1(test, len, hash);
@@ -442,7 +442,7 @@ int process_command(char* command, char* encoded_str) {
         printf("first %i = ", j);
         char* test2 = calculate_hash(encode(result));
 
-        char* hashed_value = calculate_hash(encode(info));
+        char* hashed_value = calculate_hash(encode(info), bytesRead);
 
         value_delete(result);
         value_delete(announce);
