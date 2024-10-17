@@ -434,6 +434,7 @@ int process_command(char* command, char* encoded_str) {
         
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
+        char* test = calculate_hash(file_content);
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
