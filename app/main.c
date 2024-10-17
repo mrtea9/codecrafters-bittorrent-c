@@ -380,8 +380,9 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     long filesize = ftell(file);
     fseek(file, 0, SEEK_SET);
 
-    unsigned char* buffer = malloc(filesize);
+    unsigned char* buffer = malloc(filesize + 1);
     *bytesRead = fread(buffer, sizeof(char), filesize, file);
+    buffer[bytesRead] = '\0';
 
     fclose(file);
     return buffer;
@@ -398,28 +399,6 @@ char* calculate_hash(unsigned char* data, size_t len) {
     sha1_str[SHA_DIGEST_LENGTH * 2] = '\0'; 
 
     return sha1_str;
-}
-
-char* find_info(char* bencoded_value) {
-    char* info_start = strstr(bencoded_value, "4:info");
-    int count = 0;
-    size_t info_len;
-    if (info_start) {
-        info_start += 6; // Move pointer past "4:info" to the start of the 'info' dictionary
-
-        // Find the corresponding closing 'e' for the 'info' section
-        int depth = 1;
-        char* p = info_start;
-        while (*p && depth > 0) {
-            p++;
-            count++;
-        }
-
-        // Set the length of the 'info' section without including the final 'e' of the outer dictionary
-        printf("len = %i\n", count);
-        return info_start;
-    }
-    return NULL;
 }
 
 int process_command(char* command, char* encoded_str) {
@@ -453,7 +432,6 @@ int process_command(char* command, char* encoded_str) {
 
         char* encoded_result = encode(result);
         char* encoded_info = encode(info);
-        char* finded_info = find_info(file_content);
 
         int len_encoded_result = strlen(encoded_result);
         printf("first %i = ", len_encoded_result);
