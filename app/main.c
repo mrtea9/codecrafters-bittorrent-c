@@ -376,47 +376,47 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
 
     if (file == NULL) return NULL;
 
-    if (fseek(file, 0, SEEK_END) != 0) {
-        fclose(file);
-        return NULL;
-    }
-
-    int filesize = ftell(file);
-
-    if (filesize == 0) {
-        fclose(file);
-        return NULL;
-    }
-
+    fseek(file, 0, SEEK_END);
+    long filesize = ftell(file);
     fseek(file, 0, SEEK_SET);
 
     unsigned char* buffer = malloc(filesize);
-
     *bytesRead = fread(buffer, sizeof(char), filesize, file);
 
     fclose(file);
     return buffer;
 }
 
-char* calculate_hash(char* string) {
-    unsigned char* test = string;
-    size_t len = strlen(test);
-
+char* calculate_hash(unsigned char* data, size_t len) {
     unsigned char hash[SHA_DIGEST_LENGTH];
-    SHA1(test, len, hash);
+    SHA1(data, len, hash);
 
-    char sha1_str[SHA_DIGEST_LENGTH * 2 + 1];
+    char* sha1_str = malloc(SHA_DIGEST_LENGTH * 2 + 1);
     for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
         sprintf(sha1_str + (i * 2), "%02x", hash[i]);
     }
     sha1_str[SHA_DIGEST_LENGTH * 2] = '\0'; 
 
-    printf("Info Hash: %s\n", sha1_str);
+    return sha1_str;
+}
 
-    char* result = malloc(strlen(sha1_str) + 1);
-    strcpy(result, sha1_str);
+void process_info_command(const char* torrent_file) {
+    size_t bytesRead = 0;
+    unsigned char* file_content = read_file(torrent_file, &bytesRead);
 
-    return result;
+    char* bencoded_value = (char*)file_content;
+    value* decoded = decode_bencode(bencoded_value);
+
+    value* info_dict = value_get(decoded, "info");
+
+    char* encoded_info = encode(info_dict);
+    size_t info_length = strlen(encoded_info);
+
+    char* info_hash = calculate_hash((unsigned char*)encoded_info, info_length);
+    printf("Info Hash: %s\n", info_hash);
+
+    value_delete(info_dict);
+    value_delete(decoded);
 }
 
 int process_command(char* command, char* encoded_str) {
@@ -438,10 +438,10 @@ int process_command(char* command, char* encoded_str) {
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
         int len_file_content = strlen(file_content);
 
-        printf("first %i, %i = ", len_file_content, bytesRead);
+        //printf("first %i, %i = ", len_file_content, bytesRead);
 
-        calculate_hash(file_content);
-        printf("first string =\n %s\n", file_content);
+        //calculate_hash(file_content);
+        //printf("first string =\n %s\n", file_content);
 
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
@@ -451,14 +451,15 @@ int process_command(char* command, char* encoded_str) {
         char* encoded_result = encode(result);
         char* encoded_info = encode(info);
 
-        int len_encoded_result = strlen(encoded_result);
-        printf("first %i = ", len_encoded_result);
+        process_info_command(encoded_str);
+       // int len_encoded_result = strlen(encoded_result);
+        //printf("first %i = ", len_encoded_result);
 
-        calculate_hash(encoded_result);
+       // calculate_hash(encoded_result);
 
-        printf("second string =\n %s\n", encoded_result);
+       // printf("second string =\n %s\n", encoded_result);
 
-        calculate_hash(encoded_info);
+        //calculate_hash(encoded_info);
 
         value_delete(result);
         value_delete(announce);
