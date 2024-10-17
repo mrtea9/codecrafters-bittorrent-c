@@ -442,7 +442,7 @@ int process_command(char* command, char* encoded_str) {
         printf("first %i = ", j);
         char* test2 = calculate_hash(encode(result));
 
-        //char* hashed_value = calculate_hash(encode(info));
+        char* hashed_value = calculate_hash(encode(info));
 
         value_delete(result);
         value_delete(announce);
