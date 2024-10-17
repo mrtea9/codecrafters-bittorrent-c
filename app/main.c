@@ -422,7 +422,8 @@ char* find_info_section(char* bencoded_value, size_t* info_len) {
         *info_len = (p - 1) - info_start;
         return info_start;
     }
-        return NULL;
+        
+    return NULL;
 }
 
 void process_info_command(const char* torrent_file) {
