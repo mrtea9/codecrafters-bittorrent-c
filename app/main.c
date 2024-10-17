@@ -346,8 +346,8 @@ char* encode_dict(value* decoded) {
 
         encoded_dict = realloc(encoded_dict, new_len);
         strcat(encoded_dict, encoded_value);
-
-        free(encoded_value);
+        printf("encoded3 = %s\n", encoded_value);
+        //free(encoded_value);
     }
 
     encoded_dict = realloc(encoded_dict, strlen(encoded_dict) + 2);
