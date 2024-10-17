@@ -389,17 +389,30 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     return buffer;
 }
 
+void print_bytes(unsigned char* string, int length) {
+    for (int i = 0; i < length; i++) {
+        if (string[i] < 16)
+            printf("0%01x", string[i]);
+        else
+            printf("%01x", string[i]);
+    }
+    printf("\n");
+}
+
 char* calculate_hash(unsigned char* data, size_t len) {
-    unsigned char hash[SHA_DIGEST_LENGTH];
+    char hash[21];
     SHA1(data, len, hash);
 
-    char* sha1_str = malloc(SHA_DIGEST_LENGTH * 2 + 1);
+    printf("Info Hash test: ");
+    print_bytes(hash, 20);
+
+/*    char* sha1_str = malloc(SHA_DIGEST_LENGTH * 2 + 1);
     for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
         sprintf(sha1_str + (i * 2), "%02x", hash[i]);
     }
-    sha1_str[SHA_DIGEST_LENGTH * 2] = '\0'; 
+    sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';*/ 
 
-    return sha1_str;
+    return data;
 }
 
 int process_command(char* command, char* encoded_str) {
