@@ -439,6 +439,7 @@ int process_command(char* command, char* encoded_str) {
         printf("Tracker URL: %s\n", announce->string);
         printf("Length: %ld\n", length->number);
 
+
         value_delete(result);
         value_delete(announce);
         value_delete(length);
