@@ -400,52 +400,6 @@ char* calculate_hash(unsigned char* data, size_t len) {
     return sha1_str;
 }
 
-char* find_info_section(char* bencoded_value, size_t* info_len) {
-    char* info_start = strstr(bencoded_value, "4:info");
-    if (info_start) {
-        info_start += 6; // Move pointer past "4:info" to the start of the 'info' dictionary
-
-        // Find the corresponding closing 'e' for the 'info' section
-        int depth = 1;
-        char* p = info_start;
-        while (*p && depth > 0) {
-            if (*p == 'd' || *p == 'l') {
-                depth++;  // Start of a new dictionary or list, increase depth
-            }
-            else if (*p == 'e') {
-                depth--;  // End of a dictionary or list, decrease depth
-            }
-            p++;
-        }
-
-        // Set the length of the 'info' section without including the final 'e' of the outer dictionary
-        *info_len = (p - 1) - info_start;
-        return info_start;
-    }
-        
-    return NULL;
-}
-
-void process_info_command(const char* torrent_file) {
-    size_t bytesRead = 0;
-    unsigned char* file_content = read_file(torrent_file, &bytesRead);
-
-    size_t info_len = 0;
-    char* info_start = find_info_section((char*)file_content, &info_len);
-    printf("%s\n", info_start);
-
-    if (info_start) {
-        // Calculate the SHA-1 hash of the 'info' section directly from the file content
-        char* info_hash = calculate_hash((unsigned char*)info_start, info_len);
-        printf("Info Hash: %s\n", info_hash);
-
-        free(info_hash);
-    }
-    else {
-        printf("Error: 'info' section not found.\n");
-    }
-}
-
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
@@ -465,10 +419,10 @@ int process_command(char* command, char* encoded_str) {
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
         int len_file_content = strlen(file_content);
 
-        //printf("first %i, %i = ", len_file_content, bytesRead);
+        printf("first %i, %i = ", len_file_content, bytesRead);
 
-        //calculate_hash(file_content);
-        //printf("first string =\n %s\n", file_content);
+        printf("Info Hash: %s", calculate_hash(file_content));
+        printf("first string =\n %s\n", file_content);
 
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
@@ -479,14 +433,14 @@ int process_command(char* command, char* encoded_str) {
         char* encoded_info = encode(info);
 
         process_info_command(encoded_str);
-       // int len_encoded_result = strlen(encoded_result);
-        //printf("first %i = ", len_encoded_result);
+        int len_encoded_result = strlen(encoded_result);
+        printf("first %i = ", len_encoded_result);
 
-       // calculate_hash(encoded_result);
+        printf("Info Hash: %s", calculate_hash(encoded_result));
 
-       // printf("second string =\n %s\n", encoded_result);
+        printf("second string =\n %s\n", encoded_result);
 
-        //calculate_hash(encoded_info);
+        printf("Info Hash: %s", calculate_hash(encoded_info));
 
         value_delete(result);
         value_delete(announce);
