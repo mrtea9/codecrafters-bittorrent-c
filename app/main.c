@@ -432,7 +432,6 @@ int process_command(char* command, char* encoded_str) {
         char* encoded_result = encode(result);
         char* encoded_info = encode(info);
 
-        process_info_command(encoded_str);
         int len_encoded_result = strlen(encoded_result);
         printf("first %i = ", len_encoded_result);
 
