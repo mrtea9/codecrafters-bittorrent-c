@@ -400,23 +400,46 @@ char* calculate_hash(unsigned char* data, size_t len) {
     return sha1_str;
 }
 
+char* find_info_section(char* bencoded_value, size_t* info_len) {
+    char* info_start = strstr(bencoded_value, "4:info");
+    if (info_start) {
+        info_start += 6; // Move pointer to the start of 'info' dict content
+
+        // Decode the info dictionary size
+        int depth = 1;
+        char* p = info_start;
+        while (*p && depth > 0) {
+            if (*p == 'd' || *p == 'l') {
+                depth++;
+            }
+            else if (*p == 'e') {
+                depth--;
+            }
+            p++;
+        }
+        *info_len = p - info_start;
+        return info_start;
+    }
+    return NULL;
+}
+
 void process_info_command(const char* torrent_file) {
     size_t bytesRead = 0;
     unsigned char* file_content = read_file(torrent_file, &bytesRead);
 
-    char* bencoded_value = (char*)file_content;
-    value* decoded = decode_bencode(bencoded_value);
+    size_t info_len = 0;
+    char* info_start = find_info_section((char*)file_content, &info_len);
 
-    value* info_dict = value_get(decoded, "info");
+    if (info_start) {
+        // Calculate the SHA-1 hash of the 'info' section directly from the file content
+        char* info_hash = calculate_hash((unsigned char*)info_start, info_len);
+        printf("Info Hash: %s\n", info_hash);
 
-    char* encoded_info = encode(info_dict);
-    size_t info_length = strlen(encoded_info);
-
-    char* info_hash = calculate_hash((unsigned char*)encoded_info, info_length);
-    printf("Info Hash: %s\n", info_hash);
-
-    value_delete(info_dict);
-    value_delete(decoded);
+        free(info_hash);
+    }
+    else {
+        printf("Error: 'info' section not found.\n");
+    }
 }
 
 int process_command(char* command, char* encoded_str) {
