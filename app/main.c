@@ -405,7 +405,7 @@ char* find_info_section(char* bencoded_value, size_t* info_len) {
     if (info_start) {
         info_start += 6; // Move pointer to the start of 'info' dict content
 
-        // Decode the info dictionary size
+        // Decode the 'info' dictionary size without including the outer 'e'
         int depth = 1;
         char* p = info_start;
         while (*p && depth > 0) {
@@ -414,10 +414,14 @@ char* find_info_section(char* bencoded_value, size_t* info_len) {
             }
             else if (*p == 'e') {
                 depth--;
+                // Stop at the first 'e' which closes the 'info' dictionary (not the outermost dictionary)
+                if (depth == 0) {
+                    break;
+                }
             }
             p++;
         }
-        *info_len = p - info_start;
+        *info_len = p - info_start;  // Length without the final 'e'
         return info_start;
     }
     return NULL;
