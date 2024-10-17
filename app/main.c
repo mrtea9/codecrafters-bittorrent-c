@@ -407,7 +407,7 @@ char* calculate_hash(unsigned char* data, size_t len) {
     for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
         sprintf(sha1_str + (i * 2), "%02x", hash[i]);
     }
-    sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';*/ 
+    sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';
 
     return data;
 }
