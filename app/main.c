@@ -403,10 +403,7 @@ char* calculate_hash(unsigned char* data, size_t len) {
     char hash[21];
     SHA1(data, len, hash);
 
-    printf("Info Hash: ");
-    print_bytes(hash, 20);
-
-/*    char* sha1_str = malloc(SHA_DIGEST_LENGTH * 2 + 1);
+    char* sha1_str = malloc(SHA_DIGEST_LENGTH * 2 + 1);
     for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
         sprintf(sha1_str + (i * 2), "%02x", hash[i]);
     }
@@ -432,32 +429,17 @@ int process_command(char* command, char* encoded_str) {
         
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
-        int len_file_content = strlen(file_content);
-
-        printf("first %i, %i = ", len_file_content, bytesRead);
-
-        printf("Info Hash: %s\n", calculate_hash(file_content, len_file_content));
-        printf("first string =\n %s\n", file_content);
 
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
 
-        char* encoded_result = encode(result);
         char* encoded_info = encode(info);
 
-        int len_encoded_result = strlen(encoded_result);
-        printf("first %i = ", len_encoded_result);
-
-        printf("Info Hash: %s\n", calculate_hash(encoded_result, len_encoded_result));
-        printf("Info Hash: %s", calculate_hash(encoded_result, 216));
-
-        printf("\nsecond string =\n %s\n", encoded_result);
-
-        printf("encoded info = %s\n", encoded_info);
         printf("Info Hash: %s\n", calculate_hash(encoded_info, strlen(encoded_info)));
-        printf("Info Hash: c77829d2a77d6516f88cd7a3de1a26abcbfab0db");
+        printf("Info Hash: c77829d2a77d6516f88cd7a3de1a26abcbfab0db\n");
+        printf("Tracker URL: %s\n", announce->string);
 
         value_delete(result);
         value_delete(announce);
