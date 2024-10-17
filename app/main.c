@@ -403,7 +403,7 @@ char* calculate_hash(unsigned char* data, size_t len) {
     char hash[21];
     SHA1(data, len, hash);
 
-    printf("Info Hash test: ");
+    printf("Info Hash: ");
     print_bytes(hash, 20);
 
 /*    char* sha1_str = malloc(SHA_DIGEST_LENGTH * 2 + 1);
