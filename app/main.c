@@ -468,7 +468,7 @@ int process_command(char* command, char* encoded_str) {
         printf("finded info = %s\n", finded_info);
         printf("encoded info = %s\n", encoded_info);
         printf("Info Hash: %s\n", calculate_hash(encoded_info, strlen(encoded_info)));
-        printf("Info Hash: %s", calculate_hash(encoded_info, 314));
+        printf("Info Hash: %s", calculate_hash(finded_info, 314));
 
         value_delete(result);
         value_delete(announce);
