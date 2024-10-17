@@ -421,7 +421,7 @@ int process_command(char* command, char* encoded_str) {
 
         printf("first %i, %i = ", len_file_content, bytesRead);
 
-        printf("Info Hash: %s", calculate_hash(file_content));
+        printf("Info Hash: %s", calculate_hash(file_content, len_file_content));
         printf("first string =\n %s\n", file_content);
 
         value* result = decode_bencode(file_content);
@@ -436,11 +436,11 @@ int process_command(char* command, char* encoded_str) {
         int len_encoded_result = strlen(encoded_result);
         printf("first %i = ", len_encoded_result);
 
-        printf("Info Hash: %s", calculate_hash(encoded_result));
+        printf("Info Hash: %s", calculate_hash(encoded_result, len_encoded_result));
 
         printf("second string =\n %s\n", encoded_result);
 
-        printf("Info Hash: %s", calculate_hash(encoded_info));
+        printf("Info Hash: %s", calculate_hash(encoded_info, strlen(encoded_info)));
 
         value_delete(result);
         value_delete(announce);
