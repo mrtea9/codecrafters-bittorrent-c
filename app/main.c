@@ -400,7 +400,7 @@ void print_bytes(unsigned char* string, int length) {
 }
 
 char* calculate_hash(unsigned char* data, size_t len) {
-    char hash[21];
+    unsigned char hash[SHA_DIGEST_LENGTH];
     SHA1(data, len, hash);
 
     char* sha1_str = malloc(SHA_DIGEST_LENGTH * 2 + 1);
