@@ -316,6 +316,7 @@ char* encode_string(value* decoded) {
     char* encoded_string = malloc(strlen(decoded->string) + 3);
     sprintf(encoded_string, "%i:%s", strlen(decoded->string), decoded->string);
     value_println(decoded);
+    printf("encoded = %s\n", encoded_string);
 
     return encoded_string;
 }
