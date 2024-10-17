@@ -400,6 +400,30 @@ char* calculate_hash(unsigned char* data, size_t len) {
     return sha1_str;
 }
 
+char* find_info(char* bencoded_value) {
+    char* info_start = strstr(bencoded_value, "4:info");
+    if (info_start) {
+        info_start += 6; // Move pointer past "4:info" to the start of the 'info' dictionary
+
+        // Find the corresponding closing 'e' for the 'info' section
+        int depth = 1;
+        char* p = info_start;
+        while (*p && depth > 0) {
+            if (*p == 'd' || *p == 'l') {
+                depth++;  // Start of a new dictionary or list, increase depth
+            }
+            else if (*p == 'e') {
+                depth--;  // End of a dictionary or list, decrease depth
+            }
+            p++;
+        }
+
+        // Set the length of the 'info' section without including the final 'e' of the outer dictionary
+        return info_start;
+    }
+    return NULL;
+}
+
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
@@ -431,6 +455,7 @@ int process_command(char* command, char* encoded_str) {
 
         char* encoded_result = encode(result);
         char* encoded_info = encode(info);
+        char* finded_info = find_info(file_content);
 
         int len_encoded_result = strlen(encoded_result);
         printf("first %i = ", len_encoded_result);
@@ -440,6 +465,7 @@ int process_command(char* command, char* encoded_str) {
 
         printf("\nsecond string =\n %s\n", encoded_result);
 
+        printf("finded info = %s\n", finded_info);
         printf("encoded info = %s\n", encoded_info);
         printf("Info Hash: %s\n", calculate_hash(encoded_info, strlen(encoded_info)));
         printf("Info Hash: %s", calculate_hash(encoded_info, 314));
