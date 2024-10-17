@@ -440,8 +440,9 @@ int process_command(char* command, char* encoded_str) {
 
         printf("\nsecond string =\n %s\n", encoded_result);
 
+        printf("encoded info = %s\n", encoded_info);
         printf("Info Hash: %s\n", calculate_hash(encoded_info, strlen(encoded_info)));
-        printf("Info Hash: %s", calculate_hash(encoded_info, strlen(encoded_info) - 1));
+        printf("Info Hash: %s", calculate_hash(encoded_info, 314));
 
         value_delete(result);
         value_delete(announce);
