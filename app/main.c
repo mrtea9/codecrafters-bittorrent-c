@@ -421,7 +421,7 @@ char* find_info(char* bencoded_value) {
 
         // Set the length of the 'info' section without including the final 'e' of the outer dictionary
         info_len = p - info_start;
-        printf("%zu\n", info_len);
+        printf("len = %zu\n", info_len);
         return info_start;
     }
     return NULL;
