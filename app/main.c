@@ -389,16 +389,6 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     return buffer;
 }
 
-void print_bytes(unsigned char* string, int length) {
-    for (int i = 0; i < length; i++) {
-        if (string[i] < 16)
-            printf("0%01x", string[i]);
-        else
-            printf("%01x", string[i]);
-    }
-    printf("\n");
-}
-
 char* calculate_hash(unsigned char* data, size_t len) {
     unsigned char hash[SHA_DIGEST_LENGTH];
     SHA1(data, len, hash);
@@ -412,7 +402,7 @@ char* calculate_hash(unsigned char* data, size_t len) {
     return sha1_str;
 }
 
-void print_bytes(const unsigned char* data, size_t len) {
+void print_bytes(const unsigned char* data, int len) {
     for (size_t i = 0; i < len; i++) {
         // Print each byte in hexadecimal (02 ensures 2 digits, padded with zero if necessary)
         printf("%02x", data[i]);
