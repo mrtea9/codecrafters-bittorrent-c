@@ -402,6 +402,7 @@ char* calculate_hash(unsigned char* data, size_t len) {
 
 char* find_info(char* bencoded_value) {
     char* info_start = strstr(bencoded_value, "4:info");
+    int count = 0;
     size_t info_len;
     if (info_start) {
         info_start += 6; // Move pointer past "4:info" to the start of the 'info' dictionary
@@ -417,11 +418,11 @@ char* find_info(char* bencoded_value) {
                 depth--;  // End of a dictionary or list, decrease depth
             }
             p++;
+            count++;
         }
 
         // Set the length of the 'info' section without including the final 'e' of the outer dictionary
-        info_len = p - info_start;
-        printf("len = %zu\n", info_len);
+        printf("len = %i\n", count);
         return info_start;
     }
     return NULL;
