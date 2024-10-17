@@ -366,6 +366,8 @@ char* encode(value* decoded) {
 
     if (decoded->type == VAL_DICT) return encode_dict(decoded);
 
+    printf("da\n");
+
     exit(1);
 }
 
