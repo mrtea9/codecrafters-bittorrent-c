@@ -393,14 +393,22 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     return buffer;
 }
 
-void print_bytes(unsigned char* string, int length) {
-    for (int i = 0; i < length; i++) {
-        if (string[i] < 16)
-            printf("0%01x", string[i]);
-        else
-            printf("%01x", string[i]);
+char* calculate_hash(char* string) {
+    unsigned char* test = string;
+    size_t len = strlen(test);
+
+    unsigned char hash[SHA_DIGEST_LENGTH];
+    SHA1(test, len, hash);
+
+    char sha1_str[SHA_DIGEST_LENGTH * 2 + 1];
+    for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
+        sprintf(sha1_str + (i * 2), "%02x", hash[i]);
     }
-    printf("\n");
+    sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';  /
+
+    printf("Info Hash: %s\n", sha1_str);
+
+    return sha1_str;
 }
 
 int process_command(char* command, char* encoded_str) {
@@ -428,35 +436,7 @@ int process_command(char* command, char* encoded_str) {
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
 
-        //value_println(info);
-
-        unsigned char* test = encode(info);
-        //printf("%s\n", test);
-        size_t len = strlen(test);
-
-
-        unsigned char hash[SHA_DIGEST_LENGTH];
-        SHA1(test, len, hash);
-       // printf("hash = %s\n", hash);
-
-        char sha1_str[SHA_DIGEST_LENGTH * 2 + 1];
-        for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
-            sprintf(sha1_str + (i * 2), "%02x", hash[i]);
-        }
-        sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';  // Null-terminate the string
-
-        printf("Info Hash: %s\n", sha1_str);
-        print_bytes(hash, 20);
-        //value_println(result);
-        //value_println(info);
-        
-        //value* encoded_info = encode(info);
-
-
-        //value_print_info(announce);
-        //putchar('\n');
-        //value_print_info(length);
-        //putchar('\n');
+        hashed_value = calculate_hash(encode(info));
 
         value_delete(result);
         value_delete(announce);
