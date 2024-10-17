@@ -355,6 +355,8 @@ char* encode_dict(value* decoded) {
 
 char* encode(value* decoded) {
 
+    printf("test\n");
+
     if (decoded->type == VAL_NUMBER) return encode_number(decoded);
 
     if (decoded->type == VAL_STRING) return encode_string(decoded);
