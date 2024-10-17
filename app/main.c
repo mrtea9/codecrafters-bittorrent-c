@@ -409,7 +409,7 @@ char* calculate_hash(unsigned char* data, size_t len) {
     }
     sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';
 
-    return data;
+    return sha1_str;
 }
 
 int process_command(char* command, char* encoded_str) {
