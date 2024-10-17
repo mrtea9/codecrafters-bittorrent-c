@@ -381,8 +381,9 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     fseek(file, 0, SEEK_SET);
 
     unsigned char* buffer = malloc(filesize + 1);
-    *bytesRead = fread(buffer, sizeof(char), filesize, file);
-    buffer[bytesRead] = '\0';
+    int bytes = fread(buffer, sizeof(char), filesize, file);
+    *bytesRead = bytes;
+    buffer[bytes] = '\0';
 
     fclose(file);
     return buffer;
