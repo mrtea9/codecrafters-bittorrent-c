@@ -440,6 +440,7 @@ int process_command(char* command, char* encoded_str) {
         printf("Info Hash: %s\n", calculate_hash(encoded_info, strlen(encoded_info)));
         printf("Info Hash: c77829d2a77d6516f88cd7a3de1a26abcbfab0db\n");
         printf("Tracker URL: %s\n", announce->string);
+        printf("Length: %ld\n", length->number);
 
         value_delete(result);
         value_delete(announce);
