@@ -393,8 +393,7 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     unsigned char* buffer = malloc(filesize + 1);
 
     *bytesRead = fread(buffer, sizeof(char), filesize, file);
-
-
+    printf("buffer = %s\n", buffer);
 
     fclose(file);
     return buffer;
