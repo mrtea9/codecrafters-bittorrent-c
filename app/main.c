@@ -393,7 +393,7 @@ char* calculate_hash(unsigned char* data, size_t len) {
 
     char* sha1_str = malloc(SHA_DIGEST_LENGTH * 2 + 1);
     for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
-        sprintf(sha1_str + (i * 2), "%01x", hash[i]);
+        sprintf(sha1_str + (i * 2), "%02x", hash[i]);
     }
     sha1_str[SHA_DIGEST_LENGTH * 2] = '\0'; 
 
@@ -403,25 +403,23 @@ char* calculate_hash(unsigned char* data, size_t len) {
 char* find_info_section(char* bencoded_value, size_t* info_len) {
     char* info_start = strstr(bencoded_value, "4:info");
     if (info_start) {
-        info_start += 6; // Move pointer to the start of 'info' dict content
+        info_start += 6; // Move pointer past "4:info" to the start of the 'info' dictionary
 
-        // Decode the 'info' dictionary size without including the outer 'e'
+        // Find the corresponding closing 'e' for the 'info' section
         int depth = 1;
         char* p = info_start;
         while (*p && depth > 0) {
             if (*p == 'd' || *p == 'l') {
-                depth++;
+                depth++;  // Start of a new dictionary or list, increase depth
             }
             else if (*p == 'e') {
-                depth--;
-                // Stop at the first 'e' which closes the 'info' dictionary (not the outermost dictionary)
-                if (depth == 0) {
-                    break;
-                }
+                depth--;  // End of a dictionary or list, decrease depth
             }
             p++;
         }
-        *info_len = p - info_start;  // Length without the final 'e'
+
+        // Set the length of the 'info' section without including the final 'e' of the outer dictionary
+        *info_len = (p - 1) - info_start;
         return info_start;
     }
     return NULL;
