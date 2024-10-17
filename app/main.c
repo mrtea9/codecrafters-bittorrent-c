@@ -393,6 +393,16 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     return buffer;
 }
 
+void print_bytes(unsigned char* string, int length) {
+    for (int i = 0; i < length; i++) {
+        if (string[i] < 16)
+            printf("0%01x", string[i]);
+        else
+            printf("%01x", string[i]);
+    }
+    printf("\n");
+}
+
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
@@ -436,6 +446,7 @@ int process_command(char* command, char* encoded_str) {
         sha1_str[SHA_DIGEST_LENGTH * 2] = '\0';  // Null-terminate the string
 
         printf("Info Hash: %s", sha1_str);
+        print_bytes(hash, 20);
         //value_println(result);
         //value_println(info);
         
