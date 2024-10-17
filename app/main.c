@@ -19,6 +19,7 @@ struct value {
 
     long number;
     char* string;
+    size_t string_length;
 
     int count;
     value** cell;
@@ -50,11 +51,13 @@ value* value_number(long number) {
     return val;
 }
 
-value* value_string(char* string) {
+value* value_string(char* string, size_t length) {
     value* val = malloc(sizeof(value));
     val->type = VAL_STRING;
-    val->string = malloc(strlen(string) + 1);
-    strcpy(val->string, string);
+    val->string = malloc(length + 1);
+    memcpy(val->string, string, length);
+    val->string[length] = '\0';
+    val->string_length = length;
     return val;
 }
 
@@ -92,8 +95,10 @@ value* value_copy(value* val) {
             break;
 
         case VAL_STRING:
-            x->string = malloc(strlen(val->string) + 1);
-            strcpy(x->string, val->string);
+            x->string = malloc(val->string_length + 1);
+            memcpy(x->string, val->string, val->string_length);
+            x->string[val->string_length] = '\0';
+            x->string_length = val->string_length;
             break;
 
         case VAL_LIST:
@@ -205,7 +210,7 @@ value* decode_string(char** bencoded_value) {
         decoded_str[length] = '\0';
 
         *bencoded_value = start + length; // Move the pointer past the string
-        value* result = value_string(decoded_str);
+        value* result = value_string(decoded_str, length);
         //free(decoded_str);
         return result;
     }
@@ -313,8 +318,8 @@ char* encode_number(value* decoded) {
 }
 
 char* encode_string(value* decoded) {
-    char* encoded_string = malloc(strlen(decoded->string) + 3);
-    sprintf(encoded_string, "%i:%s", strlen(decoded->string), decoded->string);
+    char* encoded_string = malloc(num_of_digits(decoded->string_length) + decoded->string_length + 2);
+    sprintf(encoded_string, "%zu:%s", decoded->string_length, decoded->string);
 
     return encoded_string;
 }
@@ -362,7 +367,7 @@ char* encode(value* decoded) {
 
     if (decoded->type == VAL_DICT) return encode_dict(decoded);
 
-    exit(1);
+    return NULL;
 }
 
 unsigned char* read_file(const char* filename, size_t* bytesRead) {
@@ -387,6 +392,8 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     unsigned char* buffer = malloc(filesize + 1);
 
     *bytesRead = fread(buffer, sizeof(char), filesize, file);
+
+
 
     fclose(file);
     return buffer;
