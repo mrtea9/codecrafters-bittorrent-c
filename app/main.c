@@ -439,6 +439,7 @@ int process_command(char* command, char* encoded_str) {
         value* announce = value_get(result, "announce");
         value* length = value_get(result, "length");
         value* info = value_get(result, "info");
+        value_println(result);
         char* test2 = calculate_hash(encode(result));
 
         char* hashed_value = calculate_hash(encode(info));
