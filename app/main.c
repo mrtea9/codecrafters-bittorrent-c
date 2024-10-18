@@ -452,41 +452,29 @@ void print_bytes(const unsigned char* data, int len) {
     printf("\n");
 }
 
-char* get_ip_addres(char* addres) {
+char* get_ip_port(char* addres, int* port) {
 
     char* slash_index = strchr(addres, '/');
     char* start = slash_index + 2;
     char* colon_index = strchr(start, ':');
+    char* port_index = strchr(colon_index, '/');
     int total_len = strlen(start);
     int colon_len = strlen(colon_index);
-    int len = total_len - colon_len;
+    int ip_len = total_len - colon_len;
 
-    char* ip_addres = malloc(len + 1);
-    strncpy(ip_addres, start, len);
-    ip_addres[len] = '\0';
+    char* ip_addres = malloc(ip_len + 1);
+    strncpy(ip_addres, start, ip_len);
+    ip_addres[ip_len] = '\0';
 
     printf("ip_addres = %s\n", ip_addres);
     printf("add = %s\n", start);
     printf("colon index = %s\n", colon_index);
+    printf("port index = %s\n", port_index);
     printf("total len = %d\n colon len = %d\n", total_len, colon_len);
 
+    
+
     return addres;
-}
-
-int get_port(char* addres) {
-
-    char* colon_index = strchr(addres, ':');
-    char* sad = malloc(6);
-
-    if (colon_index != NULL) {
-        char* start = colon_index + 1;
-        printf("start = %s\n", start);
-        strncpy(sad, start, 5);
-        sad[6] = '\0';
-        printf("result = %d\n", atoi(sad));
-    }
-
-    return 0;
 }
 
 int process_command(char* command, char* encoded_str) {
@@ -531,7 +519,7 @@ int process_command(char* command, char* encoded_str) {
     else if (strcmp(command, "peers") == 0) {
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
-        int port;
+        int port = 0;
         char* ip_addres;
 
         value* result = decode_bencode(file_content);
@@ -541,7 +529,7 @@ int process_command(char* command, char* encoded_str) {
         value* piece_length = value_get(result, "piece length");
         value* pieces = value_get(result, "pieces");
 
-        ip_addres = get_ip_addres(announce->string);
+        ip_addres = get_ip_port(announce->string, &port);
         //port = get_port(ip_addres);
 
         //printf("%s\n", ip_addres);
