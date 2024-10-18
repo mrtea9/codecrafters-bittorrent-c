@@ -457,10 +457,11 @@ char* get_ip_port(char* addres, int* port) {
     char* slash_index = strchr(addres, '/');
     char* start = slash_index + 2;
     char* colon_index = strchr(start, ':');
-    char* port_index = strchr(colon_index, '/');
     int total_len = strlen(start);
     int colon_len = strlen(colon_index);
     int ip_len = total_len - colon_len;
+
+    port = atoi(colon_index);
 
     char* ip_addres = malloc(ip_len + 1);
     strncpy(ip_addres, start, ip_len);
@@ -469,7 +470,7 @@ char* get_ip_port(char* addres, int* port) {
     printf("ip_addres = %s\n", ip_addres);
     printf("add = %s\n", start);
     printf("colon index = %s\n", colon_index);
-    printf("port index = %s\n", port_index);
+    printf("port index = %d\n", port);
     printf("total len = %d\n colon len = %d\n", total_len, colon_len);
 
     
