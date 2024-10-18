@@ -510,7 +510,7 @@ int process_command(char* command, char* encoded_str) {
 
         printf("%s\n", announce->string);
 
-        //perform_get_request(announce->string);
+        perform_get_request(announce->string);
 
         value_delete(result);
         value_delete(announce);
