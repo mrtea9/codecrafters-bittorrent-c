@@ -456,10 +456,14 @@ char* get_ip_addres(char* addres) {
 
     char* slash_index = strchr(addres, '/');
     char* start = slash_index + 2;
-    int total_len = strlen(start);
     char* colon_index = strchr(start, ':');
+    int total_len = strlen(start);
     int colon_len = strlen(colon_index);
+    int len = total_len - colon_len;
 
+    char* ip_addres = start + len;
+
+    printf("ip_addres = %s\n", ip_addres);
     printf("add = %s\n", start);
     printf("colond index = %s\n", colon_index);
     printf("total len = %d\n colon len = %d\n", total_len, colon_len);
