@@ -467,15 +467,7 @@ char* get_ip_port(char* addres, int* port) {
     strncpy(ip_addres, start, ip_len);
     ip_addres[ip_len] = '\0';
 
-    printf("ip_addres = %s\n", ip_addres);
-    printf("add = %s\n", start);
-    printf("colon index = %s\n", colon_index);
-    printf("port = %i\n", *port);
-    printf("total len = %d\n colon len = %d\n", total_len, colon_len);
-
-    
-
-    return addres;
+    return ip_addres;
 }
 
 int process_command(char* command, char* encoded_str) {
@@ -531,6 +523,8 @@ int process_command(char* command, char* encoded_str) {
         value* pieces = value_get(result, "pieces");
 
         ip_addres = get_ip_port(announce->string, &port);
+
+        printf("ip = %s, port = %d\n", ip_addres, port);
         //port = get_port(ip_addres);
 
         //printf("%s\n", ip_addres);
