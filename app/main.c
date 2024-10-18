@@ -501,7 +501,7 @@ int process_command(char* command, char* encoded_str) {
         value* piece_length = value_get(result, "piece length");
         value* pieces = value_get(result, "pieces");
 
-        printf("%s\n", announce->string);
+        printf("%s\n", *announce->string + 7);
         printf("%i\n", atoi(announce->string));
 
         perform_get_request(test);
