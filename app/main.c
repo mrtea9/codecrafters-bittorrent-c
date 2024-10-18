@@ -456,7 +456,7 @@ char* get_ip_addres(char* addres) {
 
     printf("add = %s\n", addres);
 
-    return adress;
+    return addres;
 }
 
 int get_port(char* addres) {
