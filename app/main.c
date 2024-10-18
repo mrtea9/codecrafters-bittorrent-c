@@ -455,7 +455,7 @@ void print_bytes(const unsigned char* data, int len) {
 char* get_ip_addres(char* addres) {
 
     char* slash_index = strchr(addres, '/');
-    char* start = slash_index + 2
+    char* start = slash_index + 2;
 
     printf("add = %s\n", start);
 
