@@ -506,7 +506,7 @@ int process_command(char* command, char* encoded_str) {
         //char* colon_index = strchr(*bencoded_value, ':');
         printf("%i\n", atoi(announce->string));
 
-        perform_get_request(test);
+        //perform_get_request(test);
 
         value_delete(result);
         value_delete(announce);
