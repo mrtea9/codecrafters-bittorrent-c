@@ -461,8 +461,9 @@ char* get_ip_addres(char* addres) {
     int colon_len = strlen(colon_index);
     int len = total_len - colon_len;
 
-    char* ip_addres = malloc(len);
-    strncpy(ip_addres, start, 8);
+    char* ip_addres = malloc(len + 1);
+    strncpy(ip_addres, start, len);
+    ip_addres[len + 1] = '\0';
 
     printf("ip_addres = %s\n", ip_addres);
     printf("add = %s\n", start);
