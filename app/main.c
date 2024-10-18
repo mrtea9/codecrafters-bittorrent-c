@@ -8,7 +8,7 @@
 #include <ctype.h>
 #include <openssl/sha.h>
 
-#define PORT "6881"
+#define PORT "80"
 
 typedef struct value value;
 
