@@ -492,6 +492,7 @@ int process_command(char* command, char* encoded_str) {
     else if (strcmp(command, "peers") == 0) {
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
+        char test[] = "127.0.0.1";
 
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
