@@ -8,7 +8,7 @@
 #include <ctype.h>
 #include <openssl/sha.h>
 
-#define PORT "80"
+#define PORT "42585"
 
 typedef struct value value;
 
@@ -407,35 +407,28 @@ char* calculate_hash(unsigned char* data, size_t len) {
     return sha1_str;
 }
 
-void perform_get_request(char* url) {
+void perform_get_request(char* address) {
     int sockfd;
-    struct addrinfo hints, *res;
+    struct sockaddr_in server_addr;
     char request[1024], response[4096];
 
-    memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_INET;
-    hints.ai_socktype = SOCK_STREAM;
-
-    if (getaddrinfo(url, PORT, &hints, &res) != 0) {
-        perror("getaddrinfo failed");
-        exit(EXIT_FAILURE);
-    }
-
-    sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
         perror("Socket creation failed");
-        freeaddrinfo(res);
         exit(EXIT_FAILURE);
     }
 
-    if (connect(sockfd, res->ai_addr, res->ai_addrlen) < 0) {
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(PORT);
+    server_addr.sin_addr.s_addr = inet_addr(address);
+
+    if (connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
         perror("Connection failed");
         close(sockfd);
-        freeaddrinfo(res);
         exit(EXIT_FAILURE);
     }
 
-    snprintf(request, sizeof(request), "GET / HTTP/1.1\r\ninfo_hash: 1231414\r\n\r\n", url);
+    snprintf(request, sizeof(request), "GET / HTTP/1.1\r\ninfo_hash: 1231414\r\n\r\n", address);
 
     send(sockfd, request, strlen(request), 0);
 
@@ -446,7 +439,6 @@ void perform_get_request(char* url) {
     }
 
     close(sockfd);
-    freeaddrinfo(res);
 }
 
 void print_bytes(const unsigned char* data, int len) {
