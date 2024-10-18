@@ -428,7 +428,9 @@ void perform_get_request(char* address, int port) {
         exit(EXIT_FAILURE);
     }
 
-    snprintf(request, sizeof(request), "GET / HTTP/1.1\r\ninfo_hash: 1231414\r\n\r\n", address);
+    snprintf(request, sizeof(request), "GET / HTTP/1.1\r\n"
+                                       "Host: %s\r\n"
+                                       "info_hash: 1231414\r\n\r\n", address);
 
     send(sockfd, request, strlen(request), 0);
 
@@ -448,6 +450,29 @@ void print_bytes(const unsigned char* data, int len) {
     }
     // Print a newline after the entire hex string
     printf("\n");
+}
+
+char* get_ip_addres(char* addres) {
+
+    printf("add = %s\n", addres);
+
+    return adress;
+}
+
+int get_port(char* addres) {
+
+    char* colon_index = strchr(addres, ':');
+    char* sad = malloc(6);
+
+    if (colon_index != NULL) {
+        char* start = colon_index + 1;
+        printf("start = %s\n", start);
+        strncpy(sad, start, 5);
+        sad[6] = '\0';
+        printf("result = %d\n", atoi(sad));
+    }
+
+    return 0;
 }
 
 int process_command(char* command, char* encoded_str) {
@@ -492,7 +517,8 @@ int process_command(char* command, char* encoded_str) {
     else if (strcmp(command, "peers") == 0) {
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
-        char test[] = "127.0.0.1";
+        int port;
+        char* ip_addres;
 
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
@@ -501,23 +527,14 @@ int process_command(char* command, char* encoded_str) {
         value* piece_length = value_get(result, "piece length");
         value* pieces = value_get(result, "pieces");
 
-        printf("%s\n", announce->string);
-        char* ip_addres = announce->string + 7;
-        printf("%s\n", ip_addres);
+        ip_addres = get_ip_addres(announce->string);
+        //port = get_port(ip_addres);
+
+        //printf("%s\n", ip_addres);
         //char* colon_index = strchr(*bencoded_value, ':');
-        printf("%i\n", atoi(announce->string));
+        //printf("%i\n", atoi(announce->string));
 
-        char* colon_index = strchr(ip_addres, ':');
-        char* sad = malloc(6);
-
-        if (colon_index != NULL) {
-            char* start = colon_index + 1;
-            printf("start = %s\n", start);
-            strncpy(sad, start, 5);
-            sad[6] = '\0';
-            printf("result = %d\n", atoi(sad));
-        }
-        perform_get_request(test, atoi(sad));
+        //perform_get_request(ip_addres, port);
 
         value_delete(result);
         value_delete(announce);
