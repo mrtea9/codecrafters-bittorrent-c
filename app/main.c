@@ -8,6 +8,8 @@
 #include <ctype.h>
 #include <openssl/sha.h>
 
+#define PORT "6881"
+
 typedef struct value value;
 
 enum {
@@ -414,7 +416,7 @@ void perform_get_request(char* url) {
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
 
-    if (getaddrinfo(url, 6881, &hints, &res) != 0) {
+    if (getaddrinfo(url, PORT, &hints, &res) != 0) {
         perror("getaddrinfo failed");
         exit(EXIT_FAILURE);
     }
