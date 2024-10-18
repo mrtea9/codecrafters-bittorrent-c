@@ -461,7 +461,7 @@ char* get_ip_port(char* addres, int* port) {
     int colon_len = strlen(colon_index);
     int ip_len = total_len - colon_len;
 
-    *port = atoi(colon_index);
+    *port = atoi(colon_index + 1);
 
     char* ip_addres = malloc(ip_len + 1);
     strncpy(ip_addres, start, ip_len);
