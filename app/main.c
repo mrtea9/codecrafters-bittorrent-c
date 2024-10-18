@@ -492,7 +492,6 @@ int process_command(char* command, char* encoded_str) {
     else if (strcmp(command, "peers") == 0) {
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
-        char test[] = "127.0.0.1";
 
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
@@ -501,8 +500,9 @@ int process_command(char* command, char* encoded_str) {
         value* piece_length = value_get(result, "piece length");
         value* pieces = value_get(result, "pieces");
 
-        printf("%s\n", announce->string + 7);
         printf("%s\n", announce->string);
+        char* ip_addres = announce->string + 7;
+        printf("%s\n", ip_addres);
         //char* colon_index = strchr(*bencoded_value, ':');
         printf("%i\n", atoi(announce->string));
 
