@@ -470,7 +470,7 @@ char* get_ip_port(char* addres, int* port) {
     printf("ip_addres = %s\n", ip_addres);
     printf("add = %s\n", start);
     printf("colon index = %s\n", colon_index);
-    printf("port index = %d\n", *port);
+    printf("port = %i\n", *port);
     printf("total len = %d\n colon len = %d\n", total_len, colon_len);
 
     
