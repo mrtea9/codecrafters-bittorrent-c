@@ -407,7 +407,7 @@ char* calculate_hash(unsigned char* data, size_t len) {
     return sha1_str;
 }
 
-void perform_get_request(char* address) {
+void perform_get_request(char* address, int port) {
     int sockfd;
     struct sockaddr_in server_addr;
     char request[1024], response[4096];
@@ -419,7 +419,7 @@ void perform_get_request(char* address) {
     }
 
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(PORT);
+    server_addr.sin_port = htons(port);
     server_addr.sin_addr.s_addr = inet_addr(address);
 
     if (connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
@@ -516,7 +516,7 @@ int process_command(char* command, char* encoded_str) {
             result[6] = '\0';
             printf("result = %d\n", atoi(result));
         }
-        //perform_get_request(test);
+        perform_get_request(test, atoi(result));
 
         value_delete(result);
         value_delete(announce);
