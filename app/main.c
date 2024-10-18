@@ -511,6 +511,8 @@ int process_command(char* command, char* encoded_str) {
         if (colon_index != NULL) {
             char* start = colon_index + 1;
             printf("start = %s\n", start);
+            char* end = strchr(start, '/');
+            printf("end = %s\n", end);
         }
         //perform_get_request(test);
 
