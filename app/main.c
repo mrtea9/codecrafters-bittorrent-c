@@ -512,7 +512,7 @@ int process_command(char* command, char* encoded_str) {
             char* start = colon_index + 1;
             printf("start = %s\n", start);
             char* result = malloc(6);
-            strncpy(result, start, 6);
+            strncpy(result, start, 5);
             result[6] = '\0';
             printf("result = %s\n", result);
         }
