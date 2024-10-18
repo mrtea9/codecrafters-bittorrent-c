@@ -511,8 +511,10 @@ int process_command(char* command, char* encoded_str) {
         if (colon_index != NULL) {
             char* start = colon_index + 1;
             printf("start = %s\n", start);
-            char* end = strchr(start, '/');
-            printf("end = %s\n", start - end);
+            char* result = malloc(6);
+            strncpy(result, start, 6);
+            result[6] = '\0';
+            printf("result = %s\n", result);
         }
         //perform_get_request(test);
 
