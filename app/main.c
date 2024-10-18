@@ -506,6 +506,12 @@ int process_command(char* command, char* encoded_str) {
         //char* colon_index = strchr(*bencoded_value, ':');
         printf("%i\n", atoi(announce->string));
 
+        char* colon_index = strchr(ip_addres, ':');
+
+        if (colon_index != NULL) {
+            char* start = colon_index + 1;
+            printf("start = %s\n", start);
+        }
         //perform_get_request(test);
 
         value_delete(result);
