@@ -502,6 +502,8 @@ int process_command(char* command, char* encoded_str) {
         value* pieces = value_get(result, "pieces");
 
         printf("%s\n", announce->string + 7);
+        printf("%s\n", announce->string);
+        //char* colon_index = strchr(*bencoded_value, ':');
         printf("%i\n", atoi(announce->string));
 
         perform_get_request(test);
