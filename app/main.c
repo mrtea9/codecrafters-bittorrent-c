@@ -458,10 +458,11 @@ char* get_ip_addres(char* addres) {
     char* start = slash_index + 2;
     int total_len = strlen(start);
     char* colon_index = strchr(start, ':');
+    int colon_len = strlen(colon_index);
 
     printf("add = %s\n", start);
     printf("colond index = %s\n", colon_index);
-    printf("total len = %d\n", total_len);
+    printf("total len = %d\n colon len = %d\n", total_len, colon_len);
 
     return addres;
 }
