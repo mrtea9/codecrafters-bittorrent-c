@@ -8,7 +8,7 @@
 #include <ctype.h>
 #include <openssl/sha.h>
 
-#define PORT "42585"
+#define PORT 42585
 
 typedef struct value value;
 
@@ -492,6 +492,7 @@ int process_command(char* command, char* encoded_str) {
     else if (strcmp(command, "peers") == 0) {
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
+        char test[] = "127.0.0.1";
 
         value* result = decode_bencode(file_content);
         value* announce = value_get(result, "announce");
@@ -502,7 +503,7 @@ int process_command(char* command, char* encoded_str) {
 
         printf("%s\n", announce->string);
 
-        perform_get_request(announce->string);
+        perform_get_request(test);
 
         value_delete(result);
         value_delete(announce);
