@@ -525,13 +525,8 @@ int process_command(char* command, char* encoded_str) {
         ip_addres = get_ip_port(announce->string, &port);
 
         printf("ip = %s, port = %d\n", ip_addres, port);
-        //port = get_port(ip_addres);
 
-        //printf("%s\n", ip_addres);
-        //char* colon_index = strchr(*bencoded_value, ':');
-        //printf("%i\n", atoi(announce->string));
-
-        //perform_get_request(ip_addres, port);
+        perform_get_request(ip_addres, port);
 
         value_delete(result);
         value_delete(announce);
