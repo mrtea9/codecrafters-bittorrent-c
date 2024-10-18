@@ -507,16 +507,16 @@ int process_command(char* command, char* encoded_str) {
         printf("%i\n", atoi(announce->string));
 
         char* colon_index = strchr(ip_addres, ':');
+        char* sad = malloc(6);
 
         if (colon_index != NULL) {
             char* start = colon_index + 1;
             printf("start = %s\n", start);
-            char* result = malloc(6);
-            strncpy(result, start, 5);
-            result[6] = '\0';
-            printf("result = %d\n", atoi(result));
+            strncpy(sad, start, 5);
+            sad[6] = '\0';
+            printf("result = %d\n", atoi(sad));
         }
-        perform_get_request(test, atoi(result));
+        perform_get_request(test, atoi(sad));
 
         value_delete(result);
         value_delete(announce);
