@@ -514,7 +514,7 @@ int process_command(char* command, char* encoded_str) {
             char* result = malloc(6);
             strncpy(result, start, 5);
             result[6] = '\0';
-            printf("result = %s\n", result);
+            printf("result = %d\n", atoi(result));
         }
         //perform_get_request(test);
 
