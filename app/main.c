@@ -533,6 +533,8 @@ void perform_get_request(value* result) {
         response[bytes_received] = '\0';
         total_bytes += bytes_received;
 
+        //printf("response = %s\n", response);
+        extract_peers(response);
         strncat(full_response, response, bytes_received);
 
         if (strstr(full_response, "\r\n\r\n")) {
@@ -540,7 +542,10 @@ void perform_get_request(value* result) {
         }
     }
 
-    extract_peers(full_response);
+
+    //printf("%s", full_response);
+    //extract_peers(full_response);
+    //printf("88.99.2.101:6881");
 
     close(sockfd);
 
