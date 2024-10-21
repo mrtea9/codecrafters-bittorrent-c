@@ -466,7 +466,6 @@ void perform_get_request(value* result) {
     snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%d&compact=1", info_hash, piece_id, length->number);
     printf("%s\n", query_string);
 
-
     snprintf(request, sizeof(request), "GET /announce%s HTTP/1.1\r\n"
                                        "Host: %s\r\n"
                                        "Conection: close\r\n\r\n", query_string, ip_addres);
