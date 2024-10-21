@@ -472,6 +472,9 @@ void extract_peers(const char* bencoded_response) {
         char ip_str[INET_ADDRSTRLEN];
         inet_ntop(AF_INET, ip, ip_str, INET_ADDRSTRLEN);
 
+        printf("Raw bytes: %02X %02X %02X %02X (IP), %02X %02X (Port)\n",
+            ip[0], ip[1], ip[2], ip[3], port_bytes[0], port_bytes[1]);
+
         printf("%s:%d\n", ip_str, port);
     }
 }
