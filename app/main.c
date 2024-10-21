@@ -613,6 +613,9 @@ int process_command(char* command, char* encoded_str) {
 
         value_delete(result);
     }
+    else if (strcmp(command, "handshake")) {
+        printf("da");
+    }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
         return 1;
