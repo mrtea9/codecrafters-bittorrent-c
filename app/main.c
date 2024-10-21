@@ -457,9 +457,11 @@ void perform_get_request(value* result) {
         close(sockfd);
         exit(EXIT_FAILURE);
     }
-
+    printf("da1\n");
     char* encoded_info = encode(info);
+    printf("da2\n");
     char* info_hash = calculate_hash(encoded_info, strlen(encoded_info));
+    printf("da3\n");
 
     char query_string[512];
     snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%d&compact=1", info_hash, length->number);
