@@ -458,7 +458,10 @@ void perform_get_request(value* result) {
         exit(EXIT_FAILURE);
     }
 
-    snprintf(request, sizeof(request), "GET / HTTP/1.1\r\n"
+    char query_string[512];
+    snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%s&compact=1")
+
+    snprintf(request, sizeof(request), "GET /announce HTTP/1.1\r\n"
                                        "Host: %s\r\n"
                                        "Conection: close\r\n\r\n", ip_addres);
 
@@ -471,6 +474,7 @@ void perform_get_request(value* result) {
     }
 
     close(sockfd);
+
     value_delete(announce);
     value_delete(length);
     value_delete(info);
