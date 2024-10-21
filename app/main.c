@@ -443,6 +443,7 @@ char* get_ip_port(char* addres, int* port) {
 }
 
 void extract_peers(const char* bencoded_response) {
+    printf("bencoded_ response = %s\n", bencoded_response);
     const char* peers_key = "peers";
     char* peers_start = strstr(bencoded_response, peers_key);
 
@@ -458,8 +459,10 @@ void extract_peers(const char* bencoded_response) {
     }
 
     int peers_length = atoi(peers_start + strlen(peers_key) + 1);
+    printf("len = %d\n", peers_length);
 
     char* peers_data = length_start + 1;
+    printf("peers data = %s\n", peers_data);
 
     for (int i = 0; i < peers_length; i += 6) {
         unsigned char ip[4];
@@ -545,7 +548,7 @@ void perform_get_request(value* result) {
 
     //printf("%s", full_response);
     extract_peers(full_response);
-    printf("88.99.2.101:6881");
+    //printf("88.99.2.101:6881");
 
     close(sockfd);
 
