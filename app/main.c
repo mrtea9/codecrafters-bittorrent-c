@@ -499,6 +499,7 @@ void perform_get_request(value* result) {
 
     close(sockfd);
 
+
     value_delete(announce);
     value_delete(length);
     value_delete(info);
