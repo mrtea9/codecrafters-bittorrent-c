@@ -527,7 +527,7 @@ void perform_get_request(value* result) {
     send(sockfd, request, strlen(request), 0);
 
     int bytes_received;
-    bytes_received = recv(sockfd, response, sizeof(response) - 1, 0)
+    bytes_received = recv(sockfd, response, sizeof(response) - 1, 0);
     response[bytes_received] = '\0';
     printf("%s", response);
     extract_peers(response);
