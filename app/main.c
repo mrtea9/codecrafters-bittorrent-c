@@ -458,8 +458,12 @@ void perform_get_request(value* result) {
         exit(EXIT_FAILURE);
     }
 
+    char* encoded_info = encode(info);
+    char* info_hash = calculate_hash(encoded_info, strlen(encoded_info));
+
     char query_string[512];
-    snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%s&compact=1");
+    snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%d&compact=1", info_hash, length->number);
+    printf("%s\n", query_string);
 
     snprintf(request, sizeof(request), "GET /announce%s HTTP/1.1\r\n"
                                        "Host: %s\r\n"
