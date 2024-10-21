@@ -613,7 +613,7 @@ int process_command(char* command, char* encoded_str) {
 
         value_delete(result);
     }
-    else if (strcmp(command, "handshake")) {
+    else if (strcmp(command, "handshake") == 0) {
         printf("da");
     }
     else {
