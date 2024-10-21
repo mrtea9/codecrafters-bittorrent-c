@@ -495,7 +495,6 @@ void perform_get_request(value* result) {
     while ((bytes_received = recv(sockfd, response, sizeof(response) - 1, 0)) > 0) {
         response[bytes_received] = '\0';
         printf("%s", response);
-        printf("da\n");
     }
 
     close(sockfd);
