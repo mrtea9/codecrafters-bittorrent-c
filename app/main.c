@@ -544,7 +544,7 @@ void perform_get_request(value* result) {
 
 
     //printf("%s", full_response);
-    //extract_peers(full_response);
+    extract_peers(full_response);
 
     close(sockfd);
 
