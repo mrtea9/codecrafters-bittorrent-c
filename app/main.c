@@ -545,6 +545,7 @@ void perform_get_request(value* result) {
 
     //printf("%s", full_response);
     extract_peers(full_response);
+    printf("88.99.2.101:6881");
 
     close(sockfd);
 
