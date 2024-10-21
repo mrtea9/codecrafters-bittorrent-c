@@ -446,6 +446,7 @@ void extract_peers(const char* bencoded_response) {
     printf("bencoded_ response = %s\n", bencoded_response);
     const char* peers_key = "peers";
     char* peers_start = strstr(bencoded_response, peers_key);
+    printf("peers_start = %s\n", peers_start);
 
     if (!peers_start) {
         printf("no peers start\n");
