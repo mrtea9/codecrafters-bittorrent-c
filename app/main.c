@@ -492,7 +492,7 @@ void perform_get_request(value* result) {
 
     ip_addres = get_ip_port(announce->string, &port);
 
-    printf("ip = %s, port = %d\n", ip_addres, port);
+   // printf("ip = %s, port = %d\n", ip_addres, port);
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
@@ -518,7 +518,7 @@ void perform_get_request(value* result) {
 
     char query_string[512];
     snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%d&compact=1", info_hash_url_encoded, peer_id, length->number);
-    printf("%s\n", query_string);
+    //printf("%s\n", query_string);
 
     snprintf(request, sizeof(request), "GET /announce%s HTTP/1.1\r\n"
                                        "Host: %s\r\n"
@@ -529,7 +529,7 @@ void perform_get_request(value* result) {
     int bytes_received;
     bytes_received = recv(sockfd, response, sizeof(response) - 1, 0);
     response[bytes_received] = '\0';
-    printf("%s", response);
+    //printf("%s", response);
     extract_peers(response);
 
     close(sockfd);
