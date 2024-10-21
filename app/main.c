@@ -461,7 +461,6 @@ void extract_peers(const char* bencoded_response) {
 
     char* peers_data = length_start + 1;
 
-    printf("Peers:\n");
     for (int i = 0; i < peers_length; i += 6) {
         unsigned char ip[4];
         memcpy(ip, &peers_data[i], 4);
