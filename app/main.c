@@ -407,10 +407,40 @@ char* calculate_hash(unsigned char* data, size_t len) {
     return sha1_str;
 }
 
-void perform_get_request(char* address, int port) {
+char* get_ip_port(char* addres, int* port) {
+
+    char* slash_index = strchr(addres, '/');
+    char* start = slash_index + 2;
+    char* colon_index = strchr(start, ':');
+    int total_len = strlen(start);
+    int colon_len = strlen(colon_index);
+    int ip_len = total_len - colon_len;
+
+    *port = atoi(colon_index + 1);
+
+    char* ip_addres = malloc(ip_len + 1);
+    strncpy(ip_addres, start, ip_len);
+    ip_addres[ip_len] = '\0';
+
+    return ip_addres;
+}
+
+void perform_get_request(char* address, int port, value* result) {
     int sockfd;
     struct sockaddr_in server_addr;
     char request[1024], response[4096];
+    int port = 0;
+    char* ip_addres;
+
+    value* announce = value_get(result, "announce");
+    value* length = value_get(result, "length");
+    value* info = value_get(result, "info");
+    value* piece_length = value_get(result, "piece length");
+    value* pieces = value_get(result, "pieces");
+
+    ip_addres = get_ip_port(announce->string, &port);
+
+    printf("ip = %s, port = %d\n", ip_addres, port);
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
@@ -441,6 +471,11 @@ void perform_get_request(char* address, int port) {
     }
 
     close(sockfd);
+    value_delete(announce);
+    value_delete(length);
+    value_delete(info);
+    value_delete(piece_length);
+    value_delete(pieces);
 }
 
 void print_bytes(const unsigned char* data, int len) {
@@ -450,24 +485,6 @@ void print_bytes(const unsigned char* data, int len) {
     }
     // Print a newline after the entire hex string
     printf("\n");
-}
-
-char* get_ip_port(char* addres, int* port) {
-
-    char* slash_index = strchr(addres, '/');
-    char* start = slash_index + 2;
-    char* colon_index = strchr(start, ':');
-    int total_len = strlen(start);
-    int colon_len = strlen(colon_index);
-    int ip_len = total_len - colon_len;
-
-    *port = atoi(colon_index + 1);
-
-    char* ip_addres = malloc(ip_len + 1);
-    strncpy(ip_addres, start, ip_len);
-    ip_addres[ip_len] = '\0';
-
-    return ip_addres;
 }
 
 int process_command(char* command, char* encoded_str) {
@@ -512,28 +529,12 @@ int process_command(char* command, char* encoded_str) {
     else if (strcmp(command, "peers") == 0) {
         size_t bytesRead = 0;
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
-        int port = 0;
-        char* ip_addres;
 
         value* result = decode_bencode(file_content);
-        value* announce = value_get(result, "announce");
-        value* length = value_get(result, "length");
-        value* info = value_get(result, "info");
-        value* piece_length = value_get(result, "piece length");
-        value* pieces = value_get(result, "pieces");
 
-        ip_addres = get_ip_port(announce->string, &port);
-
-        printf("ip = %s, port = %d\n", ip_addres, port);
-
-        perform_get_request(ip_addres, port);
+        perform_get_request(ip_addres, port, result);
 
         value_delete(result);
-        value_delete(announce);
-        value_delete(length);
-        value_delete(info);
-        value_delete(piece_length);
-        value_delete(pieces);
     }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
