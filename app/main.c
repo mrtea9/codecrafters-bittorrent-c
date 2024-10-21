@@ -461,6 +461,7 @@ void extract_peers(const char* bencoded_response) {
 
     char* peers_data = length_start + 1;
 
+    printf("Peers:\n");
     for (int i = 0; i < peers_length; i += 6) {
         unsigned char ip[4];
         memcpy(ip, &peers_data[i], 4);
@@ -472,10 +473,7 @@ void extract_peers(const char* bencoded_response) {
         char ip_str[INET_ADDRSTRLEN];
         inet_ntop(AF_INET, ip, ip_str, INET_ADDRSTRLEN);
 
-        printf("Raw bytes: %02X %02X %02X %02X (IP), %02X %02X (Port)\n",
-            ip[0], ip[1], ip[2], ip[3], port_bytes[0], port_bytes[1]);
-
-        printf("%s:%d\n", ip_str, port);
+        printf("IP: %s, PORT: %d\n", ip_str, port);
     }
 }
 
@@ -494,7 +492,7 @@ void perform_get_request(value* result) {
 
     ip_addres = get_ip_port(announce->string, &port);
 
-   // printf("ip = %s, port = %d\n", ip_addres, port);
+    printf("ip = %s, port = %d\n", ip_addres, port);
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
@@ -520,7 +518,7 @@ void perform_get_request(value* result) {
 
     char query_string[512];
     snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%d&compact=1", info_hash_url_encoded, peer_id, length->number);
-    //printf("%s\n", query_string);
+    printf("%s\n", query_string);
 
     snprintf(request, sizeof(request), "GET /announce%s HTTP/1.1\r\n"
                                        "Host: %s\r\n"
@@ -529,12 +527,15 @@ void perform_get_request(value* result) {
     send(sockfd, request, strlen(request), 0);
 
     int bytes_received;
-    bytes_received = recv(sockfd, response, sizeof(response) - 1, 0);
-    response[bytes_received] = '\0';
-    printf("%s", response);
-    extract_peers(response);
+    while ((bytes_received = recv(sockfd, response, sizeof(response) - 1, 0)) > 0) {
+        response[bytes_received] = '\0';
+        printf("%s", response);
+        extract_peers(response);
+
+    }
 
     close(sockfd);
+
 
     value_delete(announce);
     value_delete(length);
