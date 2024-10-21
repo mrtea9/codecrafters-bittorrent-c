@@ -394,9 +394,26 @@ unsigned char* read_file(const char* filename, size_t* bytesRead) {
     return buffer;
 }
 
-char* calculate_hash(unsigned char* data, size_t len) {
-    unsigned char hash[SHA_DIGEST_LENGTH];
+char* url_encode(unsigned char* data, size_t len) {
+    char* encoded = malloc(len * 3 + 1);
+    char* ptr = encoded;
+
+    for (size_t i = 0; i < len; i++) {
+        ptr += sprintf(ptr, "%%%02X", data[i]);
+    }
+
+    *ptr = '\0';
+    return encoded;
+}
+
+unsigned char* calculate_raw_hash(unsigned char* data, size_t len) {
+    unsigned char* hash = malloc(SHA_DIGEST_LENGTH);
     SHA1(data, len, hash);
+    return hash;
+}
+
+char* calculate_hash(unsigned char* data, size_t len) {
+    unsigned char* hash = calculate_raw_hash(data, len);
 
     char* sha1_str = malloc(SHA_DIGEST_LENGTH * 2 + 1);
     for (int i = 0; i < SHA_DIGEST_LENGTH; i++) {
@@ -459,11 +476,13 @@ void perform_get_request(value* result) {
     }
 
     char* encoded_info = encode(info);
-    char* info_hash = calculate_hash(encoded_info, strlen(encoded_info));
-    char piece_id[] = "23141516167152146123";
+    unsigned char* raw_info_hash = calculate_raw_hash((unsigned char*)encoded_info, strlen(encoded_info));
+    char* info_hash_url_encoded = url_encode(raw_info_hash, SHA_DIGEST_LENGTH);
+    char peer_id[] = "23141516167152146123";
+    free(raw_info_hash);
 
     char query_string[512];
-    snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%d&compact=1", info_hash, piece_id, length->number);
+    snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%d&compact=1", info_hash_url_encoded, peer_id, length->number);
     printf("%s\n", query_string);
 
     snprintf(request, sizeof(request), "GET /announce%s HTTP/1.1\r\n"
