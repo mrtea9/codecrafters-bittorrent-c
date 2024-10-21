@@ -459,11 +459,11 @@ void perform_get_request(value* result) {
     }
 
     char query_string[512];
-    snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%s&compact=1")
+    snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%s&compact=1");
 
-    snprintf(request, sizeof(request), "GET /announce HTTP/1.1\r\n"
+    snprintf(request, sizeof(request), "GET /announce%s HTTP/1.1\r\n"
                                        "Host: %s\r\n"
-                                       "Conection: close\r\n\r\n", ip_addres);
+                                       "Conection: close\r\n\r\n", query_string, ip_addres);
 
     send(sockfd, request, strlen(request), 0);
 
