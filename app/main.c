@@ -450,7 +450,7 @@ void perform_get_request(value* result) {
 
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
-    server_addr.sin_addr.s_addr = inet_addr(address);
+    server_addr.sin_addr.s_addr = inet_addr(ip_addres);
 
     if (connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
         perror("Connection failed");
@@ -460,7 +460,7 @@ void perform_get_request(value* result) {
 
     snprintf(request, sizeof(request), "GET / HTTP/1.1\r\n"
                                        "Host: %s\r\n"
-                                       "info_hash: 1231414\r\n\r\n", address);
+                                       "Conection: close\r\n\r\n", ip_addres);
 
     send(sockfd, request, strlen(request), 0);
 
