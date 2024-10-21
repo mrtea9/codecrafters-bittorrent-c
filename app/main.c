@@ -425,7 +425,7 @@ char* get_ip_port(char* addres, int* port) {
     return ip_addres;
 }
 
-void perform_get_request(char* address, int port, value* result) {
+void perform_get_request(value* result) {
     int sockfd;
     struct sockaddr_in server_addr;
     char request[1024], response[4096];
@@ -532,7 +532,7 @@ int process_command(char* command, char* encoded_str) {
 
         value* result = decode_bencode(file_content);
 
-        perform_get_request(ip_addres, port, result);
+        perform_get_request(result);
 
         value_delete(result);
     }
