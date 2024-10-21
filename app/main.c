@@ -533,7 +533,7 @@ void perform_get_request(value* result) {
         response[bytes_received] = '\0';
         total_bytes += bytes_received;
 
-        //printf("response = %s\n", response);
+        printf("response = %s\n", response);
         extract_peers(response);
         strncat(full_response, response, bytes_received);
 
