@@ -473,7 +473,7 @@ void extract_peers(const char* bencoded_response) {
         char ip_str[INET_ADDRSTRLEN];
         inet_ntop(AF_INET, ip, ip_str, INET_ADDRSTRLEN);
 
-        printf("IP: %s, PORT: %d\n", ip_str, port);
+        printf("%s:%d\n", ip_str, port);
     }
 }
 
@@ -527,15 +527,12 @@ void perform_get_request(value* result) {
     send(sockfd, request, strlen(request), 0);
 
     int bytes_received;
-    while ((bytes_received = recv(sockfd, response, sizeof(response) - 1, 0)) > 0) {
-        response[bytes_received] = '\0';
-        printf("%s", response);
-        extract_peers(response);
-        break;
-    }
+    bytes_received = recv(sockfd, response, sizeof(response) - 1, 0)
+    response[bytes_received] = '\0';
+    printf("%s", response);
+    extract_peers(response);
 
     close(sockfd);
-
 
     value_delete(announce);
     value_delete(length);
