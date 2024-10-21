@@ -457,7 +457,7 @@ void extract_peers(const char* bencoded_response) {
         return;
     }
 
-    int peers_length = atoi(peers_start + strlen(peers_key));
+    int peers_length = atoi(peers_start + strlen(peers_key) + 1);
 
     char* peers_data = length_start + 1;
 
@@ -534,7 +534,7 @@ void perform_get_request(value* result) {
         total_bytes += bytes_received;
 
         //printf("response = %s\n", response);
-        extract_peers(response);
+        //extract_peers(response);
         strncat(full_response, response, bytes_received);
 
         if (strstr(full_response, "\r\n\r\n")) {
@@ -544,8 +544,8 @@ void perform_get_request(value* result) {
 
 
     //printf("%s", full_response);
-    //extract_peers(full_response);
-    //printf("88.99.2.101:6881");
+    extract_peers(full_response);
+    printf("88.99.2.101:6881");
 
     close(sockfd);
 
