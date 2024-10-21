@@ -527,12 +527,24 @@ void perform_get_request(value* result) {
     send(sockfd, request, strlen(request), 0);
 
     int bytes_received;
+    char full_response[8192];
+    int total_bytes = 0;
+
     while ((bytes_received = recv(sockfd, response, sizeof(response) - 1, 0)) > 0) {
         response[bytes_received] = '\0';
-        printf("%s", response);
-        extract_peers(response);
-        break;
+        total_bytes += bytes_received;
+
+        strncat(full_response, response, bytes_received);
+
+        if (strstr(full_response, "\r\n\r\n")) {
+            break;
+        }
     }
+
+
+    printf("%s", full_response);
+    extract_peers(full_response);
+
 
     close(sockfd);
 
