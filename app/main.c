@@ -531,6 +531,7 @@ void perform_get_request(value* result) {
         response[bytes_received] = '\0';
         printf("%s", response);
         extract_peers(response);
+        break;
     }
 
     close(sockfd);
