@@ -534,6 +534,9 @@ void perform_get_request(value* result) {
         response[bytes_received] = '\0';
         total_bytes += bytes_received;
 
+        printf("response = %s\n", response);
+
+
         strncat(full_response, response, bytes_received);
 
         if (strstr(full_response, "\r\n\r\n")) {
