@@ -491,7 +491,7 @@ void perform_get_request(value* result) {
 
     ip_addres = get_ip_port(announce->string, &port);
 
-    printf("ip = %s, port = %d\n", ip_addres, port);
+   // printf("ip = %s, port = %d\n", ip_addres, port);
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
@@ -533,7 +533,7 @@ void perform_get_request(value* result) {
         response[bytes_received] = '\0';
         total_bytes += bytes_received;
 
-        printf("response = %s\n", response);
+        //printf("response = %s\n", response);
         extract_peers(response);
         strncat(full_response, response, bytes_received);
 
@@ -543,12 +543,10 @@ void perform_get_request(value* result) {
     }
 
 
-    printf("%s", full_response);
-    extract_peers(full_response);
-
+    //printf("%s", full_response);
+    //extract_peers(full_response);
 
     close(sockfd);
-
 
     value_delete(announce);
     value_delete(length);
