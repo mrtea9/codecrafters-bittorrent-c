@@ -442,6 +442,41 @@ char* get_ip_port(char* addres, int* port) {
     return ip_addres;
 }
 
+void extract_peers(const char* bencoded_response) {
+    const char* peers_key = "peers";
+    char* peers_start = strstr(bencoded_response, peers_key);
+
+    if (!peers_start) {
+        printf("no peers start\n");
+        return;
+    }
+
+    char* length_start = strchr(peers_start, ':');
+    if (!length_start) {
+        printf("no length_start\n");
+        return;
+    }
+
+    int peers_length = atoi(peers_start + strlen(peers_key) + 1);
+
+    char* peers_data = length_start + 1;
+
+    printf("Peers:\n");
+    for (int i = 0; i < peers_length; i += 6) {
+        unsigned char ip[4];
+        memcpy(ip, &peers_data[i], 4);
+
+        unsigned char port_bytes[2];
+        memcpy(port_bytes, &peers_data[i + 4], 2);
+        int port = (port_bytes[0] << 8) | port_bytes[1];
+
+        char ip_str[INET_ADDRSTRLEN];
+        inet_ntop(AF_INET, ip, ip_str, INET_ADDRSTRLEN);
+
+        printf("IP: %s, PORT: %d\n", ip_str, port);
+    }
+}
+
 void perform_get_request(value* result) {
     int sockfd;
     struct sockaddr_in server_addr;
@@ -495,6 +530,7 @@ void perform_get_request(value* result) {
     while ((bytes_received = recv(sockfd, response, sizeof(response) - 1, 0)) > 0) {
         response[bytes_received] = '\0';
         printf("%s", response);
+        extract_peers(response);
     }
 
     close(sockfd);
