@@ -636,7 +636,7 @@ int main(int argc, char* argv[]) {
 
     char* command = argv[1];
     char* encoded_str = argv[2];
-    printf("sad = %s", argv[3]);
+    printf("sad = %s\n", argv[3]);
 
     process_command(command, encoded_str);
 
