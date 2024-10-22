@@ -652,6 +652,7 @@ int main(int argc, char* argv[]) {
     if (argc == 3) {
         char* address = argv[3];
         peer_handshake(command, encoded_str, address);
+        printf("sad");
     }
     else {
         process_command(command, encoded_str);
