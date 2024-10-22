@@ -678,6 +678,7 @@ int peer_handshake(char* command, char* encoded_str, char* address) {
         exit(1);
     }
 
+
     send_handshake(sockfd, result);
 
     receive_handshake(sockfd);
