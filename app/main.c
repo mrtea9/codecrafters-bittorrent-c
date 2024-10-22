@@ -56,7 +56,7 @@ int num_of_digits(int number) {
 void generate_peer_id(char* peer_id) {
     for (int i = 0; i < 20; i++) {
         peer_id[i] = rand() % 256;
-        printf("s = %s\n", peer_id[i]);
+        printf("s = %c\n", peer_id[i]);
     }
 
     printf("sad = %s\n", peer_id);
