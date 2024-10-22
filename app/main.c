@@ -667,7 +667,7 @@ int peer_handshake(char* command, char* encoded_str, char* address) {
 
     send_handshake(sockfd, result);
 
-    receive_handshake(sockfd);
+    //receive_handshake(sockfd);
 
     printf("peer_ip = %s\n", peer_ip);
     printf("port = %d\n", port);
