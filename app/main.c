@@ -621,9 +621,21 @@ int peer_handshake(char* command, char* encoded_str, char* address) {
     char peer_id[] = "23141516167152146123";
     char* peer_ip = strtok(address, ":");
     int port = atoi(strtok(NULL, ":"));
+    size_t bytesRead = 0;
+    unsigned char* file_content = read_file(encoded_str, &bytesRead);
 
-    printf("address = %s\n", address);
+    value* result = decode_bencode(file_content);
+    value* info = value_get(result, "info");
+
+    unsigned char* encoded_info = encode(info);
+    unsigned char* raw_info_hash = calculate_raw_hash(encoded_info, strlen(encoded_info));
+
     printf("peer_ip = %s\n", peer_ip);
+
+    printf("len protocol = 1\n");
+    printf("BitTorrent protocol\n");
+    printf("00000000\n");
+    printf("%s\n", raw_info_hash);
     printf("port = %d\n", port);
 
     return 0;
