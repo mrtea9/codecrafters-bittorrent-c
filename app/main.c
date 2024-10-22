@@ -12,7 +12,7 @@
 #define RESERVED_LEN 8
 #define PROTOCOL_LEN 19
 #define HASH_LEN 20
-#define HANDSHAKE_LEN (PEER_ID_LEN + RESERVED_LEN + PROTOCOL_LEN + HASH_LEN + 1)
+#define HANDSHAKE_LEN 68
 
 typedef struct value value;
 
@@ -560,6 +560,27 @@ void print_bytes(const unsigned char* data, int len) {
     printf("\n");
 }
 
+void send_handshake(int sockfd, value* result) {
+    value* info = value_get(result, "info");
+    unsigned char* encoded_info = encode(info);
+    unsigned char* raw_info_hash = calculate_raw_hash(encoded_info, strlen(encoded_info));
+    unsigned char handshake[HANDSHAKE_LEN];
+    char peer_id[] = "23141516167152146123";
+
+    handshake[0] = PROTOCOL_LEN;
+    memcpy(&handshake[1], "BitTorrent protocol", PROTOCOL_LEN);
+    memset(&handshake[20], 0, RESERVED_LEN);
+    memcpy(&handshake[28], raw_info_hash, HASH_LEN);
+    memcpy(&handshake[48], peer_id, PEER_ID_LEN);
+
+    printf("handshake = %s\n", handshake);
+
+    printf("len protocol = 1\n");
+    printf("BitTorrent protocol\n");
+    printf("00000000\n");
+    printf("%s\n", raw_info_hash);
+}
+
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
@@ -619,18 +640,14 @@ int process_command(char* command, char* encoded_str) {
 
 int peer_handshake(char* command, char* encoded_str, char* address) {
     struct sockaddr_in peer_addr;
-
-    char peer_id[] = "23141516167152146123";
     char* peer_ip = strtok(address, ":");
     int port = atoi(strtok(NULL, ":"));
     size_t bytesRead = 0;
     unsigned char* file_content = read_file(encoded_str, &bytesRead);
-
     value* result = decode_bencode(file_content);
-    value* info = value_get(result, "info");
 
-    unsigned char* encoded_info = encode(info);
-    unsigned char* raw_info_hash = calculate_raw_hash(encoded_info, strlen(encoded_info));
+    printf("peer_ip = %s\n", peer_ip);
+    printf("port = %d\n", port);
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
@@ -648,13 +665,12 @@ int peer_handshake(char* command, char* encoded_str, char* address) {
         exit(1);
     }
 
+    send_handshake(sockfd, result);
+
+    receive_handshake(sockfd);
+
     printf("peer_ip = %s\n", peer_ip);
     printf("port = %d\n", port);
-
-    printf("len protocol = 1\n");
-    printf("BitTorrent protocol\n");
-    printf("00000000\n");
-    printf("%s\n", raw_info_hash);
 
     close(sockfd);
     return 0;
