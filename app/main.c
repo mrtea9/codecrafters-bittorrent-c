@@ -618,6 +618,8 @@ int process_command(char* command, char* encoded_str) {
 }
 
 int peer_handshake(char* command, char* encoded_str, char* address) {
+    struct sockaddr_in peer_addr;
+
     char peer_id[] = "23141516167152146123";
     char* peer_ip = strtok(address, ":");
     int port = atoi(strtok(NULL, ":"));
@@ -630,14 +632,31 @@ int peer_handshake(char* command, char* encoded_str, char* address) {
     unsigned char* encoded_info = encode(info);
     unsigned char* raw_info_hash = calculate_raw_hash(encoded_info, strlen(encoded_info));
 
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0) {
+        perror("Failed to create socket");
+        exit(1);
+    }
+
+    peer_addr.sin_family = AF_INET;
+    peer_addr.sin_port = htons(port);
+    inet_pton(AF_INET, peer_ip, &peer_addr.sin_addr);
+
+    if (connect(sockfd, (struct sockaddr*)&peer_addr, sizeof(peer_addr)) < 0) {
+        perror("Failed to connect to peer");
+        close(sockfd);
+        exit(1);
+    }
+
     printf("peer_ip = %s\n", peer_ip);
+    printf("port = %d\n", port);
 
     printf("len protocol = 1\n");
     printf("BitTorrent protocol\n");
     printf("00000000\n");
     printf("%s\n", raw_info_hash);
-    printf("port = %d\n", port);
 
+    close(sockfd);
     return 0;
 }
 
