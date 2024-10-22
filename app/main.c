@@ -648,6 +648,7 @@ int main(int argc, char* argv[]) {
 
     char* command = argv[1];
     char* encoded_str = argv[2];
+    printf("argc = %d\n", argc);
 
     if (argc == 3) {
         char* address = argv[3];
