@@ -618,9 +618,6 @@ int process_command(char* command, char* encoded_str) {
 
         value_delete(result);
     }
-    else if (strcmp(command, "handshake") == 0) {
-        printf("%s\n", encoded_str);
-    }
     else {
         fprintf(stderr, "Unknown command: %s\n", command);
         return 1;
@@ -634,7 +631,7 @@ int peer_handshake(char* command, char* encoded_str, char* address) {
     char peer_id[PEER_ID_LEN];
     generate_peer_id(peer_id);
 
-    printf("peer id = %s\n", peer_id);
+    printf("peer id = %c\n", peer_id[5]);
 
     return 0;
 }
