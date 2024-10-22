@@ -579,6 +579,8 @@ void send_handshake(int sockfd, value* result) {
     printf("BitTorrent protocol\n");
     printf("00000000\n");
     printf("%s\n", raw_info_hash);
+
+    send(sockfd, handshake, HANDSHAKE_LEN, 0);
 }
 
 int process_command(char* command, char* encoded_str) {
