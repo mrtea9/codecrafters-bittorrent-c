@@ -57,6 +57,8 @@ void generate_peer_id(char* peer_id) {
     for (int i = 0; i < 20; i++) {
         peer_id[i] = rand() % 256;
     }
+
+    printf("sad = %s\n", peer_id);
 }
 
 value* value_number(long number) {
@@ -652,7 +654,6 @@ int main(int argc, char* argv[]) {
     if (argc == 4) {
         char* address = argv[3];
         peer_handshake(command, encoded_str, address);
-        printf("sad");
     }
     else {
         process_command(command, encoded_str);
