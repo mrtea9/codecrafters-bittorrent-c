@@ -8,7 +8,11 @@
 #include <ctype.h>
 #include <openssl/sha.h>
 
-#define PORT 42585
+#define PEER_ID_LEN 20
+#define RESERVED_LEN 8
+#define PROTOCOL_LEN 19
+#define HASH_LEN 20
+#define HANDSHAKE_LEN (PEER_ID_LEN + RESERVED_LEN + PROTOCOL_LEN + HASH_LEN + 1)
 
 typedef struct value value;
 
@@ -47,6 +51,12 @@ int num_of_digits(int number) {
         ++count;
     } while (number != 0);
     return count;
+}
+
+void generate_peer_id(char* peer_id) {
+    for (int i = 0; i < 20; i++) {
+        peer_id[i] = rand() % 256;
+    }
 }
 
 value* value_number(long number) {
@@ -491,8 +501,6 @@ void perform_get_request(value* result) {
 
     ip_addres = get_ip_port(announce->string, &port);
 
-   // printf("ip = %s, port = %d\n", ip_addres, port);
-
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
         perror("Socket creation failed");
@@ -517,7 +525,6 @@ void perform_get_request(value* result) {
 
     char query_string[512];
     snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%d&compact=1", info_hash_url_encoded, peer_id, length->number);
-    //printf("%s\n", query_string);
 
     snprintf(request, sizeof(request), "GET /announce%s HTTP/1.1\r\n"
                                        "Host: %s\r\n"
@@ -533,7 +540,6 @@ void perform_get_request(value* result) {
         response[bytes_received] = '\0';
         total_bytes += bytes_received;
 
-        //printf("response = %s\n", response);
         extract_peers(response);
         strncat(full_response, response, bytes_received);
 
@@ -541,10 +547,6 @@ void perform_get_request(value* result) {
             break;
         }
     }
-
-
-    //printf("%s", full_response);
-    //extract_peers(full_response);
 
     close(sockfd);
 
@@ -624,6 +626,16 @@ int process_command(char* command, char* encoded_str) {
     return 0;
 }
 
+int peer_handshake(char* command, char* encoded_str, char* address) {
+
+    char peer_id[PEER_ID_LEN];
+    generate_peer_id(peer_id);
+
+    printf("peer id = %s\n", peer_id);
+
+    return 0
+}
+
 int main(int argc, char* argv[]) {
     // Disable  output buffering
     setbuf(stdout, NULL);
@@ -636,9 +648,14 @@ int main(int argc, char* argv[]) {
 
     char* command = argv[1];
     char* encoded_str = argv[2];
-    printf("sad = %s\n", argv[3]);
 
-    process_command(command, encoded_str);
+    if (argc == 3) {
+        char* address = argv[3];
+        peer_handshake(command, encoded_str, address);
+    }
+    else {
+        process_command(command, encoded_str);
+    }
 
     return 0;
 }
