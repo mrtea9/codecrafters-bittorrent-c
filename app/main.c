@@ -428,9 +428,9 @@ char* calculate_hash(unsigned char* data, size_t len) {
     return sha1_str;
 }
 
-char* get_ip_port(char* addres, int* port) {
+char* get_ip_port(char* address, int* port) {
 
-    char* slash_index = strchr(addres, '/');
+    char* slash_index = strchr(address, '/');
     char* start = slash_index + 2;
     char* colon_index = strchr(start, ':');
     int total_len = strlen(start);
@@ -619,8 +619,10 @@ int process_command(char* command, char* encoded_str) {
 
 int peer_handshake(char* command, char* encoded_str, char* address) {
     char peer_id[] = "23141516167152146123";
-    
+    char* peer_ip = strtok(address, ":");
+
     printf("address = %s\n", address);
+    printf("peer_ip = %s\n", peer_ip);
 
     return 0;
 }
