@@ -53,15 +53,6 @@ int num_of_digits(int number) {
     return count;
 }
 
-void generate_peer_id(char* peer_id) {
-    for (int i = 0; i < 20; i++) {
-        peer_id[i] = rand() % 256;
-        printf("s = %c\n", peer_id[i]);
-    }
-
-    printf("sad = %s\n", peer_id);
-}
-
 value* value_number(long number) {
     value* val = malloc(sizeof(value));
     val->type = VAL_NUMBER;
@@ -627,10 +618,8 @@ int process_command(char* command, char* encoded_str) {
 }
 
 int peer_handshake(char* command, char* encoded_str, char* address) {
-
-    unsigned char peer_id[PEER_ID_LEN];
-    generate_peer_id(&peer_id);
-
+    char peer_id[] = "23141516167152146123";
+    
     printf("peer id = %s\n", peer_id);
 
     return 0;
