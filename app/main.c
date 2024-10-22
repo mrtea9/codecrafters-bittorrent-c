@@ -628,7 +628,7 @@ int process_command(char* command, char* encoded_str) {
 
 int peer_handshake(char* command, char* encoded_str, char* address) {
 
-    char peer_id[PEER_ID_LEN];
+    unsigned char peer_id[PEER_ID_LEN];
     generate_peer_id(&peer_id);
 
     printf("peer id = %s\n", peer_id);
