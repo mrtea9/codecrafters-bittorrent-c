@@ -633,7 +633,7 @@ int peer_handshake(char* command, char* encoded_str, char* address) {
 
     printf("peer id = %s\n", peer_id);
 
-    return 0
+    return 0;
 }
 
 int main(int argc, char* argv[]) {
