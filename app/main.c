@@ -620,9 +620,11 @@ int process_command(char* command, char* encoded_str) {
 int peer_handshake(char* command, char* encoded_str, char* address) {
     char peer_id[] = "23141516167152146123";
     char* peer_ip = strtok(address, ":");
+    int port = atoi(strtok(NULL, ":"));
 
     printf("address = %s\n", address);
     printf("peer_ip = %s\n", peer_ip);
+    printf("port = %d\n", port);
 
     return 0;
 }
