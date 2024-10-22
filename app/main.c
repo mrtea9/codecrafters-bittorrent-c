@@ -573,14 +573,25 @@ void send_handshake(int sockfd, value* result) {
     memcpy(&handshake[28], raw_info_hash, HASH_LEN);
     memcpy(&handshake[48], peer_id, PEER_ID_LEN);
 
-    printf("handshake = %s\n", handshake);
-
-    printf("len protocol = 1\n");
-    printf("BitTorrent protocol\n");
-    printf("00000000\n");
-    printf("%s\n", raw_info_hash);
-
     send(sockfd, handshake, HANDSHAKE_LEN, 0);
+}
+
+void receive_handshake(int sockfd) {
+    unsigned char response[HANDSHAKE_LEN];
+
+    if (recv(sockfd, response, HANDSHAKE_LEN, 0) < HANDSHAKE_LEN) {
+        printf("Failed to receive full handshake\n");
+        return;
+    }
+
+    unsigned char peer_id[PEER_ID_LEN];
+    memcpy(peer_id, &response[48], PEER_ID_LEN);
+
+    printf("Peer ID: ");
+    for (int i = 0; i < PEER_ID_LEN; i++) {
+        printf("%02x", peer_id[i]);
+    }
+    printf("\n");
 }
 
 int process_command(char* command, char* encoded_str) {
@@ -669,10 +680,7 @@ int peer_handshake(char* command, char* encoded_str, char* address) {
 
     send_handshake(sockfd, result);
 
-    //receive_handshake(sockfd);
-
-    printf("peer_ip = %s\n", peer_ip);
-    printf("port = %d\n", port);
+    receive_handshake(sockfd);
 
     close(sockfd);
     return 0;
