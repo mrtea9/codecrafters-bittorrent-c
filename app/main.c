@@ -620,7 +620,7 @@ int process_command(char* command, char* encoded_str) {
 int peer_handshake(char* command, char* encoded_str, char* address) {
     char peer_id[] = "23141516167152146123";
     
-    printf("peer id = %s\n", peer_id);
+    printf("address = %s\n", address);
 
     return 0;
 }
