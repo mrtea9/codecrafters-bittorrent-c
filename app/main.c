@@ -693,6 +693,7 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     value* result = decode_bencode(file_content);
 
     value_println(result);
+    perform_get_request(result);
     printf("file to create = %s\n", file_to_create);
     printf("encoded_str = %s\n", encoded_str);
     printf("piece_number = %d\n", piece_number);
