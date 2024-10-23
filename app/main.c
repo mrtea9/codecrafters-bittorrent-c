@@ -651,7 +651,7 @@ int process_command(char* command, char* encoded_str) {
     return 0;
 }
 
-int peer_handshake(char* command, char* encoded_str, char* address) {
+int peer_handshake(char* encoded_str, char* address) {
     struct sockaddr_in peer_addr;
     char* peer_ip = strtok(address, ":");
     int port = atoi(strtok(NULL, ":"));
@@ -687,6 +687,14 @@ int peer_handshake(char* command, char* encoded_str, char* address) {
     return 0;
 }
 
+int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
+    printf("file to create = %s\n", file_to_create);
+    printf("encoded_str = %s\n", encoded_str);
+    printf("piece_number = %d\n", piece_number);
+
+    return 0;
+}
+
 int main(int argc, char* argv[]) {
     // Disable  output buffering
     setbuf(stdout, NULL);
@@ -703,7 +711,13 @@ int main(int argc, char* argv[]) {
 
     if (argc == 4) {
         char* address = argv[3];
-        peer_handshake(command, encoded_str, address);
+        peer_handshake(encoded_str, address);
+    }
+    else if (argc = 6) {
+        char* file_to_create = argv[3];
+        encoded_str = argv[4];
+        int piece_number = atoi(argv[5]);
+        download_piece(file_to_create, encoded_str, piece_number);
     }
     else {
         process_command(command, encoded_str);
