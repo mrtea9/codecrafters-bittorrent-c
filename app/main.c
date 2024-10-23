@@ -493,8 +493,8 @@ void perform_get_request(value* result) {
     value* piece_length = value_get(result, "piece length");
     value* pieces = value_get(result, "pieces");
 
+    printf("%s", announce->string);
     ip_addres = get_ip_port(announce->string, &port);
-    printf("da");
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
