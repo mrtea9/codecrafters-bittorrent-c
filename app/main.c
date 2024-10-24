@@ -747,10 +747,10 @@ int peer_handshake(char* encoded_str, char* address) {
     printf("addr = %s\n", address);
 
     struct sockaddr_in peer_addr;
-    //char* peer_ip = strtok(address, ":");
+    char* peer_ip = strtok(address, ":");
     char* peer_ip = "165.232.41.73";
     printf("da\n");
-    //int port = atoi(strtok(NULL, ":"));
+    int port = atoi(strtok(NULL, ":"));
     int port = 51418;
     printf("da2\n");
     size_t bytesRead = 0;
