@@ -596,6 +596,12 @@ void receive_handshake(int sockfd) {
 }
 
 char* resolve_hostname_to_ip(char* hostname) {
+    char* host_start = strstr(hostname, "://");
+
+    host_start = host_start + 3;
+
+    printf("host_start = %s\n", host_start);
+
     struct hostent* host = gethostbyname(hostname);
     if (host == NULL) {
         perror("gethostbyname error");
