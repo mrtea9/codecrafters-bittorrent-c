@@ -584,6 +584,7 @@ void perform_curl_request(value* result) {
             printf("Response Data:\n%s\n", chunk.memory);
 
             extract_peers(chunk.memory);
+
         }
 
         curl_easy_cleanup(curl);
