@@ -737,7 +737,7 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
 
     printf("URL tracker: %s\n", announce->string);
 
-    char* ip_address = resolve_hostname_to_ip(announce->string, &port);
+    char* ip_address = resolve_hostname_to_ip("http://tracker.openbittorrent.com/announce", &port);
 
     perform_get_request(result, ip_address, port);
     printf("file to create = %s\n", file_to_create);
