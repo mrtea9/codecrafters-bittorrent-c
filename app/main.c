@@ -493,8 +493,6 @@ void perform_get_request(value* result, char* ip, int received_port) {
     value* piece_length = value_get(result, "piece length");
     value* pieces = value_get(result, "pieces");
 
-    printf("%s\n", announce->string);
-    printf("ip = %s, port = %d\n", ip, received_port);
     if (strcmp(ip, "NULL") == 0 && port == -1) {
         ip_addres = get_ip_port(announce->string, &port);
     }
@@ -737,7 +735,6 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
 
     char* ip_address = resolve_hostname_to_ip(announce->string, &port);
 
-    value_println(result);
     printf("URL tracker: %s\n", announce->string);
     perform_get_request(result, ip_address, port);
     printf("file to create = %s\n", file_to_create);
