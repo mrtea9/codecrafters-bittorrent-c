@@ -655,6 +655,7 @@ void receive_handshake(int sockfd) {
     }
 
     unsigned char peer_id[PEER_ID_LEN];
+    printf("response = %s\n", response);
     memcpy(peer_id, &response[48], PEER_ID_LEN);
 
     printf("Peer ID: ");
