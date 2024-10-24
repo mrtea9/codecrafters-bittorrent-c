@@ -518,7 +518,7 @@ size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userdata) {
 void perform_curl_request(value* result) {
     CURL* curl;
     CURLcode res;
-    int port = 80;
+    //int port = 80;
 
     value* announce = value_get(result, "announce");
     value* length = value_get(result, "length");
