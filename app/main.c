@@ -600,13 +600,8 @@ char* resolve_hostname_to_ip(char* hostname, int* port) {
 
     host_start = host_start + 3;
 
-    printf("host_start = %s\n", host_start);
-
     char* path = strchr(host_start, '/');
     if (path) *path = '\0';
-
-    printf("path = %s\n", path);
-    printf("host_start = %s\n", host_start);
 
     struct hostent* host = gethostbyname(host_start);
     if (host == NULL) {
@@ -623,7 +618,8 @@ char* resolve_hostname_to_ip(char* hostname, int* port) {
     char* ip_address = malloc(INET_ADDRSTRLEN);
     inet_ntop(AF_INET, addr_list[0], ip_address, INET_ADDRSTRLEN);
 
-    printf("ip = %s\n", ip_address);
+    *port = 80;
+    printf("ip = %s, port = %d\n", ip_address, *port);
 
     return ip_address;
 }
