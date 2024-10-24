@@ -499,6 +499,8 @@ void perform_curl_request(value* result) {
     value* piece_length = value_get(result, "piece length");
     value* pieces = value_get(result, "pieces");
 
+    char full_url[1024];
+    unsigned char full_response[8192] = { 0 };
     char* encoded_info = encode(info);
     unsigned char* raw_info_hash = calculate_raw_hash((unsigned char*)encoded_info, strlen(encoded_info));
     char* info_hash_url_encoded = url_encode(raw_info_hash, SHA_DIGEST_LENGTH);
@@ -510,8 +512,6 @@ void perform_curl_request(value* result) {
 
     curl = curl_easy_init();
     if (curl) {
-        char full_url[1024];
-        char full_response[8192] = { 0 };
         snprintf(full_url, sizeof(full_url), "%s%s", announce->string, query_string);
 
         curl_easy_setopt(curl, CURLOPT_URL, full_url);
