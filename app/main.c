@@ -744,6 +744,8 @@ int process_command(char* command, char* encoded_str) {
 }
 
 int peer_handshake(char* encoded_str, char* address) {
+    printf("addr = %s\n", address);
+
     struct sockaddr_in peer_addr;
     char* peer_ip = strtok(address, ":");
     int port = atoi(strtok(NULL, ":"));
