@@ -508,7 +508,6 @@ void perform_curl_request(value* result) {
     char query_string[512];
     snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%d&compact=1", info_hash_url_encoded, peer_id, length->number);
 
-
     curl = curl_easy_init();
     if (curl) {
         char full_url[1024];
