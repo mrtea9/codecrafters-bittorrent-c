@@ -1,27 +1,13 @@
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <unistd.h>
-//#include <arpa/inet.h>
-//#include <netdb.h>
-//#include <stdbool.h>
-//#include <ctype.h>
-//#include <openssl/sha.h>
-//#include <curl/curl.h>
-#include <math.h>
-#include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <openssl/sha.h>
-#include <byteswap.h>
 #include <unistd.h>
-#include <curl/curl.h>
 #include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
+#include <netdb.h>
+#include <stdbool.h>
+#include <ctype.h>
+#include <openssl/sha.h>
+#include <curl/curl.h>
 
 #define PEER_ID_LEN 20
 #define RESERVED_LEN 8
@@ -510,29 +496,6 @@ void perform_get_request(value* result, char* ip, int received_port) {
     value* info = value_get(result, "info");
     value* piece_length = value_get(result, "piece length");
     value* pieces = value_get(result, "pieces");
-
-
-    CURL* handle = curl_easy_init(); 
-    char* encoded_info = encode(info);
-    unsigned char* hash = calculate_raw_hash((unsigned char*)encoded_info, strlen(encoded_info));
-    char* encoded_hash = curl_easy_escape(handle, hash, 20);
-    // free(hash);
-    char url[250];
-    snprintf(url, 250,
-        "%s?info_hash=%s&peer_id=00112233445566778899&port=6881&uploaded=0&"
-        "downloaded=0&left=92063&compact=1",
-        announce->string, encoded_hash);
-    curl_free(encoded_hash);
-    curl_easy_cleanup(handle);
-    // fprintf(stderr,"%s\n", url);
-    curl_data* peers_data = get_request(url);
-    char* peers_ptr = peers_data->data;
-
-    printf("test = %s\n".peers_ptr);
-
-
-
-
 
     value_println(result);
 
