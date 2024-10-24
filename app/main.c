@@ -555,8 +555,6 @@ void perform_get_request(value* result, char* ip, int received_port) {
     value* piece_length = value_get(result, "piece length");
     value* pieces = value_get(result, "pieces");
 
-    value_println(result);
-
     if (strcmp(ip, "NULL") == 0 && port == -1) {
         ip_addres = get_ip_port(announce->string, &port);
     }
