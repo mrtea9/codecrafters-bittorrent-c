@@ -520,7 +520,7 @@ size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userdata) {
     return size * nmemb;*/
 
     size_t realsize = size * nmemb;
-    struct MemoryStruct* mem = (struct MemoryStruct*)userp;
+    struct MemoryStruct* mem = (struct MemoryStruct*)userdata;
 
     char* ptr = realloc(mem->memory, mem->size + realsize + 1);
     if (!ptr) {
