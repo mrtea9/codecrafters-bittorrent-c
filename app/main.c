@@ -447,6 +447,8 @@ char* get_ip_port(char* address, int* port) {
 }
 
 void extract_peers(const char* bencoded_response) {
+    printf("bencoded = %s\n", bencoded_response);
+
     const char* peers_key = "peers";
     char* peers_start = strstr(bencoded_response, peers_key);
 
