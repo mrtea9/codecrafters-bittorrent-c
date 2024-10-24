@@ -544,7 +544,6 @@ void perform_curl_request(value* result) {
         curl_easy_setopt(curl, CURLOPT_URL, full_url);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, full_response);
-        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);  // Follow redirects, if any
         curl_easy_setopt(curl, CURLOPT_PORT, port);
 
         res = curl_easy_perform(curl);
