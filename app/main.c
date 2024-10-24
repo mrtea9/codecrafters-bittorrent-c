@@ -503,7 +503,7 @@ void perform_get_request(value* result, char* ip, int received_port) {
     }
     else {
         ip_addres = ip;
-        port = 0;
+        port = 6881;
     }
 
     printf("ip = %s, port = %d\n", ip_addres, port);
