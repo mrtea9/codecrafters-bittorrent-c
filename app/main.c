@@ -801,6 +801,7 @@ int peer_handshake(char* encoded_str, char* address) {
     }
 
 
+
     send_handshake(sockfd, result);
 
     receive_handshake(sockfd);
