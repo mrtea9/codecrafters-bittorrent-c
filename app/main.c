@@ -746,13 +746,13 @@ int process_command(char* command, char* encoded_str) {
 int peer_handshake(char* encoded_str, char* address) {
     printf("addr = %s\n", address);
 
+    int port = 0;
     struct sockaddr_in peer_addr;
-    char* colon_index = strchr(address, ':');
-    printf("colon: %s\n", colon_index);
-    char* peer_ip = strtok(address, ":");
-    printf("da\n");
-    int port = atoi(strtok(NULL, ":"));
-    printf("da2\n");
+    //printf("colon: %s\n", colon_index)
+    char* peer_ip = get_ip_port(address, &port);
+    //printf("da\n");
+    //int port = atoi(strtok(NULL, ":"));
+    //printf("da2\n");
     size_t bytesRead = 0;
     unsigned char* file_content = read_file(encoded_str, &bytesRead);
     value* result = decode_bencode(file_content);
