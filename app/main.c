@@ -784,6 +784,7 @@ int peer_handshake(char* encoded_str, char* address) {
     printf("peer_ip = %s\n", peer_ip);
     printf("port = %d\n", port);
 
+
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
         perror("Failed to create socket");
