@@ -492,6 +492,23 @@ size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userdata) {
 void perform_curl_request(value* result) {
     CURL* curl;
     CURLcode res;
+    int port = 80;
+
+    value* announce = value_get(result, "announce");
+    value* length = value_get(result, "length");
+    value* info = value_get(result, "info");
+    value* piece_length = value_get(result, "piece length");
+    value* pieces = value_get(result, "pieces");
+
+    char* encoded_info = encode(info);
+    unsigned char* raw_info_hash = calculate_raw_hash((unsigned char*)encoded_info, strlen(encoded_info));
+    char* info_hash_url_encoded = url_encode(raw_info_hash, SHA_DIGEST_LENGTH);
+    char peer_id[] = "23141516167152146123";
+    free(raw_info_hash);
+
+    char query_string[512];
+    snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%d&compact=1", info_hash_url_encoded, peer_id, length->number);
+
 
     curl = curl_easy_init();
     if (curl) {
