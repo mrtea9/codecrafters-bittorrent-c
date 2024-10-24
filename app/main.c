@@ -682,6 +682,9 @@ void receive_handshake(int sockfd) {
         printf("%02x", peer_id[i]);
     }
     printf("\n");
+
+    unsigned char buffer[1024];
+    receive_message(sockfd, buffer, sizeof(buffer));
 }
 
 char* resolve_hostname_to_ip(char* hostname, int* port) {
@@ -805,9 +808,6 @@ int peer_handshake(char* encoded_str, char* address) {
     send_handshake(sockfd, result);
 
     receive_handshake(sockfd);
-
-    //unsigned char buffer[1024];
-    //receive_message(sockfd, buffer, sizeof(buffer));
 
     //printf("bufer = %s\n", buffer);
 
