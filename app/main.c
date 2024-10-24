@@ -493,7 +493,7 @@ void perform_get_request(value* result, char* ip, int received_port) {
     value* piece_length = value_get(result, "piece length");
     value* pieces = value_get(result, "pieces");
 
-    printf("%s", announce->string);
+    printf("%s\n", announce->string);
     printf("ip = %s, port = %d\n", ip, received_port);
     if (strcmp(ip, "NULL") == 0 && port == -1) {
         ip_addres = ip;
