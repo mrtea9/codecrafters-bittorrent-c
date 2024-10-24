@@ -715,7 +715,7 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     value* result = decode_bencode(file_content);
     value* announce = value_get(result, "announce");
 
-    resolve_hostname_to_ip("http://bittorrent-test-tracker.codecrafters.io/announce");
+    resolve_hostname_to_ip("http://bittorrent-test-tracker.codecrafters.io");
 
     value_println(result);
     printf("URL tracker: %s\n", announce->string);
