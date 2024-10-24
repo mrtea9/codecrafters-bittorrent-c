@@ -561,7 +561,7 @@ void perform_get_request(value* result, char* ip, int received_port) {
         ip_addres = get_ip_port(announce->string, &port);
     }
     else {
-        perform_curl_request(result);
+        return perform_curl_request(result);
     }
 
     printf("ip = %s, port = %d\n", ip_addres, port);
