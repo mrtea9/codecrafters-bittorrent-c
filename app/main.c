@@ -748,7 +748,9 @@ int peer_handshake(char* encoded_str, char* address) {
 
     struct sockaddr_in peer_addr;
     char* peer_ip = strtok(address, ":");
+    printf("da\n");
     int port = atoi(strtok(NULL, ":"));
+    printf("da2\n");
     size_t bytesRead = 0;
     unsigned char* file_content = read_file(encoded_str, &bytesRead);
     value* result = decode_bencode(file_content);
