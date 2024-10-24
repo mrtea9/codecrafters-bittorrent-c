@@ -527,7 +527,7 @@ void perform_curl_request(value* result) {
     value* pieces = value_get(result, "pieces");
 
     char full_url[1024];
-    unsigned char full_response[8192];
+    unsigned char full_response[8192] = { 0 };
     char* encoded_info = encode(info);
     unsigned char* raw_info_hash = calculate_raw_hash((unsigned char*)encoded_info, strlen(encoded_info));
     char* info_hash_url_encoded = url_encode(raw_info_hash, SHA_DIGEST_LENGTH);
