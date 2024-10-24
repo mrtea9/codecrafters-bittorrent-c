@@ -431,9 +431,8 @@ char* calculate_hash(unsigned char* data, size_t len) {
 
 char* get_ip_port(char* address, int* port) {
     char* start;
-
     char* slash_index = strchr(address, '/');
-    printf("slah = %s\n", slash_index);
+
     if (slash_index) {
         start = slash_index + 2;
         char* colon_index = strchr(start, ':');
@@ -756,11 +755,7 @@ int peer_handshake(char* encoded_str, char* address) {
 
     int port = 0;
     struct sockaddr_in peer_addr;
-    //printf("colon: %s\n", colon_index)
     char* peer_ip = get_ip_port(address, &port);
-    //printf("da\n");
-    //int port = atoi(strtok(NULL, ":"));
-    //printf("da2\n");
     size_t bytesRead = 0;
     unsigned char* file_content = read_file(encoded_str, &bytesRead);
     value* result = decode_bencode(file_content);
