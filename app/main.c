@@ -454,6 +454,26 @@ char* get_ip_port(char* address, int* port) {
     return ip_addres;
 }
 
+void send_message(int sockfd, int length, unsigned char msg_id, unsigned char* payload) {
+    unsigned char message[length + 4];
+    int msg_length = htonl(length);
+    memcpy(message, &msg_length, 4);
+    message[4] = msg_id;
+    if (length > 1) {
+        memcpy(&message[5], payload, length - 1);
+    }
+    send(sockfd, message, length + 4, 0);
+}
+
+int receive_message(int sockfd, unsigned char* buffer, int buf_len) {
+    int bytes_read = recv(sockfd, buffer, buf_len, 0);
+    if (bytes_read < 0) {
+        perror("recv failed");
+        exit(1);
+    }
+    return bytes_read;
+}
+
 void extract_peers(const char* bencoded_response) {
 
     const char* peers_key = "peers";
@@ -655,9 +675,6 @@ void receive_handshake(int sockfd) {
     }
 
     unsigned char peer_id[PEER_ID_LEN];
-
-    printf("response = %s\n", response);
-
     memcpy(peer_id, &response[48], PEER_ID_LEN);
 
     printf("Peer ID: ");
@@ -787,6 +804,13 @@ int peer_handshake(char* encoded_str, char* address) {
     send_handshake(sockfd, result);
 
     receive_handshake(sockfd);
+
+    unsigned char buffer[1024];
+    receive_message(sockfd, buffer, sizeof(buffer));
+
+    printf("bufer = %s\n", buffer);
+
+    send_message(sockfd, 1, 2, NULL);
 
     close(sockfd);
     return 0;
