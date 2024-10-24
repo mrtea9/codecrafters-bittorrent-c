@@ -792,6 +792,7 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     char* ip_address = resolve_hostname_to_ip(announce->string, &port);
 
     perform_get_request(result, ip_address, port);
+
     printf("file to create = %s\n", file_to_create);
     printf("encoded_str = %s\n", encoded_str);
     printf("piece_number = %d\n", piece_number);
