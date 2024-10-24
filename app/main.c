@@ -595,6 +595,27 @@ void receive_handshake(int sockfd) {
     printf("\n");
 }
 
+char* resolve_hostname_to_ip(char* hostname) {
+    struct hostent* host = gethostbyname(hostname);
+    if (host == NULL) {
+        perror("gethostbyname error");
+        exit(1);
+    }
+
+    struct in_addr** addr_list = (struct in_addr**)host->h_addr_list;
+    if (add_list[0] == NULL) {
+        perror("addr_list error");
+        exit(1);
+    }
+
+    char* ip_address = malloc(INET_ADDRSTRLEN);
+    inet_ntop(AF_INET, addr_list[0], ip_address, INET_ADDRSTRLEN);
+
+    printf("ip = %s\n", ip_address);
+
+    return ip_address;
+}
+
 int process_command(char* command, char* encoded_str) {
     if (strcmp(command, "decode") == 0) {
         value* result = decode_bencode(encoded_str);
@@ -693,6 +714,8 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     unsigned char* file_content = read_file(encoded_str, &bytesRead);
     value* result = decode_bencode(file_content);
     value* announce = value_get(result, "announce");
+
+    resolve_hostname_to_ip("http://bittorrent-test-tracker.codecrafters.io/announce");
 
     value_println(result);
     printf("URL tracker: %s\n", announce->string);
