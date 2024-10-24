@@ -613,7 +613,7 @@ char* resolve_hostname_to_ip(char* hostname, int* port) {
     char* path = strchr(host_start, '/');
     if (path) *path = '\0';
 
-    struct hostent* host = gethostbyname("tracker.openbittorrent.com");
+    struct hostent* host = gethostbyname(host_start);
     if (host == NULL) {
         perror("gethostbyname error");
         exit(1);
@@ -737,7 +737,7 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
 
     printf("URL tracker: %s\n", announce->string);
 
-    char* ip_address = resolve_hostname_to_ip("http://tracker.openbittorrent.com/announce", &port);
+    char* ip_address = resolve_hostname_to_ip(announce->string, &port);
 
     perform_get_request(result, ip_address, port);
     printf("file to create = %s\n", file_to_create);
