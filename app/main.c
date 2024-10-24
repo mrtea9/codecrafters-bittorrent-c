@@ -747,9 +747,11 @@ int peer_handshake(char* encoded_str, char* address) {
     printf("addr = %s\n", address);
 
     struct sockaddr_in peer_addr;
-    char* peer_ip = strtok(address, ":");
+    //char* peer_ip = strtok(address, ":");
+    char* peer_ip = "165.232.41.73";
     printf("da\n");
-    int port = atoi(strtok(NULL, ":"));
+    //int port = atoi(strtok(NULL, ":"));
+    int port = 51418;
     printf("da2\n");
     size_t bytesRead = 0;
     unsigned char* file_content = read_file(encoded_str, &bytesRead);
@@ -796,7 +798,7 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
 
     perform_get_request(result, ip_address, port);
 
-    peer_handshake(encoded_str, "165.232.41.73::51418");
+    peer_handshake(encoded_str, "165.232.41.73:51418");
 
     printf("file to create = %s\n", file_to_create);
     printf("encoded_str = %s\n", encoded_str);
