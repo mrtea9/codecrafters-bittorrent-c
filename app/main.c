@@ -670,6 +670,9 @@ void send_handshake(int sockfd, value* result) {
 void receive_handshake(int sockfd) {
     unsigned char response[HANDSHAKE_LEN];
 
+    unsigned char buffer[1024];
+    receive_message(sockfd, buffer, sizeof(buffer));
+
     if (recv(sockfd, response, HANDSHAKE_LEN, 0) < HANDSHAKE_LEN) {
         printf("Failed to receive full handshake\n");
         return;
@@ -683,9 +686,6 @@ void receive_handshake(int sockfd) {
         printf("%02x", peer_id[i]);
     }
     printf("\n");
-
-    unsigned char buffer[1024];
-    receive_message(sockfd, buffer, sizeof(buffer));
 }
 
 char* resolve_hostname_to_ip(char* hostname, int* port) {
