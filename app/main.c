@@ -534,7 +534,7 @@ void perform_get_request(value* result, char* ip, int received_port) {
     snprintf(request, sizeof(request), "GET /announce%s HTTP/1.1\r\n"
                                        "Host: %s\r\n"
                                        "Conection: close\r\n\r\n", query_string, ip_addres);
-
+    printf("request = %s\n", request);
     send(sockfd, request, strlen(request), 0);
 
     int bytes_received;
