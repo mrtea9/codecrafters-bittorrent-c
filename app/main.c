@@ -556,6 +556,11 @@ void perform_curl_request(value* result) {
     char peer_id[] = "23141516167152146123";
     free(raw_info_hash);
 
+    struct MemoryStruct chunk;
+
+    chunk.memory = malloc(1);
+    chunk.size = 0;
+
     char query_string[512];
     snprintf(query_string, sizeof(query_string), "?info_hash=%s&peer_id=%s&port=6881&uploaded=0&downloaded=0&left=%d&compact=1", info_hash_url_encoded, peer_id, length->number);
 
@@ -568,7 +573,7 @@ void perform_curl_request(value* result) {
         //curl_easy_setopt(curl, CURLOPT_PORT, port);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &full_response);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&chunk);
 
         res = curl_easy_perform(curl);
 
@@ -576,9 +581,9 @@ void perform_curl_request(value* result) {
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
         }
         else {
-            printf("Response Data:\n%s\n", full_response);
+            printf("Response Data:\n%s\n", chunk.memory);
 
-            extract_peers(full_response);
+            extract_peers(chunk.memory);
         }
 
         curl_easy_cleanup(curl);
