@@ -692,9 +692,11 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     size_t bytesRead = 0;
     unsigned char* file_content = read_file(encoded_str, &bytesRead);
     value* result = decode_bencode(file_content);
+    value* announce = value_get(result, "announce");
 
     value_println(result);
-    perform_get_request(result);
+    printf("URL tracker: %s\n", announce->string);
+    //perform_get_request(result);
     printf("file to create = %s\n", file_to_create);
     printf("encoded_str = %s\n", encoded_str);
     printf("piece_number = %d\n", piece_number);
