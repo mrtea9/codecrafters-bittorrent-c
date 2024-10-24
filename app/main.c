@@ -549,6 +549,7 @@ void perform_get_request(value* result, char* ip, int received_port) {
     int port = 0;
     char* ip_addres;
 
+
     value* announce = value_get(result, "announce");
     value* length = value_get(result, "length");
     value* info = value_get(result, "info");
