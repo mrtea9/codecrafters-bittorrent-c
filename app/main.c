@@ -552,6 +552,7 @@ void perform_get_request(value* result, char* ip, int received_port) {
     curl = curl_easy_init();
     if (curl) {
         char full_url[1024];
+        char full_response[8192] = { 0 };
         snprintf(full_url, sizeof(full_url), "%s%s", announce->string, query_string);
         printf("Request URL: %s\n", full_url);
 
