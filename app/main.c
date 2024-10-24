@@ -480,7 +480,7 @@ void extract_peers(const char* bencoded_response) {
     }
 }
 
-void perform_get_request(value* result) {
+void perform_get_request(value* result, char* ip, int received_port) {
     int sockfd;
     struct sockaddr_in server_addr;
     char request[1024], response[4096];
@@ -494,7 +494,15 @@ void perform_get_request(value* result) {
     value* pieces = value_get(result, "pieces");
 
     printf("%s", announce->string);
-    ip_addres = get_ip_port(announce->string, &port);
+    if (strcmp(ip, "NULL") == 0 && port == -1) {
+        ip_addres = ip;
+        port = received_port;
+    }
+    else {
+        ip_addres = get_ip_port(announce->string, &port);
+    }
+
+    printf("ip = %s, port = %d\n", ip_addres, port);
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
@@ -668,8 +676,10 @@ int process_command(char* command, char* encoded_str) {
         unsigned char* file_content = read_file(encoded_str, &bytesRead);
 
         value* result = decode_bencode(file_content);
+        char* ip_address = "NULL";
+        int port = -1;
 
-        perform_get_request(result);
+        perform_get_request(result, ip_address, port);
 
         value_delete(result);
     }
@@ -724,11 +734,11 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     value* announce = value_get(result, "announce");
     int port = 0;
 
-    resolve_hostname_to_ip(announce->string, &port);
+    char* ip_address = resolve_hostname_to_ip(announce->string, &port);
 
     value_println(result);
     printf("URL tracker: %s\n", announce->string);
-    //perform_get_request(result);
+    perform_get_request(result, ip_address, port);
     printf("file to create = %s\n", file_to_create);
     printf("encoded_str = %s\n", encoded_str);
     printf("piece_number = %d\n", piece_number);
