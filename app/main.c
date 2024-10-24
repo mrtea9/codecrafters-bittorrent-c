@@ -806,12 +806,12 @@ int peer_handshake(char* encoded_str, char* address) {
 
     receive_handshake(sockfd);
 
-    unsigned char buffer[1024];
-    receive_message(sockfd, buffer, sizeof(buffer));
+    //unsigned char buffer[1024];
+    //receive_message(sockfd, buffer, sizeof(buffer));
 
-    printf("bufer = %s\n", buffer);
+    //printf("bufer = %s\n", buffer);
 
-    send_message(sockfd, 1, 2, NULL);
+    //send_message(sockfd, 1, 2, NULL);
 
     close(sockfd);
     return 0;
