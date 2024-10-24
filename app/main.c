@@ -481,7 +481,7 @@ void extract_peers(const char* bencoded_response) {
 
     if (!peers_start) {
         printf("no peers start\n");
-        return;
+        exit(1);
     }
 
     char* length_start = strchr(peers_start, ':');
