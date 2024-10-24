@@ -819,7 +819,6 @@ int peer_handshake(char* encoded_str, char* address) {
 int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     size_t bytesRead = 0;
     unsigned char* file_content = read_file(encoded_str, &bytesRead);
-
     value* result = decode_bencode(file_content);
     value* announce = value_get(result, "announce");
     int port = 0;
