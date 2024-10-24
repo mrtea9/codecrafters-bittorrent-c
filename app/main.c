@@ -657,6 +657,7 @@ void send_handshake(int sockfd, value* result) {
     unsigned char handshake[HANDSHAKE_LEN];
     char peer_id[] = "23141516167152146123";
     printf("da");
+
     handshake[0] = PROTOCOL_LEN;
     memcpy(&handshake[1], "BitTorrent protocol", PROTOCOL_LEN);
     memset(&handshake[20], 0, RESERVED_LEN);
