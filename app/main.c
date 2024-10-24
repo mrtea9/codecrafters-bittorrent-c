@@ -515,7 +515,7 @@ struct MemoryStruct {
     size_t size;
 };
 
-size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userdata) {
+size_t write_callback(void* contents, size_t size, size_t nmemb, void* userdata) {
     /*strcat(userdata, (char*)ptr);
     return size * nmemb;*/
 
