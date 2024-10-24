@@ -437,7 +437,7 @@ char* get_ip_port(char* address, int* port) {
     if (slash_index) {
         char* start = slash_index + 2;
         char* colon_index = strchr(start, ':');
-        total_len = strlen(start)
+        total_len = strlen(start);
     }
     else {
         char* colon_index = strchr(address, ':');
