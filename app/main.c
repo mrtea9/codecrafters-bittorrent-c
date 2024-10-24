@@ -595,12 +595,17 @@ void receive_handshake(int sockfd) {
     printf("\n");
 }
 
-char* resolve_hostname_to_ip(char* hostname) {
+char* resolve_hostname_to_ip(char* hostname, int port) {
     char* host_start = strstr(hostname, "://");
 
     host_start = host_start + 3;
 
     printf("host_start = %s\n", host_start);
+
+    char* path = strchr(host_start, '/');
+    if (path) *path = '\0';
+
+    printf("path = %s\n", path);
 
     struct hostent* host = gethostbyname(hostname);
     if (host == NULL) {
@@ -720,8 +725,9 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     unsigned char* file_content = read_file(encoded_str, &bytesRead);
     value* result = decode_bencode(file_content);
     value* announce = value_get(result, "announce");
+    int port = 0;
 
-    resolve_hostname_to_ip(announce->string);
+    resolve_hostname_to_ip(announce->string, &port);
 
     value_println(result);
     printf("URL tracker: %s\n", announce->string);
