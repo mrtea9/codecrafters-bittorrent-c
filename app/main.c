@@ -747,6 +747,7 @@ int peer_handshake(char* encoded_str, char* address) {
     printf("addr = %s\n", address);
 
     struct sockaddr_in peer_addr;
+    printf("da3\n");
     char* peer_ip = strtok(address, ":");
     printf("da\n");
     int port = atoi(strtok(NULL, ":"));
