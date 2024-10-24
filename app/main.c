@@ -527,7 +527,7 @@ void perform_curl_request(value* result) {
     value* pieces = value_get(result, "pieces");
 
     char full_url[1024];
-    unsigned char full_response[8192] = { 0 };
+    unsigned char full_response[8192];
     char* encoded_info = encode(info);
     unsigned char* raw_info_hash = calculate_raw_hash((unsigned char*)encoded_info, strlen(encoded_info));
     char* info_hash_url_encoded = url_encode(raw_info_hash, SHA_DIGEST_LENGTH);
@@ -670,9 +670,6 @@ void send_handshake(int sockfd, value* result) {
 void receive_handshake(int sockfd) {
     unsigned char response[HANDSHAKE_LEN];
 
-    unsigned char buffer[1024];
-    receive_message(sockfd, buffer, sizeof(buffer));
-
     if (recv(sockfd, response, HANDSHAKE_LEN, 0) < HANDSHAKE_LEN) {
         printf("Failed to receive full handshake\n");
         return;
@@ -809,10 +806,6 @@ int peer_handshake(char* encoded_str, char* address) {
     send_handshake(sockfd, result);
 
     receive_handshake(sockfd);
-
-    //printf("bufer = %s\n", buffer);
-
-    //send_message(sockfd, 1, 2, NULL);
 
     close(sockfd);
     return 0;
