@@ -546,7 +546,7 @@ void perform_curl_request(value* result) {
         curl_easy_setopt(curl, CURLOPT_PORT, port);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, full_response);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &full_response);
 
         res = curl_easy_perform(curl);
 
