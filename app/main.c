@@ -430,19 +430,19 @@ char* calculate_hash(unsigned char* data, size_t len) {
 }
 
 char* get_ip_port(char* address, int* port) {
-    int total_len;
-    int colon_len;
+    char* start;
 
     char* slash_index = strchr(address, '/');
     if (slash_index) {
-        char* start = slash_index + 2;
+        start = slash_index + 2;
         char* colon_index = strchr(start, ':');
-        total_len = strlen(start);
     }
     else {
-        char* colon_index = strchr(address, ':');
-        total_len = strlen(address);
+        start = address;
     }
+    char* start = slash_index + 2;
+    char* colon_index = strchr(start, ':');
+    int total_len = strlen(start);
     int colon_len = strlen(colon_index);
     int ip_len = total_len - colon_len;
 
