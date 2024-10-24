@@ -626,7 +626,6 @@ char* resolve_hostname_to_ip(char* hostname, int* port) {
     inet_ntop(AF_INET, addr_list[0], ip_address, INET_ADDRSTRLEN);
 
     *port = 80;
-    printf("ip = %s, port = %d\n", ip_address, *port);
 
     return ip_address;
 }
@@ -733,9 +732,10 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     value* announce = value_get(result, "announce");
     int port = 0;
 
+    printf("URL tracker: %s\n", announce->string);
+
     char* ip_address = resolve_hostname_to_ip(announce->string, &port);
 
-    printf("URL tracker: %s\n", announce->string);
     perform_get_request(result, ip_address, port);
     printf("file to create = %s\n", file_to_create);
     printf("encoded_str = %s\n", encoded_str);
