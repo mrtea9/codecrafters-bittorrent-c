@@ -448,7 +448,6 @@ char* get_ip_port(char* address, int* port) {
 }
 
 void extract_peers(const char* bencoded_response) {
-    printf("bencoded = %s\n", bencoded_response);
 
     const char* peers_key = "peers";
     char* peers_start = strstr(bencoded_response, peers_key);
@@ -515,7 +514,6 @@ void perform_curl_request(value* result) {
         char full_url[1024];
         char full_response[8192] = { 0 };
         snprintf(full_url, sizeof(full_url), "%s%s", announce->string, query_string);
-        printf("Request URL: %s\n", full_url);
 
         curl_easy_setopt(curl, CURLOPT_URL, full_url);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
@@ -525,19 +523,15 @@ void perform_curl_request(value* result) {
 
         res = curl_easy_perform(curl);
 
-        // Check for errors
         if (res != CURLE_OK) {
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
         }
         else {
-            // Process the full response
             printf("Response Data:\n%s\n", full_response);
 
-            // Extract peers from the response (your custom function)
             extract_peers(full_response);
         }
 
-        // Clean up CURL
         curl_easy_cleanup(curl);
     }
 }
