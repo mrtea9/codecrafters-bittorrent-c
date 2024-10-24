@@ -463,6 +463,7 @@ void extract_peers(const char* bencoded_response) {
         return;
     }
 
+
     int peers_length = atoi(peers_start + strlen(peers_key));
 
     char* peers_data = length_start + 1;
