@@ -608,7 +608,7 @@ char* resolve_hostname_to_ip(char* hostname, int* port) {
     printf("path = %s\n", path);
     printf("host_start = %s\n", host_start);
 
-    struct hostent* host = gethostbyname(hostname);
+    struct hostent* host = gethostbyname(host_start);
     if (host == NULL) {
         perror("gethostbyname error");
         exit(1);
