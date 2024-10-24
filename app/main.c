@@ -613,7 +613,7 @@ char* resolve_hostname_to_ip(char* hostname, int* port) {
     char* path = strchr(host_start, '/');
     if (path) *path = '\0';
 
-    struct hostent* host = gethostbyname(host_start);
+    struct hostent* host = gethostbyname("tracker.openbittorrent.com");
     if (host == NULL) {
         perror("gethostbyname error");
         exit(1);
