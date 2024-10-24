@@ -433,6 +433,7 @@ char* get_ip_port(char* address, int* port) {
     char* start;
 
     char* slash_index = strchr(address, '/');
+    printf("slah = %s\n", slash_index);
     if (slash_index) {
         start = slash_index + 2;
         char* colon_index = strchr(start, ':');
@@ -440,7 +441,6 @@ char* get_ip_port(char* address, int* port) {
     else {
         start = address;
     }
-    char* start = slash_index + 2;
     char* colon_index = strchr(start, ':');
     int total_len = strlen(start);
     int colon_len = strlen(colon_index);
