@@ -603,7 +603,7 @@ char* resolve_hostname_to_ip(char* hostname) {
     }
 
     struct in_addr** addr_list = (struct in_addr**)host->h_addr_list;
-    if (add_list[0] == NULL) {
+    if (addr_list[0] == NULL) {
         perror("addr_list error");
         exit(1);
     }
