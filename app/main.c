@@ -484,12 +484,21 @@ void extract_peers(const char* bencoded_response) {
     }
 }
 
+size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userdata) {
+    strcat(userdata, (char*)ptr);
+    return size * nmemb;
+}
+
 void perform_get_request(value* result, char* ip, int received_port) {
     int sockfd;
     struct sockaddr_in server_addr;
     char request[1024], response[4096];
     int port = 0;
     char* ip_addres;
+
+    // test
+    CURL* curl;
+    CURLcode res;
 
     value* announce = value_get(result, "announce");
     value* length = value_get(result, "length");
@@ -539,6 +548,36 @@ void perform_get_request(value* result, char* ip, int received_port) {
                                        "Conection: close\r\n\r\n", query_string, ip_addres);
     printf("request = %s\n", request);
     send(sockfd, request, strlen(request), 0);
+
+    curl = curl_easy_init();
+    if (curl) {
+        char full_url[1024];
+        snprintf(full_url, sizeof(full_url), "%s%s", announce->string, query_string);
+        printf("Request URL: %s\n", full_url);
+
+        curl_easy_setopt(curl, CURLOPT_URL, full_url);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, full_response);
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);  // Follow redirects, if any
+        curl_easy_setopt(curl, CURLOPT_PORT, port);
+
+        res = curl_easy_perform(curl);
+
+        // Check for errors
+        if (res != CURLE_OK) {
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        }
+        else {
+            // Process the full response
+            printf("Response Data:\n%s\n", full_response);
+
+            // Extract peers from the response (your custom function)
+            extract_peers(full_response);
+        }
+
+        // Clean up CURL
+        curl_easy_cleanup(curl);
+    }
 
     int bytes_received;
     char full_response[8192];
