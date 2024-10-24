@@ -595,7 +595,7 @@ void receive_handshake(int sockfd) {
     printf("\n");
 }
 
-char* resolve_hostname_to_ip(char* hostname, int port) {
+char* resolve_hostname_to_ip(char* hostname, int* port) {
     char* host_start = strstr(hostname, "://");
 
     host_start = host_start + 3;
@@ -606,6 +606,7 @@ char* resolve_hostname_to_ip(char* hostname, int port) {
     if (path) *path = '\0';
 
     printf("path = %s\n", path);
+    printf("host_start = %s\n", host_start);
 
     struct hostent* host = gethostbyname(hostname);
     if (host == NULL) {
