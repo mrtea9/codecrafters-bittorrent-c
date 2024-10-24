@@ -496,11 +496,11 @@ void perform_get_request(value* result, char* ip, int received_port) {
     printf("%s\n", announce->string);
     printf("ip = %s, port = %d\n", ip, received_port);
     if (strcmp(ip, "NULL") == 0 && port == -1) {
-        ip_addres = ip;
-        port = received_port;
+        ip_addres = get_ip_port(announce->string, &port);
     }
     else {
-        ip_addres = get_ip_port(announce->string, &port);
+        ip_addres = ip;
+        port = received_port;
     }
 
     printf("ip = %s, port = %d\n", ip_addres, port);
