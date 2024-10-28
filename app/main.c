@@ -542,6 +542,7 @@ void perform_curl_request(value* result) {
         snprintf(full_url, sizeof(full_url), "%s%s", announce->string, query_string);
         printf("full url = %s\n", full_url);
 
+
         curl_easy_setopt(curl, CURLOPT_URL, full_url);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
