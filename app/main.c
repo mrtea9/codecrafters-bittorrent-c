@@ -664,8 +664,6 @@ void send_handshake(int sockfd, value* result) {
     memcpy(&handshake[48], peer_id, PEER_ID_LEN);
 
     send(sockfd, handshake, HANDSHAKE_LEN, 0);
-
-    printf("da");
 }
 
 void receive_handshake(int sockfd) {
