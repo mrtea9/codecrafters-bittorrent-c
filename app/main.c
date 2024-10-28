@@ -543,7 +543,6 @@ void perform_curl_request(value* result) {
         printf("full url = %s\n", full_url);
 
         curl_easy_setopt(curl, CURLOPT_URL, full_url);
-        //curl_easy_setopt(curl, CURLOPT_PORT, port);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &full_response);
