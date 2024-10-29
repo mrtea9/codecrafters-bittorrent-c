@@ -887,41 +887,12 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
             return -1;
         }
 
+        printf("i = %d\nindex = %d\nbegin = %d\nlength = %d\n", i, piece_index, begin, length);
+        printf("i = %d\nreceived index = %d\received_begin = %d\nlength = %d\n", i, received_index, received_begin, length);
+
         memcpy(piece_data + begin, buffer + 13, length);
     }
 
-
-    return 0;
-}
-
-int request_blocks(int sockfd, int piece_index, int piece_length) {
-
-    int block_size = 1 << 14;
-    int num_blocks = (piece_length + block_size - 1) / block_size;
-
-    printf("num blocks = %d\n", num_blocks);
-
-    for (int i = 0; i < num_blocks; i++) {
-        int begin = i * block_size;
-        int length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
-
-        unsigned char message[17];
-        int total_length = htonl(13);
-
-
-        memcpy(message, &total_length, 4);
-        message[4] = 6;
-
-        printf("i = %d\nindex = %d\nbegin = %d\nlength = %d\n", i, piece_index, begin, length);
-
-        *(int*)&message[5] = htonl(piece_index);
-        *(int*)&message[9] = htonl(begin);
-        *(int*)&message[13] = htonl(length);
-
-        if (send(sockfd, message, 17, 0) <= 0) return -1;
-    }
-
-    printf("requested\n");
 
     return 0;
 }
