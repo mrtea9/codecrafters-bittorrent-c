@@ -864,6 +864,7 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
         printf("index = %d, begin = %d\n", index, begin);
 
         if (index != piece_index || begin != i * block_size) {
+            fprintf(stderr, "Block mismatch: expected piece %d at offset %d\n", piece_index, i * block_size);
             free(piece_data);
             return -1;
         }
@@ -872,7 +873,6 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
         memcpy(piece_data + begin, buffer + 13, data_length);
     }
 
-    printf("piece data = %s\n", piece_data);
 
     return 0;
 }
