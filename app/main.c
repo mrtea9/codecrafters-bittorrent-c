@@ -887,6 +887,7 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
             return -1;
         }
 
+
         printf("i = %d\nindex = %d\nbegin = %d\nlength = %d\n", i, piece_index, begin, length);
         printf("i = %d\nreceived index = %d\received_begin = %d\nlength = %d\n", i, received_index, received_begin, length);
 
