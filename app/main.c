@@ -865,17 +865,17 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
         *(int*)&request_msg[5] = htonl(piece_index);
         *(int*)&request_msg[9] = htonl(begin);
         *(int*)&request_msg[13] = htonl(length);
-        printf("Request Message: ");
-        for (int j = 0; j < 17; j++) {
-            printf("%02x ", request_msg[j]);  // Hexadecimal
-        }
-        printf("\n");
+        //printf("Request Message: ");
+        //for (int j = 0; j < 17; j++) {
+        //    printf("%02x ", request_msg[j]);  // Hexadecimal
+        //}
+        //printf("\n");
 
-        printf("Request Message (decimal): ");
-        for (int j = 0; j < 17; j++) {
-            printf("%d ", request_msg[j]);    // Decimal
-        }
-        printf("\n");
+        //printf("Request Message (decimal): ");
+        //for (int j = 0; j < 17; j++) {
+        //    printf("%d ", request_msg[j]);    // Decimal
+        //}
+        //printf("\n");
 
         if (send(sockfd, request_msg, sizeof(request_msg), 0) <= 0) {
             perror("Falied to send request");
@@ -884,7 +884,7 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
         }
 
         unsigned char buffer[length + 13];
-        if (recv(sockfd, buffer, length + 13, 0) <= 0) {
+        if (recvall(sockfd, buffer, length + 13) <= 0) {
             perror("Failed to receive block data");
             free(piece_data);
             return -1;
