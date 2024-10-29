@@ -896,7 +896,19 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
         memcpy(piece_data + begin, buffer + 13, length);
     }
 
+    // hash verification need to implement
 
+    FILE* file = fopen(file_to_create, "wb");
+    if (!file) {
+        perror("Failed to open file for writing");
+        free(piece_data);
+        return -1;
+    }
+    fwrite(piece_data, 1, piece_length, file);
+    fclose(file);
+
+    free(piece_data);
+    printf("Piece %d successfully downloaded and verified.\n", piece_index);
     return 0;
 }
 
