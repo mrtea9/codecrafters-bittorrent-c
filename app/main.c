@@ -648,10 +648,8 @@ Peer* perform_curl_request(value* result) {
         }
 
 
-        curl_easy_cleanup(curl);
+        //curl_easy_cleanup(curl);
     }
-
-    printf("sad");
 
     return list_peers;
 }
@@ -675,9 +673,9 @@ Peer* perform_get_request(value* result, char* ip, int received_port) {
     else {
         Peer* test = perform_curl_request(result);
         printf("test");
-        exit(1);
+        //exit(1);
 
-        //return perform_curl_request(result);
+        return perform_curl_request(result);
     }
 
     printf("ip = %s, port = %d\n", ip_addres, port);
