@@ -879,9 +879,10 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
             return -1;
         }
 
+        //int received_id = ntohl(*(int*)&buffer[4]);
         int received_index = ntohl(*(int*)&buffer[5]);
         int received_begin = ntohl(*(int*)&buffer[9]);
-        printf("i = %d\n", i);
+        printf("buffer = %d\n", buffer[4]);
 
         if (received_index != piece_index || received_begin != begin) {
             fprintf(stderr, "Block mismatch: expected piece %d at offset %d, but received index %d, begin %d\n",
