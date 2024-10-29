@@ -882,15 +882,15 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
         int received_index = ntohl(*(int*)&buffer[5]);
         int received_begin = ntohl(*(int*)&buffer[9]);
 
-        //if (received_index != piece_index || received_begin != begin) {
-        //    fprintf(stderr, "Block mismatch: expected piece %d at offset %d, but received index %d, begin %d\n",
-        //        piece_index, begin, received_index, received_begin);
-        //    free(piece_data);
-        //    return -1;
-        //}
+        if (received_index != piece_index || received_begin != begin) {
+            fprintf(stderr, "Block mismatch: expected piece %d at offset %d, but received index %d, begin %d\n",
+                piece_index, begin, received_index, received_begin);
+            continue;
+        }
 
         printf("i = %d\nindex = %d\nbegin = %d\nlength = %d\n", i, piece_index, begin, length);
-        printf("i = %d\nreceived index = %d\nreceived_begin = %d\nlength = %d\n", i, received_index, received_begin, length);
+        printf("received index = %d\nreceived_begin = %d\n", i, received_index, received_begin, length);
+
 
         memcpy(piece_data + begin, buffer + 13, length);
     }
