@@ -857,8 +857,10 @@ int wait_for_bitfield(int sockfd) {
 
     if (length > 1) {
         unsigned char discard[length - 1];
-        if (recv(sock, discard, length - 1, 0) <= 0) return -1;
+        if (recv(sockfd, discard, length - 1, 0) <= 0) return -1;
     }
+
+    printf("succsess\n");
     return 0;
 }
 
