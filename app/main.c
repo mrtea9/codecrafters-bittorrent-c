@@ -895,6 +895,7 @@ int request_blocks(int sockfd, int piece_index, int piece_length) {
         unsigned char message[17];
         int total_length = htonl(13);
 
+
         memcpy(message, &total_length, 4);
         message[4] = 6;
 
