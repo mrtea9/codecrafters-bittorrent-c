@@ -559,6 +559,7 @@ int receive_message(int sockfd, unsigned char* buffer, int buf_len) {
 
 Peer* extract_peers(const char* bencoded_response) {
     Peer* list_peer = peer_list();
+
     const char* peers_key = "peers";
     char* peers_start = strstr(bencoded_response, peers_key);
 
