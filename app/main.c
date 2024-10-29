@@ -670,7 +670,6 @@ Peer* perform_get_request(value* result, char* ip, int received_port) {
     }
     else {
         //Peer* test = perform_curl_request(result);
-        printf("test");
         //exit(1);
 
         return perform_curl_request(result);
@@ -927,8 +926,6 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
         peer_handshake(encoded_str, address);
 
     }
-    exit(1);
-    peer_handshake(encoded_str, "165.232.41.73:51517");
 
     printf("file to create = %s\n", file_to_create);
     printf("encoded_str = %s\n", encoded_str);
