@@ -895,7 +895,6 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
             continue;
         }
 
-
         memcpy(piece_data + begin, buffer + 13, length);
     }
 
