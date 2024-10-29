@@ -644,6 +644,8 @@ Peer* perform_curl_request(value* result) {
             printf("Response Data:\n%s\n", full_response);
 
             list_peers = extract_peers(full_response);
+
+            printf("sad");
         }
 
         curl_easy_cleanup(curl);
