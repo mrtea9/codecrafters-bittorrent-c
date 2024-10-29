@@ -865,6 +865,7 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
         *(int*)&request_msg[5] = htonl(piece_index);
         *(int*)&request_msg[9] = htonl(begin);
         *(int*)&request_msg[13] = htonl(length);
+        printf("request message = %s\n", request_msg);
 
         if (send(sockfd, request_msg, sizeof(request_msg), 0) <= 0) {
             perror("Falied to send request");
@@ -884,14 +885,12 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
         int received_begin = ntohl(*(int*)&buffer[9]);
         if (buffer[4] != 7) {
             fprintf(stderr, "Unexpected message ID: %d. Expected 7 for piece message.\n", buffer[4]);
-            i--; // Retry this block
             continue;
         }
 
         if (received_index != piece_index || received_begin != begin) {
             fprintf(stderr, "Block mismatch: expected piece %d at offset %d, but received index %d, begin %d\n",
                 piece_index, begin, received_index, received_begin);
-            i--;
             continue;
         }
 
