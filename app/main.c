@@ -886,6 +886,7 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
     }
 
     printf("este");
+
     return 0;
 }
 
