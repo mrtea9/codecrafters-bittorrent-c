@@ -845,6 +845,7 @@ int process_command(char* command, char* encoded_str) {
     return 0;
 }
 
+
 int recvall(int sock, char* buffer, int length) {
     int bytes_read = 0;
     fprintf(stderr, "Requested %d\n", length);
