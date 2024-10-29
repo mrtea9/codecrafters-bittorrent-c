@@ -901,7 +901,7 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
         }
 
         unsigned char buffer[length + 13];
-        msg_len = recvall(sockfd, buffer, length + 13); //, 0);
+        int msg_len = recvall(sockfd, buffer, length + 13); //, 0);
         fprintf(stderr, "Received %d\n", msg_len);
        /* if (recvall(sockfd, buffer, length + 13) <= 0) {
             perror("Failed to receive block data");
