@@ -592,7 +592,6 @@ void extract_peers(const char* bencoded_response) {
         peer_add(list_peer, peer);
         peer_println(list_peer);
         peer_println(peer);
-        peer_delete(peer);
     }
 
     peer_println(list_peer);
