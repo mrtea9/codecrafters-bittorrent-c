@@ -671,6 +671,7 @@ Peer* perform_get_request(value* result, char* ip, int received_port) {
         Peer* test = perform_curl_request(result);
         printf("test");
         exit(1);
+
         //return perform_curl_request(result);
     }
 
