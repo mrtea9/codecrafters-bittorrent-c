@@ -589,6 +589,7 @@ void extract_peers(const char* bencoded_response) {
         inet_ntop(AF_INET, ip, ip_str, INET_ADDRSTRLEN);
 
         Peer* peer = peer_create(ip_str, port);
+
         peer_add(list_peer, peer);
         peer_println(list_peer);
         peer_println(peer);
