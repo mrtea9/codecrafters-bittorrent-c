@@ -874,7 +874,6 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
 
     printf("piece data = %s\n", piece_data);
 
-
     return 0;
 }
 
