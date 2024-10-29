@@ -570,7 +570,7 @@ Peer* extract_peers(const char* bencoded_response) {
     char* length_start = strchr(peers_start, ':');
     if (!length_start) {
         printf("no length_start\n");
-        return;
+        exit(1);
     }
 
     int peers_length = atoi(peers_start + strlen(peers_key));
