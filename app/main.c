@@ -853,7 +853,6 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
     for (int i = 0; i < num_blocks; i++) {
         unsigned char buffer[block_size + 13];
 
-        printf("da\n");
         if (recv(sockfd, buffer, block_size + 13, 0) <= 0) {
             free(piece_data);
             return -1;
@@ -865,10 +864,10 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
         int index = ntohl(*(int*)&buffer[5]);
         int begin = ntohl(*(int*)&buffer[9]);
 
-        if (index != piece_index || begin != i * block_size) {
-            free(piece_data);
-            return -1;
-        }
+        //if (index != piece_index || begin != i * block_size) {
+        //    free(piece_data);
+        //    return -1;
+        //}
 
         int data_length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
         memcpy(piece_data + begin, buffer + 13, data_length);
@@ -992,7 +991,6 @@ int peer_handshake(char* encoded_str, char* address, int piece_index, char* file
     while (!wait_for_unchoke(sockfd)) continue;
 
     if (request_blocks(sockfd, piece_index, piece_length->number) == 0) {
-        printf("este");
         receive_and_verify_piece(sockfd, file_to_create, piece_index, piece_length->number);
     }
 
