@@ -132,6 +132,11 @@ void peer_print(Peer* peer) {
     }
 }
 
+void peer_println(Peer* peer) {
+    peer_print(peer);
+    putchar('\n');
+}
+
 value* value_number(long number) {
     value* val = malloc(sizeof(value));
     val->type = VAL_NUMBER;
@@ -584,7 +589,7 @@ void extract_peers(const char* bencoded_response) {
         inet_ntop(AF_INET, ip, ip_str, INET_ADDRSTRLEN);
 
         Peer* peer = peer_create(ip_str, port);
-        peer_print(peer);
+        peer_println(peer);
         peer_delete(peer);
     }
 }
