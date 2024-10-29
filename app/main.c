@@ -845,36 +845,49 @@ int process_command(char* command, char* encoded_str) {
     return 0;
 }
 
-int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, int piece_length) {
+int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index, int piece_length) {
     int block_size = 1 << 14;
     int num_blocks = (piece_length + block_size - 1) / block_size;
     unsigned char* piece_data = malloc(piece_length);
 
     for (int i = 0; i < num_blocks; i++) {
-        unsigned char buffer[block_size + 13];
+        int begin = i * block_size;
+        int length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
+        if (length == 0) length = block_size;
 
-        int expected_begin = i * block_size;
+        unsigned char request_msg[17];
+        int msg_length = htonl(13);
 
-        if (recv(sockfd, buffer, block_size + 13, 0) <= 0) {
+        memcpy(request_msg, &msg_length, 4);
+        request_msg[4] = 6;
+        *(int*)&request_msg[5] = htonl(piece_index);
+        *(int*)&request_msg[9] = htonl(begin);
+        *(int*)&request_msg[13] = htonl(length);
+
+        if (send(sockfd, request_msg, sizeof(request_msg), 0) <= 0) {
+            perror("Falied to send request");
             free(piece_data);
             return -1;
         }
 
-        int index = ntohl(*(int*)&buffer[5]);
-        int begin = ntohl(*(int*)&buffer[9]);
-
-        printf("index = %d, begin = %d\n", index, begin);
-        printf("[Debug] Expected index = %d, received index = %d\n", piece_index, index);
-        printf("[Debug] Expected begin = %d, received begin = %d\n", expected_begin, begin);
-
-        if (index != piece_index || begin != i * block_size) {
-            fprintf(stderr, "Block mismatch: expected piece %d at offset %d\n", piece_index, i * block_size);
+        unsigned char buffer[length + 13];
+        if (recv(sockfd, buffer, length + 13, 0) != length + 13) {
+            perror("Failed to receive block data");
             free(piece_data);
             return -1;
         }
 
-        int data_length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
-        memcpy(piece_data + begin, buffer + 13, data_length);
+        int received_index = ntohl(*(int*)&buffer[5]);
+        int received_begin = ntohl(*(int*)&buffer[9]);
+
+        if (received_index != piece_index || received_begin != begin) {
+            fprintf(stderr, "Block mismatch: expected piece %d at offset %d, but received index %d, begin %d\n",
+                piece_index, begin, received_index, received_begin);
+            free(piece_data);
+            return -1;
+        }
+
+        memcpy(piece_data + begin, buffer + 13, length);
     }
 
 
