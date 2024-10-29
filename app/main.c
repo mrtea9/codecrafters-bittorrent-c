@@ -845,6 +845,12 @@ int process_command(char* command, char* encoded_str) {
     return 0;
 }
 
+int request_blocks(int sockfd) {
+
+
+    return 0;
+}
+
 int wait_for_unchoke(int sockfd) {
     unsigned char buffer[5];
 
@@ -897,9 +903,10 @@ int peer_handshake(char* encoded_str, char* address) {
     unsigned char* file_content = read_file(encoded_str, &bytesRead);
     value* result = decode_bencode(file_content);
 
+    value_println(result);
+
     printf("peer_ip = %s\n", peer_ip);
     printf("port = %d\n", port);
-
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
@@ -927,6 +934,8 @@ int peer_handshake(char* encoded_str, char* address) {
     send_interested(sockfd);
 
     while (!wait_for_unchoke(sockfd)) continue;
+
+    request_blocks(sockfd);
 
     close(sockfd);
     return 0;
