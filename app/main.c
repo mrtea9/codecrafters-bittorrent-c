@@ -845,6 +845,18 @@ int process_command(char* command, char* encoded_str) {
     return 0;
 }
 
+int sent_interested(int sockfd) {
+    unsigned char message[5];
+    int length = htonl(1);
+
+    memcpy(message, &length, 4);
+    message[4] = 2;
+
+    if (send(sock, message, 5, 0) <= 0) return -1;
+    printf("sended\n");
+    return 0;
+}
+
 int wait_for_bitfield(int sockfd) {
     unsigned char buffer[5];
 
@@ -900,6 +912,8 @@ int peer_handshake(char* encoded_str, char* address) {
     receive_handshake(sockfd);
 
     wait_for_bitfield(sockfd);
+
+    send_interested(sockfd);
 
     close(sockfd);
     return 0;
