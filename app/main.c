@@ -881,7 +881,7 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
 
         if (buffer[4] != 7) {
             fprintf(stderr, "Unexpected message ID: %d. Expected 7 for piece message.\n", buffer[4]);
-            i--; // Retry this block
+            //i--; // Retry this block
             continue;
         }
 
