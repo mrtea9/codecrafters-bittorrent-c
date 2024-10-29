@@ -898,6 +898,7 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
 
     // hash verification need to implement
 
+
     FILE* file = fopen(file_to_create, "wb");
     if (!file) {
         perror("Failed to open file for writing");
