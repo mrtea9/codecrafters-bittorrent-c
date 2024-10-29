@@ -845,6 +845,35 @@ int process_command(char* command, char* encoded_str) {
     return 0;
 }
 
+int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, int piece_length) {
+    int block_size = 1 << 14;
+    int num_blocks = (piece_length + block_size - 1) / block_size;
+    unsigned char* piece_data = malloc(piece_length);
+
+    for (int i = 0; i < num_blocks; i++) {
+        unsigned char buffer[block_size + 13];
+        if (recv(sockfd, buffer, block_size + 13, 0) <= 0) {
+            free(piece_data);
+            return -1;
+        }
+
+        int index = ntohl(*(int*)&buffer[5]);
+        int begin = ntohl(*(int*)&buffer[9]);
+
+        if (index != piece_index || begin != i * block_size) {
+            free(piece_data);
+            return -1;
+        }
+
+        int data_length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
+        memcpy(piece_data + begin, buffer + 13, data_length);
+    }
+
+    printf("piece data = %s\n", piece_data);
+
+    return 0;
+}
+
 int request_blocks(int sockfd, int piece_index, int piece_length) {
 
     int block_size = 1 << 14;
@@ -915,7 +944,7 @@ int wait_for_bitfield(int sockfd) {
     return 0;
 }
 
-int peer_handshake(char* encoded_str, char* address, int piece_index) {
+int peer_handshake(char* encoded_str, char* address, int piece_index, char* file_to_create) {
     printf("addr = %s\n", address);
 
     int port = 0;
@@ -957,8 +986,7 @@ int peer_handshake(char* encoded_str, char* address, int piece_index) {
     while (!wait_for_unchoke(sockfd)) continue;
 
     if (request_blocks(sockfd, piece_index, piece_length->number)) {
-        //receive_and_verify_piece(sockfd, )
-        exit(1);
+        receive_and_verify_piece(sockfd, file_to_create, piece_index, piece_length->number);
     }
 
     close(sockfd);
@@ -984,9 +1012,9 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     for (int i = 0; i < list_peers->count; i++) {
         char address[21];
         sprintf(address, "%s:%d", list_peers->peer[i]->ip, list_peers->peer[i]->port);
-        peer_handshake(encoded_str, address, 0);
-
+        peer_handshake(encoded_str, address, piece_number, file_to_create);
     }
+
     printf("file to create = %s\n", file_to_create);
     printf("encoded_str = %s\n", encoded_str);
     printf("piece_number = %d\n", piece_number);
@@ -1010,7 +1038,7 @@ int main(int argc, char* argv[]) {
 
     if (argc == 4) {
         char* address = argv[3];
-        peer_handshake(encoded_str, address, 0);
+        peer_handshake(encoded_str, address, 0, "none");
     }
     else if (argc = 6) {
         char* file_to_create = argv[3];
