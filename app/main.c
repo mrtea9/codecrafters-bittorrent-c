@@ -845,6 +845,17 @@ int process_command(char* command, char* encoded_str) {
     return 0;
 }
 
+int wait_for_unchoke(int sockfd) {
+    unsigned char buffer[5];
+
+    if (recv(sockfd, buffer, 5, 0) <= 0) return 0;
+
+    int id = buffer[4];
+
+    printf("unchoke = %d\n", id);
+    return (id == 1);
+}
+
 int send_interested(int sockfd) {
     unsigned char message[5];
     int length = htonl(1);
@@ -914,6 +925,8 @@ int peer_handshake(char* encoded_str, char* address) {
     wait_for_bitfield(sockfd);
 
     send_interested(sockfd);
+
+    while (!wait_for_unchoke(sockfd)) continue;
 
     close(sockfd);
     return 0;
