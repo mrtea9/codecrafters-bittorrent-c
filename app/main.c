@@ -854,8 +854,6 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
         unsigned char buffer[block_size + 13];
 
         int expected_begin = i * block_size;
-        int expected_data_length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
-        if (expected_data_length == 0) expected_data_length = block_size; 
 
         if (recv(sockfd, buffer, block_size + 13, 0) <= 0) {
             free(piece_data);
