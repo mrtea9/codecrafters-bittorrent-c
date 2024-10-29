@@ -851,25 +851,26 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
     unsigned char* piece_data = malloc(piece_length);
 
     for (int i = 0; i < num_blocks; i++) {
-        unsigned char buffer[block_size + 13];
+        //unsigned char buffer[block_size + 13];
+        unsigned char header[13];
 
         int expected_begin = i * block_size;
         int expected_data_length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
         if (expected_data_length == 0) expected_data_length = block_size; // For exact multiples of block_size
 
-        if (recv(sockfd, buffer, block_size + 13, 0) <= 0) {
+        if (recv(sockfd, header, 13, 0) != 13) {
             free(piece_data);
             return -1;
         }
 
-        int index = ntohl(*(int*)&buffer[5]);
-        int begin = ntohl(*(int*)&buffer[9]);
+        int index = ntohl(*(int*)&header[5]);
+        int begin = ntohl(*(int*)&header[9]);
 
         printf("index = %d, begin = %d\n", index, begin);
         printf("[Debug] Expected index = %d, received index = %d\n", piece_index, index);
         printf("[Debug] Expected begin = %d, received begin = %d\n", expected_begin, begin);
 
-        if (index != piece_index || begin != i * block_size) {
+        if (index != piece_index || begin != expected_begin) {
             fprintf(stderr, "Block mismatch: expected piece %d at offset %d\n", piece_index, i * block_size);
             free(piece_data);
             return -1;
