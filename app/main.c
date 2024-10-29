@@ -592,6 +592,7 @@ Peer* extract_peers(const char* bencoded_response) {
         peer_add(list_peer, peer);
     }
 
+    printf("da");
     return list_peer;
 }
 
