@@ -852,6 +852,8 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
 
     for (int i = 0; i < num_blocks; i++) {
         unsigned char buffer[block_size + 13];
+
+        printf("da\n");
         if (recv(sockfd, buffer, block_size + 13, 0) <= 0) {
             free(piece_data);
             return -1;
