@@ -852,6 +852,24 @@ int request_blocks(int sockfd, int piece_index, int piece_length) {
 
     printf("num blocks = %d\n", num_blocks);
 
+    for (int i = 0; i < num_blocks; i++) {
+        int begin = i * block_size;
+        int length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
+
+        unsigned char message[17];
+        int total_length = htonl(13);
+
+        memcpy(message, &total_length, 4);
+        message[4] = 6;
+        *(int*)&message[5] = htonl(piece_index);
+        *(int*)&message[9] = htonl(begin);
+        *(int*)&message[13] = htonl(length);
+
+        if (send(sockfd, message, 17, 0) <= 0) return -1;
+    }
+
+    printf("requested\n");
+
     return 0;
 }
 
@@ -897,7 +915,7 @@ int wait_for_bitfield(int sockfd) {
     return 0;
 }
 
-int peer_handshake(char* encoded_str, char* address) {
+int peer_handshake(char* encoded_str, char* address, int piece_index) {
     printf("addr = %s\n", address);
 
     int port = 0;
@@ -938,7 +956,7 @@ int peer_handshake(char* encoded_str, char* address) {
 
     while (!wait_for_unchoke(sockfd)) continue;
 
-    request_blocks(sockfd, 9, piece_length);
+    request_blocks(sockfd, piece_index, piece_length);
 
     close(sockfd);
     return 0;
@@ -963,7 +981,7 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     for (int i = 0; i < list_peers->count; i++) {
         char address[21];
         sprintf(address, "%s:%d", list_peers->peer[i]->ip, list_peers->peer[i]->port);
-        peer_handshake(encoded_str, address);
+        peer_handshake(encoded_str, address, piece_number);
 
     }
     printf("file to create = %s\n", file_to_create);
@@ -989,7 +1007,7 @@ int main(int argc, char* argv[]) {
 
     if (argc == 4) {
         char* address = argv[3];
-        peer_handshake(encoded_str, address);
+        peer_handshake(encoded_str, address, 0);
     }
     else if (argc = 6) {
         char* file_to_create = argv[3];
