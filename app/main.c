@@ -873,7 +873,7 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
         }
 
         unsigned char buffer[length + 13];
-        if (recv(sockfd, buffer, length + 13, 0) <= 0) {
+        if (recv(sockfd, buffer, length + 13) <= 0) {
             perror("Failed to receive block data");
             free(piece_data);
             return -1;
@@ -885,8 +885,6 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
         if (received_index != piece_index || received_begin != begin) {
             fprintf(stderr, "Block mismatch: expected piece %d at offset %d, but received index %d, begin %d\n",
                 piece_index, begin, received_index, received_begin);
-
-            i--;
             continue;
         }
 
