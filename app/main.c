@@ -845,6 +845,22 @@ int process_command(char* command, char* encoded_str) {
     return 0;
 }
 
+int recvall(int sock, char* buffer, int length) {
+    int bytes_read = 0;
+    fprintf(stderr, "Requested %d\n", length);
+    while (bytes_read < length) {
+        int received = 0;
+        while (received == 0)
+            received = recv(sock, buffer + bytes_read, length, 0);
+        bytes_read += received;
+        fprintf(stderr, "Receiving %d\n", bytes_read);
+        if (bytes_read <= 0) {
+            exit(-5);
+        }
+    }
+    return bytes_read;
+}
+
 int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index, int piece_length) {
     int block_size = 1 << 14;
     int num_blocks = (piece_length + block_size - 1) / block_size;
