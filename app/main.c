@@ -927,6 +927,7 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
         peer_handshake(encoded_str, address);
 
     }
+
     exit(1);
     peer_handshake(encoded_str, "165.232.41.73:51517");
 
