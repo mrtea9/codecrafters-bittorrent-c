@@ -855,8 +855,8 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
         unsigned char header[13];
 
         int expected_begin = i * block_size;
-        int expected_data_length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
-        if (expected_data_length == 0) expected_data_length = block_size; // For exact multiples of block_size
+        int data_length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
+        if (data_length == 0) data_length = block_size;
 
         if (recv(sockfd, header, 13, 0) != 13) {
             free(piece_data);
@@ -876,8 +876,13 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
             return -1;
         }
 
-        int data_length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
-        memcpy(piece_data + begin, buffer + 13, data_length);
+        /*int data_length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
+        memcpy(piece_data + begin, buffer + 13, data_length);*/
+        if (recv(sockfd, piece_data + begin, data_length, 0) != data_length) {
+            perror("Failed to receive block data");
+            free(piece_data);
+            return -1;
+        }
     }
 
 
