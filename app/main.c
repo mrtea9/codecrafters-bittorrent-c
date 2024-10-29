@@ -857,6 +857,7 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
             return -1;
         }
 
+
         printf("buffer = %s\n", buffer);
 
         int index = ntohl(*(int*)&buffer[5]);
