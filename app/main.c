@@ -845,8 +845,12 @@ int process_command(char* command, char* encoded_str) {
     return 0;
 }
 
-int request_blocks(int sockfd) {
+int request_blocks(int sockfd, int piece_index, int piece_length) {
 
+    int block_size = 1 << 14;
+    int num_blocks = (piece_length + block_size - 1) / block_size;
+
+    printf("num blocks = %d\n", num_blocks);
 
     return 0;
 }
@@ -904,8 +908,6 @@ int peer_handshake(char* encoded_str, char* address) {
     value* result = decode_bencode(file_content);
     value* piece_length = value_get(result, "piece length");
 
-    value_println(result);
-
     printf("peer_ip = %s\n", peer_ip);
     printf("port = %d\n", port);
 
@@ -936,7 +938,7 @@ int peer_handshake(char* encoded_str, char* address) {
 
     while (!wait_for_unchoke(sockfd)) continue;
 
-    request_blocks(sockfd);
+    request_blocks(sockfd, 9, piece_length);
 
     close(sockfd);
     return 0;
