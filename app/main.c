@@ -1009,9 +1009,7 @@ int peer_handshake(char* encoded_str, char* address, int piece_index, char* file
 
     while (!wait_for_unchoke(sockfd)) continue;
 
-    if (request_blocks(sockfd, piece_index, piece_length->number) == 0) {
-        receive_and_verify_piece(sockfd, file_to_create, piece_index, piece_length->number);
-    }
+    download_and_verify_piece(sockfd, file_to_create, piece_index, piece_index);
 
     close(sockfd);
     return 0;
