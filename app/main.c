@@ -16,12 +16,18 @@
 #define HANDSHAKE_LEN 68
 
 typedef struct value value;
+typedef struct Peer Peer;
 
 enum {
     VAL_NUMBER,
     VAL_STRING,
     VAL_LIST,
     VAL_DICT
+};
+
+enum {
+    PEER_SINGLE,
+    PEER_LIST
 };
 
 struct value {
@@ -35,8 +41,19 @@ struct value {
     value** cell;
 };
 
+struct Peer {
+    int type;
+
+    char* ip;
+    int port;
+
+    int count;
+    Peer** peer;
+};
+
 void value_print(value* val);
 value* value_copy(value* val);
+void peer_print(Peer* peer);
 value* decode_list(char** bencoded_value);
 value* decode_dict(char** bencoded_value);
 char* encode(value* decoded);
@@ -52,6 +69,67 @@ int num_of_digits(int number) {
         ++count;
     } while (number != 0);
     return count;
+}
+
+Peer* peer_create(char* ip, int port) {
+    Peer* peer = malloc(sizeof(Peer));
+    peer->type = PEER_SINGLE;
+    peer->ip = malloc(strlen(ip) + 1);
+    memcpy(peer->ip, ip, strlen(ip));
+    peer->ip[strlen(ip) + 1] = '\0';
+    peer->port = port;
+    return peer;
+}
+
+Peer* peer_list(void) {
+    Peer* peer = malloc(sizeof(peer));
+    peer->type = PEER_LIST;
+    peer->count = 0;
+    peer->peer = NULL;
+    return peer;
+}
+
+Peer* peer_add(Peer* peer_result, Peer* peer_added) {
+    peer_result->count++;
+    peer_result->peer = realloc(peer_result->peer, sizeof(Peer*) * peer_result->count);
+    peer_result->peer[peer_result->count - 1] = peer_added;
+    return peer_result;
+}
+
+void peer_delete(Peer* peer) {
+    switch (peer->type) {
+        case PEER_SINGLE:
+            free(peer->ip);
+            break;
+
+        case PEER_LIST:
+            for (int i = 0; i < peer->count; i++) {
+                peer_delete(peer->peer[i]);
+            }
+            break;
+    }
+
+    free(peer);
+}
+
+void peer_print_list(Peer* peer) {
+    putchar('(');
+    for (int i = 0; i < peer->count; i++) {
+        peer_print(peer->peer[i]);
+        if (i != (peer->count - 1)) putchar(',');
+    }
+    putchar(')');
+}
+
+void peer_print(Peer* peer) {
+    switch (peer->type) {
+        case PEER_SINGLE:
+            printf("%s:%d", peer->ip, peer->port);
+            break;
+        case PEER_LIST:
+            peer_print_list(peer);
+            break;
+    }
 }
 
 value* value_number(long number) {
@@ -506,7 +584,9 @@ void extract_peers(const char* bencoded_response) {
         char ip_str[INET_ADDRSTRLEN];
         inet_ntop(AF_INET, ip, ip_str, INET_ADDRSTRLEN);
 
-        printf("%s:%d\n", ip_str, port);
+        Peer* peer = peer_create(ip_str, port);
+        peer_print(peer);
+        peer_delete(peer);
     }
 }
 
