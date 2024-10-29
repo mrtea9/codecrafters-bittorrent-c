@@ -897,7 +897,7 @@ int request_blocks(int sockfd, int piece_index, int piece_length) {
 
         memcpy(message, &total_length, 4);
         message[4] = 6;
-        printf("index = %d\nbegin = %d\nlength = %d\n");
+        printf("index = %d\nbegin = %d\nlength = %d\n", piece_index, begin, length);
         *(int*)&message[5] = htonl(piece_index);
         *(int*)&message[9] = htonl(begin);
         *(int*)&message[13] = htonl(length);
