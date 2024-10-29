@@ -958,7 +958,6 @@ int peer_handshake(char* encoded_str, char* address, int piece_index) {
 
     if (request_blocks(sockfd, piece_index, piece_length->number)) {
         //receive_and_verify_piece(sockfd, )
-
         exit(1);
     }
 
