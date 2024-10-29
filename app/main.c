@@ -921,6 +921,14 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
 
     peer_println(list_peers);
 
+    for (int i = 0; i < list_peers->count; i++) {
+        char address[21];
+        sprintf(address, "%s:%d", list_peers->peer[i]->ip, list_peers->peer[i]->port);
+        printf("address = %s", address);
+        exit(1);
+        peer_handshake(encoded_str, )
+    }
+
     peer_handshake(encoded_str, "165.232.41.73:51517");
 
     printf("file to create = %s\n", file_to_create);
