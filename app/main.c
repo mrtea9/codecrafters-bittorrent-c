@@ -557,7 +557,7 @@ int receive_message(int sockfd, unsigned char* buffer, int buf_len) {
     return bytes_read;
 }
 
-void extract_peers(const char* bencoded_response) {
+Peer* extract_peers(const char* bencoded_response) {
 
     const char* peers_key = "peers";
     char* peers_start = strstr(bencoded_response, peers_key);
@@ -594,7 +594,7 @@ void extract_peers(const char* bencoded_response) {
 
     peer_println(list_peer);
 
-    peer_delete(list_peer);
+    return list_peer;
 }
 
 size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userdata) {
@@ -602,9 +602,11 @@ size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userdata) {
     return size * nmemb;
 }
 
-void perform_curl_request(value* result) {
+Peer* perform_curl_request(value* result) {
     CURL* curl;
     CURLcode res;
+
+    Peer* list_peers;
 
     value* announce = value_get(result, "announce");
     value* length = value_get(result, "length");
@@ -642,20 +644,21 @@ void perform_curl_request(value* result) {
         else {
             printf("Response Data:\n%s\n", full_response);
 
-            extract_peers(full_response);
+            list_peers = extract_peers(full_response);
         }
 
         curl_easy_cleanup(curl);
     }
+
+    return list_peers;
 }
 
-void perform_get_request(value* result, char* ip, int received_port) {
+Peer* perform_get_request(value* result, char* ip, int received_port) {
     int sockfd;
     struct sockaddr_in server_addr;
     char request[1024], response[4096];
     int port = 0;
     char* ip_addres;
-
 
     value* announce = value_get(result, "announce");
     value* length = value_get(result, "length");
@@ -692,6 +695,7 @@ void perform_get_request(value* result, char* ip, int received_port) {
     unsigned char* raw_info_hash = calculate_raw_hash((unsigned char*)encoded_info, strlen(encoded_info));
     char* info_hash_url_encoded = url_encode(raw_info_hash, SHA_DIGEST_LENGTH);
     char peer_id[] = "23141516167152146123";
+    Peer* list_peers;
     free(raw_info_hash);
 
     char query_string[512];
@@ -711,7 +715,7 @@ void perform_get_request(value* result, char* ip, int received_port) {
         response[bytes_received] = '\0';
         total_bytes += bytes_received;
 
-        extract_peers(response);
+        list_peers = extract_peers(response);
         strncat(full_response, response, bytes_received);
 
         if (strstr(full_response, "\r\n\r\n")) {
@@ -726,6 +730,8 @@ void perform_get_request(value* result, char* ip, int received_port) {
     value_delete(info);
     value_delete(piece_length);
     value_delete(pieces);
+
+    return list_peers;
 }
 
 void print_bytes(const unsigned char* data, int len) {
@@ -901,13 +907,16 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     unsigned char* file_content = read_file(encoded_str, &bytesRead);
     value* result = decode_bencode(file_content);
     value* announce = value_get(result, "announce");
+    Peer* list_peers;
     int port = 0;
 
     printf("URL tracker: %s\n", announce->string);
 
     char* ip_address = resolve_hostname_to_ip(announce->string, &port);
 
-    perform_get_request(result, ip_address, port);
+    list_peers = perform_get_request(result, ip_address, port);
+
+    peer_println(list_peers);
 
     peer_handshake(encoded_str, "165.232.41.73:51517");
 
