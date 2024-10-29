@@ -647,6 +647,7 @@ Peer* perform_curl_request(value* result) {
 
         curl_easy_cleanup(curl);
     }
+
     printf("sad");
 
     return list_peers;
