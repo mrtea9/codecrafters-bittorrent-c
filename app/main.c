@@ -849,7 +849,7 @@ int download_and_verify_piece(int sockfd, char* file_to_create, int piece_index,
     int block_size = 1 << 14;
     int num_blocks = (piece_length + block_size - 1) / block_size;
     unsigned char* piece_data = malloc(piece_length);
-    print("num blocks = %d\n", num_blocks);
+    printf("num blocks = %d\n", num_blocks);
 
     for (int i = 0; i < num_blocks; i++) {
         int begin = i * block_size;
