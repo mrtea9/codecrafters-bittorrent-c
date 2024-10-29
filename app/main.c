@@ -864,10 +864,12 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
         int index = ntohl(*(int*)&buffer[5]);
         int begin = ntohl(*(int*)&buffer[9]);
 
-        //if (index != piece_index || begin != i * block_size) {
-        //    free(piece_data);
-        //    return -1;
-        //}
+        printf("index = %d, begin = %d\n", index, begin);
+
+        if (index != piece_index || begin != i * block_size) {
+            free(piece_data);
+            return -1;
+        }
 
         int data_length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
         memcpy(piece_data + begin, buffer + 13, data_length);
