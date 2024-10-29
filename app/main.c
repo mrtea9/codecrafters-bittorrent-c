@@ -643,7 +643,6 @@ Peer* perform_curl_request(value* result) {
             printf("Response Data:\n%s\n", full_response);
 
             list_peers = extract_peers(full_response);
-            printf("da");
         }
 
         curl_easy_cleanup(curl);
@@ -914,6 +913,7 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     char* ip_address = resolve_hostname_to_ip(announce->string, &port);
 
     list_peers = perform_get_request(result, ip_address, port);
+    print("da");
 
     peer_println(list_peers);
 
