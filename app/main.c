@@ -574,8 +574,8 @@ void extract_peers(const char* bencoded_response) {
     }
 
     int peers_length = atoi(peers_start + strlen(peers_key));
-
     char* peers_data = length_start + 1;
+    Peer* list_peer = peer_list();
 
     for (int i = 0; i < peers_length; i += 6) {
         unsigned char ip[4];
@@ -589,9 +589,12 @@ void extract_peers(const char* bencoded_response) {
         inet_ntop(AF_INET, ip, ip_str, INET_ADDRSTRLEN);
 
         Peer* peer = peer_create(ip_str, port);
-        peer_println(peer);
+        peer_add(list_peer, peer);
         peer_delete(peer);
     }
+
+    peer_println(list_peer);
+    peer_delete(list_peer);
 }
 
 size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userdata) {
