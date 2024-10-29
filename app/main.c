@@ -902,8 +902,9 @@ int peer_handshake(char* encoded_str, char* address) {
     size_t bytesRead = 0;
     unsigned char* file_content = read_file(encoded_str, &bytesRead);
     value* result = decode_bencode(file_content);
+    value* piece_length = value_get(result, "piece length");
 
-    value_println(result);
+    value_println(piece_length);
 
     printf("peer_ip = %s\n", peer_ip);
     printf("port = %d\n", port);
