@@ -878,14 +878,14 @@ int receive_and_verify_piece(int sockfd, char* file_to_create, int piece_index, 
 
         /*int data_length = (i == num_blocks - 1) ? (piece_length % block_size) : block_size;
         memcpy(piece_data + begin, buffer + 13, data_length);*/
-        if (recv(sockfd, piece_data + begin, data_length, 0) != data_length) {
+        if (recv(sockfd, piece_data + begin, data_length, 0) <= 0) {
             perror("Failed to receive block data");
             free(piece_data);
             return -1;
         }
     }
 
-
+    printf("este");
     return 0;
 }
 
