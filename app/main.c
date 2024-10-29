@@ -671,7 +671,7 @@ Peer* perform_get_request(value* result, char* ip, int received_port) {
         ip_addres = get_ip_port(announce->string, &port);
     }
     else {
-        Peer* test = perform_curl_request(result);
+        //Peer* test = perform_curl_request(result);
         printf("test");
         //exit(1);
 
