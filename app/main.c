@@ -956,7 +956,9 @@ int peer_handshake(char* encoded_str, char* address, int piece_index) {
 
     while (!wait_for_unchoke(sockfd)) continue;
 
-    request_blocks(sockfd, piece_index, piece_length->number);
+    if (request_blocks(sockfd, piece_index, piece_length->number)) {
+        receive_and_verify_piece(sockfd, )
+    }
 
     close(sockfd);
     return 0;
@@ -981,7 +983,7 @@ int download_piece(char* file_to_create, char* encoded_str, int piece_number) {
     for (int i = 0; i < list_peers->count; i++) {
         char address[21];
         sprintf(address, "%s:%d", list_peers->peer[i]->ip, list_peers->peer[i]->port);
-        peer_handshake(encoded_str, address, piece_number);
+        peer_handshake(encoded_str, address, 0);
 
     }
     printf("file to create = %s\n", file_to_create);
