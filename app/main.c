@@ -558,7 +558,7 @@ int receive_message(int sockfd, unsigned char* buffer, int buf_len) {
 }
 
 Peer* extract_peers(const char* bencoded_response) {
-
+    Peer* list_peer = peer_list();
     const char* peers_key = "peers";
     char* peers_start = strstr(bencoded_response, peers_key);
 
@@ -575,7 +575,6 @@ Peer* extract_peers(const char* bencoded_response) {
 
     int peers_length = atoi(peers_start + strlen(peers_key));
     char* peers_data = length_start + 1;
-    Peer* list_peer = peer_list();
 
     for (int i = 0; i < peers_length; i += 6) {
         unsigned char ip[4];
