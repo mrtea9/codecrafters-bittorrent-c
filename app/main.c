@@ -845,14 +845,14 @@ int process_command(char* command, char* encoded_str) {
     return 0;
 }
 
-int sent_interested(int sockfd) {
+int send_interested(int sockfd) {
     unsigned char message[5];
     int length = htonl(1);
 
     memcpy(message, &length, 4);
     message[4] = 2;
 
-    if (send(sock, message, 5, 0) <= 0) return -1;
+    if (send(sockfd, message, 5, 0) <= 0) return -1;
     printf("sended\n");
     return 0;
 }
