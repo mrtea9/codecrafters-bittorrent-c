@@ -593,6 +593,7 @@ void extract_peers(const char* bencoded_response) {
     }
 
     peer_println(list_peer);
+
     peer_delete(list_peer);
 }
 
